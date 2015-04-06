@@ -14,7 +14,7 @@ chrome extension which generates a cheat sheet from markdown
   * die erste h1 heading wird überschrift der ganzen seite
   * alles was jeweils zwischen zwei h2 headings steht wird inhalt des kastens
 
-## wie solls aussehen / wie könnte mans realisieren
+## wie solls aussehen / grobe realisierung
 
 * **startseite**: simple liste wo man mglkeit hat bereits erstellte spickzettel zu löschen oder zu bearbeiten sowie einen button um 
 um einen neuen spickzettel zu erstellen
@@ -34,10 +34,25 @@ startseite zu kommen
   * **nötige werkzeuge:** html, css und javascript - das html wird aus dem speicher ins html geholt (blöde formulierung^^).
   damit das alles bunt und cool aussieht und die bildschrimbreite gut ausgenutzt wird ist sicher einiges an css nötig sein.
   
+## in detail realisierung
+
+### **startseite** : 
+* realisiert als **Extension Icon mit popup.html** (siehe <a href="https://developer.chrome.com/extensions/browserAction">Chrome API</a> dazu) mit eingebundenem **popup.js**
+* "add new cheat sheet" als link -> verweist auf **edit.html**
+* bereits erstellte spickzettel als vertikale (von oben nach unten) liste, jeder eintrag hat daneben 2 kleine icons zum bearbeiten und löschen (schraubenschlüssel und großes "X" z.B.) -> eintrag verweist auf **cheatsheet.html** und gibt mit, welche liste ausgewählt wurde, z.B. via **query string**  
+* 'bearbeiten' verweist auf **edit.html** und gibt mit welche liste ausgewählt wurde, 'löschen' callt den **storage** und **löscht** den jeweiligen eintrag und updatet bei erfolg **popup.html**, indem der listeneintrag verschwindet 
+
+### **erstellen von cheat sheets**
+
+* realisiert als **edit.html** mit eingebundenem **edit.js** und **markdownparser.js**
+* sobald es aufgerufen wird, evaluiert das js, welches cheat sheet es holen soll (wenn empty, dann leeres blatt), fetcht daten aus dem <a href="https://developer.chrome.com/apps/app_storage">storage</a> für das jeweilige cheat sheet und popularisiert das edit formular damit. 
+* submit und preview als button realisiert
+* wenn preview click  
+
 ## potenzielle probleme der realisierung
 
 * im moment ist das einzige problem das ich erkennen könnte, dass der markdown parser uns das html nicht nach unsren wünschen bearbeiten lässt
-
+* vielleicht brauchen wir ein angular um  
   
 
   
