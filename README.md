@@ -47,7 +47,29 @@ startseite zu kommen
 * realisiert als **edit.html** mit eingebundenem **edit.js** und **markdownparser.js**
 * sobald es aufgerufen wird, evaluiert das js, welches cheat sheet es holen soll (wenn empty, dann leeres blatt), fetcht daten aus dem <a href="https://developer.chrome.com/apps/app_storage">storage</a> für das jeweilige cheat sheet und popularisiert das edit formular damit. 
 * submit und preview als button realisiert
-* wenn preview click  
+* wenn preview geclickt wird, wird **markdownparser.js** aufgerufen, der versucht den inhalt des formulars zu parsen. Bei Misserfolg wird eine Fehlermeldung ausgegeben. Bei Erfolg wird (vllt. in neuem fenster) **cheatsheet.html%preview** aufgerufen. 
+* wenn submit geclickt wird, wird zusätzlich zu obigen schritten das geparste html als json in storage gespeichert.
+* der name des json docs wird aus dem text der h1 überschrift generiert. (somit muss der parser auch implementieren, dass es einen fehler gibt, wenn keine h1 überschrift exisitiert), außerdem enthält es zusätzliche info, die nötig ist (z.B. name aller div classes) sowie das gerenderte html als string
+```json
+
+{   
+ "name" : "json-cheat-cheet",
+ "divs" : ["a", "b"]
+ "html" : 
+ "
+ <h1>json</h1>
+ <div class="a">
+ <h2>Hi</h2>
+ <p>I'm Bob.
+ </div>
+ <div class="b">
+ <h2>Hi Bob.</h2>
+ </div>
+ "
+}
+```
+
+
 
 ## potenzielle probleme der realisierung
 
