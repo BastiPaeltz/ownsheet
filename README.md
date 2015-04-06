@@ -4,13 +4,13 @@ chrome extension which generates a cheat sheet from markdown
 ## was soll es können
 
 * aussehen in etwa von <a href="http://overapi.com/git/">overapi</a>
-  * --> ganze Bildschrimbreite wird für information ausgenutzt, so wie es sein sollte (leider viel zu selten im web)
+  * ganze Bildschrimbreite wird für information ausgenutzt, so wie es sein sollte (leider viel zu selten im web)
   
 * aber nicht mit vordefinierten spickzetteln wie bei overapi, sondern mit meinen eigenen
-  * --> die ich am liebsten schön schnell in markdown schreiben will (z.B.sowas <a href="https://github.com/tiimgreen/github-cheat-sheet/blob/master/README.md">hier</a>
+  * die ich am liebsten schön schnell in markdown schreiben will (z.B.sowas <a href="https://github.com/tiimgreen/github-cheat-sheet/blob/master/README.md">hier</a>
 
 **Man schreibt seine Spickzettel in markdown und es wird dann eine webpage generiert, nach dem Prinzip:**
-  * pro '## heading' (h2 heading) wird ein neuer "farbiger Kasten" (siehe link) erstellt
+  * pro '## markdown überschrift' (h2 heading) wird ein neuer "farbiger Kasten" (siehe link) erstellt
   * die erste h1 heading wird überschrift der ganzen seite
   * alles was jeweils zwischen zwei h2 headings steht wird inhalt des kastens
 
@@ -22,7 +22,7 @@ um einen neuen spickzettel zu erstellen
   
 * **Erstellen von cheat sheets**: formular feld wo man sein markdown einträgt. 2 optionen: preview, submit. außerdem noch option um zurück zur 
 startseite zu kommen
-  * **nötige werkzeuge:** simples css, html und javascript, javascript markdown parser, sobald preview oder submit gedrückt wird.
+  * **nötige werkzeuge:** simples css, html und javascript, **javascript markdown parser, sobald preview oder submit gedrückt wird.**  
   <a href="https://github.com/chjj/marked">marked</a> sieht gut aus, da es nötig ist den html output noch etwas zu bearbeiten
   (z.B. divs um jeden 'kasten', damit man nachher per css drauf zugreifen kann). marked lässt einen das machen.
   Anschließend wird der html output in den speicher geschrieben.   
