@@ -10,7 +10,7 @@ chrome extension which generates a cheat sheet from markdown
   * die ich am liebsten schön schnell in **markdown** schreiben will (wie z.B. <a href="https://github.com/tiimgreen/github-cheat-sheet/blob/master/README.md">hier geschehen</a>.)
 
 **Man lädt seinen markdown Spickzettel und es wird dann eine webpage generiert, nach dem Prinzip:**
-  * pro '## markdown überschrift' (h2 heading) wird ein neuer "farbiger Kasten" (siehe overapi link) erstellt
+  * pro '**## markdown überschrift**' (h2 heading in html) wird ein neuer "farbiger Kasten" (siehe overapi link) erstellt
   * die erste h1 heading wird überschrift der ganzen seite
   * alles was jeweils zwischen zwei h2 headings steht wird inhalt des kastens
 
