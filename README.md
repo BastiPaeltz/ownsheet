@@ -37,26 +37,25 @@ startseite zu kommen
 ## in detail realisierung
 
 ### **startseite** : 
-* realisiert als **Extension Icon mit popup.html** (siehe <a href="https://developer.chrome.com/extensions/browserAction">Chrome API</a> dazu) mit eingebundenem **popup.js**
+* realisiert als **Extension Icon mit popup.html** (siehe <a href="https://developer.chrome.com/extensions/browserAction">Chrome API</a> dazu) mit eingebundenem **popup.js** sowie **main.css**
 * "add new cheat sheet" als link -> verweist auf **edit.html**
 * bereits erstellte spickzettel als vertikale (von oben nach unten) liste, jeder eintrag hat daneben 2 kleine icons zum bearbeiten und löschen (schraubenschlüssel und großes "X" z.B.) -> eintrag verweist auf **cheatsheet.html** und gibt mit, welche liste ausgewählt wurde, z.B. via **query string**  
 * 'bearbeiten' verweist auf **edit.html** und gibt mit welche liste ausgewählt wurde, 'löschen' callt den **storage** und **löscht** den jeweiligen eintrag und updatet bei erfolg **popup.html**, indem der listeneintrag verschwindet 
 
 ### **erstellen von cheat sheets**
 
-* realisiert als **edit.html** mit eingebundenem **edit.js** und **markdownparser.js**
+* realisiert als **edit.html** mit eingebundenem **edit.js** und **markdownparser.js** sowie **main.css**
 * sobald es aufgerufen wird, evaluiert das js, welches cheat sheet es holen soll (wenn empty, dann leeres blatt), fetcht daten aus dem <a href="https://developer.chrome.com/apps/app_storage">storage</a> für das jeweilige cheat sheet und popularisiert das edit formular damit. 
 * submit und preview als button realisiert
-* wenn preview geclickt wird, wird **markdownparser.js** aufgerufen, der versucht den inhalt des formulars zu parsen. Bei Misserfolg wird eine Fehlermeldung ausgegeben. Bei Erfolg wird (vllt. in neuem fenster) **cheatsheet.html%preview** aufgerufen. 
+* wenn preview geclickt wird, wird **markdownparser.js** aufgerufen, der versucht den inhalt des formulars zu parsen. Bei Misserfolg wird eine Fehlermeldung ausgegeben. Bei Erfolg wird (vllt. in neuem fenster) **cheatsheet.html%_preview** aufgerufen. 
 * wenn submit geclickt wird, wird zusätzlich zu obigen schritten das geparste html als json in storage gespeichert.
 * der name des json docs wird aus dem text der h1 überschrift generiert. (somit muss der parser auch implementieren, dass es einen fehler gibt, wenn keine h1 überschrift exisitiert), außerdem enthält es zusätzliche info, die nötig ist (z.B. name aller div classes) sowie das gerenderte html als string
 ```json
 
 {   
  "name" : "json-cheat-cheet",
- "divs" : ["a", "b"]
- "html" : 
- "
+ "divs" : ["a", "b"],
+ "html" : "
  <h1>json</h1>
  <div class="a">
  <h2>Hi</h2>
@@ -69,12 +68,16 @@ startseite zu kommen
 }
 ```
 
+### der eigentliche spickzettel
 
+* realisiert als **cheatsheet.html** mit eingebundenem **cheatsheet.js** und **cheatsheet.css**
+* js liest aus, welche liste aufgerufen wurde und nimmmt das html aus dem jeweiligen JSON des storage
+* das wird dann in cheatsheet.html eingefügt, das an sich (statisch) nur ein bisschen grundlegendes (wie z.B. encoding utf-8) beschreibt, der eigentlche content kommt vom js und wird vom css gestylet, dass es nebeneinander ist und bunt
 
 ## potenzielle probleme der realisierung
 
-* im moment ist das einzige problem das ich erkennen könnte, dass der markdown parser uns das html nicht nach unsren wünschen bearbeiten lässt
-* vielleicht brauchen wir ein angular um  
+* markdown parser lässt uns das html mglws. nicht nach unsren wünschen bearbeiten 
+* möglicherweise ist pures js zu langsam um das alles nice und responsive darzustellen und man brauch angular o.ä.  
   
 
   
