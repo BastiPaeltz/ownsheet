@@ -7,7 +7,7 @@ chrome extension which generates a cheat sheet from markdown
   * ganze Bildschrimbreite wird für information ausgenutzt, so wie es sein sollte (leider viel zu selten im web)
   
 * aber nicht mit vordefinierten spickzetteln wie bei overapi, sondern mit meinen eigenen
-  * die ich am liebsten schön schnell in markdown schreiben will (z.B.sowas <a href="https://github.com/tiimgreen/github-cheat-sheet/blob/master/README.md">hier</a>
+  * die ich am liebsten schön schnell in **markdown** schreiben will (wie z.B. <a href="https://github.com/tiimgreen/github-cheat-sheet/blob/master/README.md">hier geschehen</a>.)
 
 **Man schreibt seine Spickzettel in markdown und es wird dann eine webpage generiert, nach dem Prinzip:**
   * pro '## markdown überschrift' (h2 heading) wird ein neuer "farbiger Kasten" (siehe link) erstellt
