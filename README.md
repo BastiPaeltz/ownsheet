@@ -3,14 +3,14 @@ chrome extension which generates a cheat sheet from markdown
 
 ## was soll es können
 
-* aussehen in etwa von <a href="http://overapi.com/git/">overapi</a>
+* cooles aussehen wie <a href="http://overapi.com/git/">overapi</a>
   * ganze Bildschrimbreite wird für information ausgenutzt, so wie es sein sollte (leider viel zu selten im web)
   
-* aber nicht mit vordefinierten spickzetteln wie bei overapi, sondern mit meinen eigenen
+* aber nicht mit vordefinierten spickzetteln wie bei overapi, sondern mit meinen eigenen oder mit coolen, die andere geschrieben haben (z.B. siehe link unten) 
   * die ich am liebsten schön schnell in **markdown** schreiben will (wie z.B. <a href="https://github.com/tiimgreen/github-cheat-sheet/blob/master/README.md">hier geschehen</a>.)
 
-**Man schreibt seine Spickzettel in markdown und es wird dann eine webpage generiert, nach dem Prinzip:**
-  * pro '## markdown überschrift' (h2 heading) wird ein neuer "farbiger Kasten" (siehe link) erstellt
+**Man lädt seinen markdown Spickzettel und es wird dann eine webpage generiert, nach dem Prinzip:**
+  * pro '## markdown überschrift' (h2 heading) wird ein neuer "farbiger Kasten" (siehe overapi link) erstellt
   * die erste h1 heading wird überschrift der ganzen seite
   * alles was jeweils zwischen zwei h2 headings steht wird inhalt des kastens
 
