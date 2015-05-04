@@ -3,9 +3,9 @@
  * Created by sebastian on 5/3/15.
  */
 
-var ownsheet = angular.module("ownsheet-app");
+var ownsheetApp = angular.module("ownsheetApp");
 
-ownsheet.controller('landingController', function ($scope){
+ownsheetApp.controller('popupController', function ($scope){
 
     // TODO: Get sheets from chrome storage
     $scope.sheets = [
