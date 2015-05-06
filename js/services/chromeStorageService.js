@@ -5,22 +5,20 @@
 "use strict";
 
 var ownsheetApp = angular.module("ownsheetApp");
-//ownsheetApp.value('chromeStorage', chrome.storage.local);
-ownsheetApp.service('chromeStorageService', ['chromeStorage', function (chromeStorage) {
 
+ownsheetApp.service('chromeStorageService', function ($q) {
 
+    var storage = chrome.storage.local;
     this.pushToStorage = function (sheet) {
-        var result;
-
-        chromeStorage.set(sheet, function () {
+        var deferred = $q.defer();
+        storage.set(sheet, function () {
             if (chrome.runtime.LastError) {
-                result = "Error pushing sheet. " + sheet.name;
+                deferred.resolve("Error pushing sheet. " + sheet.name);
             } else {
-                result = "Success pushing sheet " + sheet.name;
+                deferred.resolve("Success pushing sheet " + sheet.name);
             }
         });
-
-        return result;
+        return deferred.promise;
     };
 
 
@@ -28,7 +26,7 @@ ownsheetApp.service('chromeStorageService', ['chromeStorage', function (chromeSt
 
         var result;
         if (sheet) {
-            chromeStorage.get(sheet.name, function (item) {
+            storage.get(sheet.name, function (item) {
                 if (chrome.runtime.LastError) {
                     result = "Error getting sheet " + sheet.name;
                 } else {
@@ -37,7 +35,7 @@ ownsheetApp.service('chromeStorageService', ['chromeStorage', function (chromeSt
             });
         }
         else {
-            chromeStorage.get(null, function (items) {
+            storage.get(null, function (items) {
                 if (chrome.runtime.LastError) {
                     result = "Error getting all sheets";
                 } else {
@@ -53,7 +51,7 @@ ownsheetApp.service('chromeStorageService', ['chromeStorage', function (chromeSt
     this.removeFromStorage = function (sheet) {
 
         var result;
-        chromeStorage.remove(sheet.name, function () {
+        storage.remove(sheet.name, function () {
             if (chrome.runtime.LastError) {
                 result = "Error removing " + sheet.name;
             } else {
@@ -63,4 +61,4 @@ ownsheetApp.service('chromeStorageService', ['chromeStorage', function (chromeSt
         return result;
     };
 
-}]);
+});

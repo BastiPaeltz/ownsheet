@@ -5,29 +5,15 @@
 describe('Chrome Storage Service', function () {
 
 
-    var mock, chromeStorage, chromeStorageService;
+    var getSpy, storage, chromeStorageService, promise;
     beforeEach(module('ownsheetApp'));
-
+    getSpy = jasmine.createSpy('getSpy').and.returnValue("passed");
     beforeEach(function () {
-        mock = {
-            name: 'my little pony',
-            content: 'is awesome'
-        };
-
-        chromeStorage = {
-            get: jasmine.createSpy("getSpy"),
-            set: jasmine.createSpy("setSpy"),
-            remove: jasmine.createSpy("removeSpy")
-
-        };
-
-        module(function ($provide) {
-            $provide.value('chromeStorage', chromeStorage);
-        });
 
         inject(function (_chromeStorageService_) {
             chromeStorageService = _chromeStorageService_;
         });
+
     });
     it("should have methods get, remove and push", function () {
         expect(chromeStorageService.getFromStorage).toBeDefined();
@@ -36,7 +22,12 @@ describe('Chrome Storage Service', function () {
     });
 
     it("should be able to push a single item to storage", function () {
-
+        spyOn(chromeStorageService, "pushToStorage").and.callThrough();
+        promise = chromeStorageService.pushToStorage({name: 'git'});
+        expect(chromeStorageService.pushToStorage).toHaveBeenCalledWith({name : 'git'});
+        promise.then(function(value){
+            expect(value).toEqual("Success pushing sheet git");
+        });
     });
 
 });
