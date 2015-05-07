@@ -5,12 +5,14 @@
 
 var ownsheetApp = angular.module("ownsheetApp");
 
-ownsheetApp.controller('popupController', ["$scope", "chromeStorageService", function ($scope, chromeStorageService){
-
-    var sheets = chromeStorageService.getFromStorage(null);
-    if(!sheets){
-        $scope.emptyMessage = "No sheets added yet."
-    }
-    else $scope.sheets = [sheets];
+ownsheetApp.controller('popupController', ["$scope", "chromeStorageService", function ($scope, chromeStorageService) {
+    chromeStorageService.getFromStorage(null).then(function (value) {
+        if (!value) {
+            $scope.emptyMessage = "No sheets added yet."
+        }
+        else {
+            $scope.sheets = [value];
+        }
+    });
 }]);
 

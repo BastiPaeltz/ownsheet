@@ -9,12 +9,14 @@ var ownsheetApp = angular.module("ownsheetApp");
 ownsheetApp.service('chromeStorageService', function ($q) {
 
     var storage = chrome.storage.local;
+
     this.pushToStorage = function (sheet) {
         var deferred = $q.defer();
         storage.set(sheet, function () {
             if (chrome.runtime.LastError) {
                 deferred.resolve("Error pushing sheet. " + sheet.name);
             } else {
+                console.log(1);
                 deferred.resolve("Success pushing sheet " + sheet.name);
             }
         });
@@ -24,41 +26,40 @@ ownsheetApp.service('chromeStorageService', function ($q) {
 
     this.getFromStorage = function (sheet) {
 
-        var result;
+        var deferred = $q.defer();
         if (sheet) {
             storage.get(sheet.name, function (item) {
                 if (chrome.runtime.LastError) {
-                    result = "Error getting sheet " + sheet.name;
+                    deferred.resolve("Error getting sheet " + sheet.name);
                 } else {
-                    result = item;
+                    deferred.resolve(item);
                 }
             });
         }
         else {
             storage.get(null, function (items) {
                 if (chrome.runtime.LastError) {
-                    result = "Error getting all sheets";
+                    deferred.resolve("Error getting all sheets");
                 } else {
-                    result = items;
+                    deferred.resolve(items);
                 }
             });
         }
-
-        return result;
+        return deferred.promise;
     };
 
 
     this.removeFromStorage = function (sheet) {
 
-        var result;
+        var deferred = q.defer();
         storage.remove(sheet.name, function () {
             if (chrome.runtime.LastError) {
-                result = "Error removing " + sheet.name;
+                deferred.resolve("Error removing " + sheet.name);
             } else {
-                result = "Removed " + sheet.name;
+                deferred.resolve("Removed " + sheet.name);
             }
         });
-        return result;
+        return deferred.promise;
     };
 
 });
