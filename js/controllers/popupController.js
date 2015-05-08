@@ -11,8 +11,16 @@ ownsheetApp.controller('popupController', ["$scope", "chromeStorageService", fun
             $scope.emptyMessage = "No sheets added yet."
         }
         else {
-            $scope.sheets = [value];
+            $scope.sheets = [];
+            for (var sheet in value){
+                $scope.sheets.push(value[sheet]);
+            }
         }
     });
+
+    $scope.newSheet = function(){
+
+    }
+
 }]);
 

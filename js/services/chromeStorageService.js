@@ -41,6 +41,7 @@ ownsheetApp.service('chromeStorageService', function ($q) {
                 if (chrome.runtime.LastError) {
                     deferred.resolve("Error getting all sheets");
                 } else {
+
                     deferred.resolve(items);
                 }
             });
