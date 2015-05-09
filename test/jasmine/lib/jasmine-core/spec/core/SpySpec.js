@@ -22,7 +22,7 @@ describe('Spies', function () {
       }).toThrowError("Jasmine spies would overwrite the 'and' and 'calls' properties on the object being spied upon");
     });
 
-    it("adds a spyStrategy and callTracker to the spy", function() {
+    it("adds a spyStrategy and callTracker to the storageSpy", function() {
       var spy = j$.createSpy(TestClass.prototype, TestClass.prototype.someFunction);
 
       expect(spy.and).toEqual(jasmine.any(j$.SpyStrategy));
@@ -60,7 +60,7 @@ describe('Spies', function () {
   });
 
   describe("createSpyObj", function() {
-    it("should create an object with a bunch of spy methods when you call jasmine.createSpyObj()", function() {
+    it("should create an object with a bunch of storageSpy methods when you call jasmine.createSpyObj()", function() {
       var spyObj = j$.createSpyObj('BaseName', ['method1', 'method2']);
 
       expect(spyObj).toEqual({ method1: jasmine.any(Function), method2: jasmine.any(Function)});

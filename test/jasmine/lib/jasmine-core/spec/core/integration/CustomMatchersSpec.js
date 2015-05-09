@@ -102,7 +102,7 @@ describe("Custom Matchers (Integration)", function() {
   });
 
   it("passes the expected and actual arguments to the comparison function", function(done) {
-    var argumentSpy = jasmine.createSpy("argument spy").and.returnValue({ pass: true });
+    var argumentSpy = jasmine.createSpy("argument storageSpy").and.returnValue({ pass: true });
 
     env.it('spec with an expectation', function () {
       env.addMatchers({
@@ -128,7 +128,7 @@ describe("Custom Matchers (Integration)", function() {
 
   it("passes the jasmine utility and current equality matchers to the expectation factory", function(done) {
     var matcherFactory = function() { return { compare: function() { return {pass: true}; }}; },
-        argumentSpy = jasmine.createSpy("argument spy").and.returnValue(matcherFactory),
+        argumentSpy = jasmine.createSpy("argument storageSpy").and.returnValue(matcherFactory),
         customEqualityFn = function() { return true; };
 
 

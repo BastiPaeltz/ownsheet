@@ -14,7 +14,7 @@ describe("Timer", function() {
   describe("when date is stubbed, perhaps by other testing helpers", function() {
     var origDate = Date;
     beforeEach(function() {
-      Date = jasmine.createSpy('date spy');
+      Date = jasmine.createSpy('date storageSpy');
     });
 
     afterEach(function() {

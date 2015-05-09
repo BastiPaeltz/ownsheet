@@ -16,7 +16,7 @@ ownsheetApp.service('mdParserService', function () {
             textToParse = textToParse.replace(/\<[^/]*?(h1).*?\>/g, "<$1 class=\"hidden\">");
         }*/
 
-        var customRenderer = new marked.Renderer();
+       /* var customRenderer = new marked.Renderer();
         customRenderer.heading = function (text, level) {
             if (level === 1) {
                 return '\<h1 class\=\"hideH1\"\>' + text + '\<\/h1\>';
@@ -31,12 +31,12 @@ ownsheetApp.service('mdParserService', function () {
             renderer: customRenderer,
             gfm: true,
             tables: true,
-            breaks: false,
+            breaks: true,
             pedantic: false,
-            sanitize: true,
+            sanitize: false,
             smartLists: true,
             smartypants: false
-        });
+        });*/
         return marked(textToParse);
     }
 });

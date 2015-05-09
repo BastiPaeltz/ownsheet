@@ -6,11 +6,13 @@
  *
  * Created by sebastian on 5/3/15.
  */
+"use strict";
 
 var ownsheetApp = angular.module("ownsheetApp");
 
-ownsheetApp.controller('editController', ["$scope", "$routeParams", "mdParserService", "localStorageService",
-    function ($scope, $routeParams, mdParserService, localStorageService) {
+ownsheetApp.controller('editController', ["$scope", "$routeParams", "mdParserService",
+    "localStorageService", "$window",
+    function ($scope, $routeParams, mdParserService, localStorageService, $window) {
         var sheetContent;
 
 
@@ -19,14 +21,14 @@ ownsheetApp.controller('editController', ["$scope", "$routeParams", "mdParserSer
         $scope.sheet = {};
         if (sheetName) {
             sheetContent = localStorageService.get(sheetName);
-            $scope.sheet.name=sheetName;
-        }else{
-            $scope.sheet.name="Add new sheet.";
+            $scope.sheet.name = sheetName;
+        } else {
+            $scope.sheet.name = "Add new sheet";
         }
 
-        if (sheetContent){
+        if (sheetContent) {
             $scope.content = sheetContent;
-        }else {
+        } else {
             $scope.content = "# ownsheet ignores these headings\n\
 \n\
 this text will be ignored\n\
@@ -49,9 +51,10 @@ this text will be content of a box\n\
 ### ownsheet shines when it comes to displaying markdown not so much when it comes to editing it"
         }
 
-        this.submit = function(){
-            var parsedMarkdown = mdParserService.parse($scope.content);
-            localStorageService.set($scope.sheet.name, parsedMarkdown);
+        this.submit = function () {
+            localStorageService.set($scope.sheet.name, $scope.content);
+            chromeStorageService.pushToStorage($scope.sheet.name, $scope.content);
+            $window.open('main.html#/view/'+$scope.sheet.name);
         }
-}]);
+    }]);
 

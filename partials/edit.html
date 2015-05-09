@@ -1,12 +1,12 @@
-
-
 <div ng-controller="editController as edit">
 
     <h1>Edit your sheet</h1>
+
     <h3>{{sheet.name}}</h3>
+
     <div class="container-fluid">
         <textarea class="form-control" ng-model="content" type="text" rows="25">
-{{content}}
+            {{content}}
         </textarea>
 
         <button ng-click="edit.submit()" class="btn btn-success btn-lg">Submit</button>

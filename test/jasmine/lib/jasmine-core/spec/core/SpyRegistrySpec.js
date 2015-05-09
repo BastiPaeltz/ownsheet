@@ -37,7 +37,7 @@ describe("SpyRegistry", function() {
       }).toThrowError(/has already been spied upon/);
     });
 
-    it("overrides the method on the object and returns the spy", function() {
+    it("overrides the method on the object and returns the storageSpy", function() {
       var originalFunctionWasCalled = false,
         spyRegistry = new j$.SpyRegistry(),
         subject = { spiedFunc: function() { originalFunctionWasCalled = true; } };

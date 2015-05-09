@@ -46,7 +46,7 @@ describe("QueueRunner", function() {
     });
 
     it("supports asynchronous functions, only advancing to next function after a done() callback", function() {
-      //TODO: it would be nice if spy arity could match the fake, so we could do something like:
+      //TODO: it would be nice if storageSpy arity could match the fake, so we could do something like:
       //createSpy('asyncfn').and.callFake(function(done) {});
 
       var onComplete = jasmine.createSpy('onComplete'),

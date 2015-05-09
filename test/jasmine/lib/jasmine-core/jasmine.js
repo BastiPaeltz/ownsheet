@@ -1597,7 +1597,7 @@ getJasmineRequireObj().pp = function(j$) {
       } else if (typeof value === 'string') {
         this.emitString(value);
       } else if (j$.isSpy(value)) {
-        this.emitScalar('spy on ' + value.and.identity());
+        this.emitScalar('storageSpy on ' + value.and.identity());
       } else if (value instanceof RegExp) {
         this.emitScalar(value.toString());
       } else if (typeof value === 'function') {
@@ -1884,7 +1884,7 @@ getJasmineRequireObj().SpyRegistry = function(j$) {
 
     this.spyOn = function(obj, methodName) {
       if (j$.util.isUndefined(obj)) {
-        throw new Error('spyOn could not find an object to spy upon for ' + methodName + '()');
+        throw new Error('spyOn could not find an object to storageSpy upon for ' + methodName + '()');
       }
 
       if (j$.util.isUndefined(methodName)) {
@@ -1896,7 +1896,7 @@ getJasmineRequireObj().SpyRegistry = function(j$) {
       }
 
       if (obj[methodName] && j$.isSpy(obj[methodName])) {
-        //TODO?: should this return the current spy? Downside: may cause user confusion about spy state
+        //TODO?: should this return the current storageSpy? Downside: may cause user confusion about storageSpy state
         throw new Error(methodName + ' has already been spied upon');
       }
 
@@ -2955,7 +2955,7 @@ getJasmineRequireObj().toHaveBeenCalled = function(j$) {
         var result = {};
 
         if (!j$.isSpy(actual)) {
-          throw new Error('Expected a spy, but got ' + j$.pp(actual) + '.');
+          throw new Error('Expected a storageSpy, but got ' + j$.pp(actual) + '.');
         }
 
         if (arguments.length > 1) {
@@ -2965,8 +2965,8 @@ getJasmineRequireObj().toHaveBeenCalled = function(j$) {
         result.pass = actual.calls.any();
 
         result.message = result.pass ?
-          'Expected spy ' + actual.and.identity() + ' not to have been called.' :
-          'Expected spy ' + actual.and.identity() + ' to have been called.';
+          'Expected storageSpy ' + actual.and.identity() + ' not to have been called.' :
+          'Expected storageSpy ' + actual.and.identity() + ' to have been called.';
 
         return result;
       }
@@ -2987,19 +2987,19 @@ getJasmineRequireObj().toHaveBeenCalledWith = function(j$) {
           result = { pass: false };
 
         if (!j$.isSpy(actual)) {
-          throw new Error('Expected a spy, but got ' + j$.pp(actual) + '.');
+          throw new Error('Expected a storageSpy, but got ' + j$.pp(actual) + '.');
         }
 
         if (!actual.calls.any()) {
-          result.message = function() { return 'Expected spy ' + actual.and.identity() + ' to have been called with ' + j$.pp(expectedArgs) + ' but it was never called.'; };
+          result.message = function() { return 'Expected storageSpy ' + actual.and.identity() + ' to have been called with ' + j$.pp(expectedArgs) + ' but it was never called.'; };
           return result;
         }
 
         if (util.contains(actual.calls.allArgs(), expectedArgs, customEqualityTesters)) {
           result.pass = true;
-          result.message = function() { return 'Expected spy ' + actual.and.identity() + ' not to have been called with ' + j$.pp(expectedArgs) + ' but it was.'; };
+          result.message = function() { return 'Expected storageSpy ' + actual.and.identity() + ' not to have been called with ' + j$.pp(expectedArgs) + ' but it was.'; };
         } else {
-          result.message = function() { return 'Expected spy ' + actual.and.identity() + ' to have been called with ' + j$.pp(expectedArgs) + ' but actual calls were ' + j$.pp(actual.calls.allArgs()).replace(/^\[ | \]$/g, '') + '.'; };
+          result.message = function() { return 'Expected storageSpy ' + actual.and.identity() + ' to have been called with ' + j$.pp(expectedArgs) + ' but actual calls were ' + j$.pp(actual.calls.allArgs()).replace(/^\[ | \]$/g, '') + '.'; };
         }
 
         return result;

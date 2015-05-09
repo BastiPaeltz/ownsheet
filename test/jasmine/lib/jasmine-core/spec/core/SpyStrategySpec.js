@@ -110,7 +110,7 @@ describe("SpyStrategy", function() {
     expect(returnValue).toEqual(void 0);
   });
 
-  it("returns the spy after changing the strategy", function(){
+  it("returns the storageSpy after changing the strategy", function(){
     var spy = {},
         spyFn = jasmine.createSpy('spyFn').and.returnValue(spy),
         spyStrategy = new j$.SpyStrategy({getSpy: spyFn});

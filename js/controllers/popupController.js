@@ -10,7 +10,6 @@ var ownsheetApp = angular.module("ownsheetApp");
 ownsheetApp.controller('popupController', ["$scope", "$window", "localStorageService", "chromeStorageService",
     function ($scope, $window, localStorageService, chromeStorageService) {
 
-        $scope.emptyMessage;
         chromeStorageService.getFromStorage(null).then(function (value) {
             if (!value) {
                 $scope.emptyMessage = "No sheets added yet."
@@ -35,7 +34,10 @@ ownsheetApp.controller('popupController', ["$scope", "$window", "localStorageSer
         };
 
         this.removeSheet = function (sheetName) {
-            console.log("remove" + sheetName);
+            // TODO: question - "are you sure" before removing
+            localStorageService.remove(sheetName);
+            chromeStorageService.removeFromStorage(sheetName);
+            // TODO: launch some animation
         };
 
         this.goToSheet = function (sheetName) {

@@ -1464,7 +1464,7 @@ describe("Env integration", function() {
     env.execute();
   });
 
-  it('throws an exception if you try to create a spy outside of a runnable', function (done) {
+  it('throws an exception if you try to create a storageSpy outside of a runnable', function (done) {
     var env = new j$.Env(),
       obj = {fn: function () {}},
       exception;

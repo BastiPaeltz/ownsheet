@@ -159,7 +159,7 @@ describe("j$.pp", function () {
     expect(j$.pp(now)).toEqual("Date(" + now.toString() + ")");
   });
 
-  it("should stringify spy objects properly", function() {
+  it("should stringify storageSpy objects properly", function() {
     var TestObject = {
           someFunction: function() {}
         },
@@ -168,9 +168,9 @@ describe("j$.pp", function () {
     var spyRegistry = new j$.SpyRegistry({currentSpies: function() {return [];}});
 
     spyRegistry.spyOn(TestObject, 'someFunction');
-    expect(j$.pp(TestObject.someFunction)).toEqual("spy on someFunction");
+    expect(j$.pp(TestObject.someFunction)).toEqual("storageSpy on someFunction");
 
-    expect(j$.pp(j$.createSpy("something"))).toEqual("spy on something");
+    expect(j$.pp(j$.createSpy("something"))).toEqual("storageSpy on something");
   });
 
   it("should stringify objects that implement jasmineToString", function () {

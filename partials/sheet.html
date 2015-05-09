@@ -1,0 +1,572 @@
+<head>
+
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <script src="../lib/highlight.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+</head>
+
+<h1 id="angularjs">AngularJS</h1>
+<ul>
+    <li><code>ng-app</code> defines and links an Angular app to an HTML element</li>
+    <li><code>ng-model</code> binds values of Angular application data to HTML input controls</li>
+    <li><code>ng-bind</code> binds Angular application data to HTML tags</li>
+</ul><h2 id="mvc">MVC</h2>
+<ul>
+    <li><p>Model View Controller pattern</p>
+        <ul>
+            <li>Model - responsible for <strong>maintaining data</strong> - responds to request from view and to
+                instructions from controller to <strong>update itself</strong></li>
+            <li>View - responsible for <strong>displaying data</strong> - triggered by controller decision to <strong>present
+                data</strong></li>
+            <li>Controller - controls interactions between Model and View - responds to <strong>user input</strong> and
+                performs <strong>interactions on model</strong></li>
+        </ul>
+    </li>
+    <li><p><strong>isolates logic from interface layer</strong></p></li>
+</ul><p><em>MVC is popular because it isolates the application logic from the user interface layer and supports
+    separation of concerns. The controller receives all requests for the application and then works with the model to
+    prepare any data needed by the view. The view then uses the data prepared by the controller to generate a final
+    presentable response.</em></p><h2 id="best-practices">best practices</h2>
+<ul>
+    <li>only directives should access DOM</li>
+    <li></li>
+</ul><h2 id="data-binding">Data binding</h2>
+<ul>
+    <li>Two way data binding</li>
+    <li>Template compiled in browser --&gt; produces live view</li>
+    <li><strong>changes to view are immediately reflected in model and any changes in the model are propagated to the
+        view immediately</strong></li>
+    <li>view just projection of model
+        <ul>
+            <li>controller is seperated, it only controlls model</li>
+        </ul>
+    </li>
+</ul><h2 id="controllers">controllers</h2>
+<ul>
+    <li>used to augment the <strong>scope</strong></li>
+    <li><p>attachted to DOM via <code>ng-controller</code> directive</p>
+        <ul>
+            <li>new child scope is created as new <strong>injectable</strong> parameter to controller&#39;s constructor
+                function as <code>$scope</code></li>
+        </ul>
+    </li>
+    <li><p><strong>Do use controllers for</strong> - setting up initial state and adding behaviour to the
+        <code>$scope</code> object</p></li>
+    <li><strong>a countroller shouldn&#39;t do too much</strong></li>
+    <li><strong>Do not use controllers to</strong> :
+        <ul>
+            <li>Manipulate DOM - controllers should only contain buisness logic</li>
+            <li>format input - use <strong>angular form controls</strong></li>
+            <li>filter input - use <strong>angular filters</strong></li>
+            <li>share code across instances - use <strong>angular services</strong></li>
+            <li>manage life cycle of other components - for example to create service instances</li>
+        </ul>
+    </li>
+</ul><h3 id="setting-up-initial-state-of-scope">Setting up initial state of scope</h3>
+<ul>
+    <li>set up state by attaching properties to <code>$scope</code> object. Properties contains view model</li>
+    <li>all <code>$scope</code> properties will be available to template at the point where <strong>controller is
+        registered in DOM</strong>```javascript
+    </li>
+</ul><p>var myApp = angular.module(&#39;myApp&#39;,[]);</p><p>myApp.controller(&#39;GreetingController&#39;, [&#39;$scope&#39;,
+    function($scope) { $scope.greeting = &#39;Hola!&#39;; // Add greeting property to scope}]);</p><p>//A corresponding
+    HTML div would be:</p>
+<div ng-controller="GreetingController"> {{ greeting }}</div>
+<pre><code>### Adding behaviour to a scope object* in order to react to events or do computation, we must provide
+    **behaviour** to the scope * **attach methods to `$scope` object*** these methods can then be **called from the
+    view** via angular **expressions** and ng event handler directives (e.g. `ngClick`)```javascriptvar myApp =
+    angular.module(&#39;myApp&#39;,[]);//add double method to scope which doubles the input number.myApp.controller(&#39;DoubleController&#39;,
+    [&#39;$scope&#39;, function($scope) { $scope.double = function(value) { return value * 2; }; // attach behaviour to
+    scope //methods can also have arguments $scope.multiply = function(multiplier) { $scope.number = number*multiplier;
+    };}]);//A corresponding HTML div would be:&lt;div ng-controller=&quot;DoubleController&quot;&gt; &lt;button
+    ng-click=&quot;multiply(multiplier)&quot;&gt;Multiply&lt;/button&gt; &lt;p&gt;Your number is {{number}}&lt;/p&gt;
+    Two times &lt;input ng-model=&quot;num&quot;&gt; equals {{ double(num) }}&lt;/div&gt;</code></pre><h3
+        id="scope-inheritance">Scope Inheritance</h3>
+<ul>
+    <li>always existent scope = <strong>root scope</strong></li>
+    <li>it is common to attach controllers at <strong>different levels of the DOM</strong></li>
+    <li>every controller creates it&#39;s own scope --&gt; <strong>result: bunch of inherited scopes
+        (hierarchy)</strong></li>
+    <li>children have access to scope of scopes, which are higher in hierarchy</li>
+</ul>
+<pre><code class="lang-javascript">var myApp = angular.module(&#39;scopeInheritance&#39;, []);myApp.controller(&#39;MainController&#39;,
+    [&#39;$scope&#39;, function($scope) { $scope.timeOfDay = &#39;morning&#39;; $scope.name = &#39;Nikki&#39;;}]);myApp.controller(&#39;ChildController&#39;,
+    [&#39;$scope&#39;, function($scope) { // timeOfDay is inherited from MainController $scope.name = &#39;Mattie&#39;;}]);myApp.controller(&#39;GrandChildController&#39;,
+    [&#39;$scope&#39;, function($scope) { $scope.timeOfDay = &#39;evening&#39;; // inherited property can be redefined
+    by children $scope.name = &#39;Gingerbread Baby&#39;;}]);</code></pre><h3 id="testing-controllers">Testing
+    controllers</h3>
+<ul>
+    <li>one of best conventions = <strong>inject root scope</strong> (<code>$rootScope</code>) and
+        <code>$controller</code></li>
+    <li>Jasmine example:</li>
+</ul>
+<pre><code class="lang-javascript">describe(&#39;myController function&#39;, function() { describe(&#39;myController&#39;,
+    function() { var $scope; beforeEach(module(&#39;myApp&#39;)); beforeEach(inject(function($rootScope, $controller) {
+    $scope = $rootScope.$new(); $controller(&#39;MyController&#39;, {$scope: $scope}); })); it(&#39;should create &quot;spices&quot;
+    model with 3 spices&#39;, function() { expect($scope.spices.length).toBe(3); }); it(&#39;should set the default
+    value of spice&#39;, function() { expect($scope.spice).toBe(&#39;habanero&#39;); }); });});</code></pre>
+<ul>
+    <li>Example for nested controllers - <strong>recreate hierarchy like in DOM</strong></li>
+</ul>
+<pre><code class="lang-javascript">describe(&#39;state&#39;, function() { var mainScope, childScope, grandChildScope;
+    beforeEach(module(&#39;myApp&#39;)); beforeEach(inject(function($rootScope, $controller) { mainScope =
+    $rootScope.$new(); $controller(&#39;MainController&#39;, {$scope: mainScope}); childScope = mainScope.$new();
+    $controller(&#39;ChildController&#39;, {$scope: childScope}); grandChildScope = childScope.$new(); $controller(&#39;GrandChildController&#39;,
+    {$scope: grandChildScope}); })); it(&#39;should have over and selected&#39;, function() {
+    expect(mainScope.timeOfDay).toBe(&#39;morning&#39;); expect(mainScope.name).toBe(&#39;Nikki&#39;);
+    expect(childScope.timeOfDay).toBe(&#39;morning&#39;); expect(childScope.name).toBe(&#39;Mattie&#39;);
+    expect(grandChildScope.timeOfDay).toBe(&#39;evening&#39;); expect(grandChildScope.name).toBe(&#39;Gingerbread Baby&#39;);
+    });});</code></pre><h2 id="services">Services</h2>
+<ul>
+    <li>substitutable objects wired together using <strong>dependency injection</strong></li>
+    <li><strong>use services to organize and share code across app</strong></li>
+    <li><strong>Lazily instantiated</strong> - only when app component depends on it</li>
+    <li><strong>Singletons</strong> - Each component dependent on a service gets a reference to the single instance
+        generated by the service factory
+    </li>
+</ul><h2 id="using-a-service">Using a service</h2>
+<ul>
+    <li><strong>add as dependency for component</strong> (controller, directive, service or filter) that depends on this
+        service
+    </li>
+    <li>example:</li>
+</ul>
+<pre><code class="lang-javascript">angular.module(&#39;myServiceModule&#39;, []) // notify is added as dependency in the
+    controller constructor.controller(&#39;MyController&#39;, [&#39;$scope&#39;,&#39;notify&#39;, function ($scope,
+    notify) { $scope.callNotify = function(msg) { notify(msg); }; }]) // service gets initialized with factory keyword,
+    it depends on the builtin service $window .factory(&#39;notify&#39;, [&#39;$window&#39;, function(win) { var msgs =
+    []; return function(msg) { msgs.push(msg); if (msgs.length == 3) { win.alert(msgs.join(&quot;\n&quot;)); msgs = [];
+    } }; }]);</code></pre><h3 id="creating-services">Creating services</h3>
+<ul>
+    <li>create own services by registering <strong>name and factory function</strong> inside angular module</li>
+    <li><strong>factory function</strong> creates single object that <strong>represents service</strong> to the rest of
+        the application
+    </li>
+    <li>the returned object or function is <strong>dependency injected</strong> into component when it (component)
+        specifies a dependency on the service
+    </li>
+</ul><h3 id="registering-services">Registering services</h3>
+<ul>
+    <li>registered via <strong>module API</strong></li>
+    <li>use <strong>module factory API</strong> to register service</li>
+</ul>
+<pre><code class="lang-javascript">var myModule = angular.module(&#39;myModule&#39;, []);myModule.factory(&#39;serviceId&#39;,
+    function() { var shinyNewServiceInstance; // factory function body that constructs shinyNewServiceInstance return
+    shinyNewServiceInstance;});</code></pre>
+<ul>
+    <li>Note: you create a <strong>factory function, not a service instance.</strong> (like a constructor, that only
+        creates instance when called)
+    </li>
+</ul><h3 id="dependencies">Dependencies</h3>
+<ul>
+    <li>services can have own dependencies (like seen in above example)</li>
+    <li>declared in factories <strong>function signature</strong></li>
+    <li>also possible to register service with <code>$provide</code></li>
+</ul>
+<pre><code class="lang-javascript">angular.module(&#39;myModule&#39;, []).config([&#39;$provide&#39;, function($provide)
+    { $provide.factory(&#39;serviceId&#39;, function() { var shinyNewServiceInstance; // factory function body that
+    constructs shinyNewServiceInstance return shinyNewServiceInstance; });}]);</code></pre><h3 id="unit-testing">Unit
+    Testing</h3>
+<ul>
+    <li>now it gets crazy</li>
+</ul>
+<pre><code class="lang-javascript">var mock, notify; //declare mock and notifybeforeEach(module(&#39;myServiceModule&#39;));beforeEach(function()
+    { // file variable mock and add a jasmine spy for the property &#39;alert&#39; which will later be called by notify
+    mock = {alert: jasmine.createSpy()}; // mock imitates the window service this time module(function($provide) {
+    $provide.value(&#39;$window&#39;, mock); }); // fill notify with notify-service inject(function($injector) { notify
+    = $injector.get(&#39;notify&#39;); });});it(&#39;should not alert first two notifications&#39;, function() { notify(&#39;one&#39;);
+    notify(&#39;two&#39;); // call to mock only on 3rd time expect(mock.alert).not.toHaveBeenCalled();});it(&#39;should
+    alert all after third notification&#39;, function() { notify(&#39;one&#39;); notify(&#39;two&#39;); notify(&#39;three&#39;);
+    // call happened expect(mock.alert).toHaveBeenCalledWith(&quot;one\ntwo\nthree&quot;);});it(&#39;should clear
+    messages after alert&#39;, function() { notify(&#39;one&#39;); notify(&#39;two&#39;); notify(&#39;third&#39;);
+    notify(&#39;more&#39;); notify(&#39;two&#39;); notify(&#39;third&#39;); // 6 times notify = 2 times called and most
+    recent call was with &#39;more two third&#39; expect(mock.alert.callCount).toEqual(2);
+    expect(mock.alert.mostRecentCall.args).toEqual([&quot;more\ntwo\nthird&quot;]);});</code></pre><h2 id="scopes">
+    Scopes</h2>
+<ul>
+    <li>scope is an <strong>object</strong> that refers to <strong>application model</strong></li>
+    <li>execution context for <strong>expressions</strong></li>
+    <li>arranged <strong>hierarchical</strong>, which mimic DOM structure</li>
+    <li>scopes can <strong>watch expressions</strong> and <strong>propagate events</strong></li>
+</ul><h3 id="scope-characteristics">scope characteristics</h3>
+<ul>
+    <li>scopes provide APIs to observe <strong>model mutations</strong> (<code>$watch</code>)</li>
+    <li>scopes provide APIs to <strong>propagate model changes</strong> through system into view from outside the
+        angular realm (controllers, services, event handlers) - (<code>$apply</code>)
+    </li>
+    <li>scopes can be nested
+        <ul>
+            <li>nested scopes are either <strong>child scopes</strong> or <strong>isolate scopes</strong></li>
+            <li>child scope <strong>inherits</strong> properties from parent scope</li>
+            <li>isolate scope does <strong>not</strong></li>
+        </ul>
+    </li>
+    <li>scopes provide context against which <strong>expressions are evaluated</strong></li>
+    <li>e.g. <code>{{username}}</code> is meaningless unless evaluated against specific scope which defines <code>Ã¹sername</code>
+        property
+    </li>
+</ul><h3 id="scope-as-data-model">Scope as data model</h3>
+<ul>
+    <li>scope is <strong>glue between controller and view</strong></li>
+    <li><strong>You can think of the scope and its properties as the data which is used to render the view.</strong>
+    </li>
+    <li>testing excerpt which uses example from <a href="https://docs.angularjs.org/guide/scope">Angular scope guide</a>
+    </li>
+</ul>
+<pre><code class="lang-javascript">it(&#39;should say hello&#39;, function() { var scopeMock = {}; var cntl = new
+    MyController(scopeMock); // Assert that username is pre-filled expect(scopeMock.username).toEqual(&#39;World&#39;);
+    // Assert that we read new username and greet scopeMock.username = &#39;angular&#39;; scopeMock.sayHello();
+    expect(scopeMock.greeting).toEqual(&#39;Hello angular!&#39;);});</code></pre><h3 id="scope-hierarchies">Scope
+    hierarchies</h3>
+<ul>
+    <li>each angular application has exactly one <strong>rootScope</strong></li>
+    <li>Angular searches expressions first into local scope and then works its way up the hierarchy (e.g. childScope -&gt;
+        ParentScope -&gt; rootScope)
+    </li>
+</ul><h3 id="scope-event-propagation">scope event propagation</h3>
+<ul>
+    <li>event can be <strong>broadcasted to scope children</strong> or <strong>emitted to scope parents</strong></li>
+    <li>both actions also propagate the <strong>callers scope</strong></li>
+</ul><h3 id="scope-life-cycle">scope life cycle</h3>
+<ul>
+    <li>to properly process model modification the execution has to enter Angular execution context using the <code>$apply</code>
+        method.
+    </li>
+    <li>after evaluating the expression, <code>$apply</code> performs a <code>$digest</code></li>
+    <li><p>in digest phase, the scope examines all <code>$watch</code> expressions and compares them with previous
+        values</p></li>
+    <li><p>creation</p>
+        <ul>
+            <li>root scope is created during application bootstrap by <code>$injector</code></li>
+        </ul>
+    </li>
+    <li>watcher registration
+        <ul>
+            <li>directives register watcher on scopes</li>
+        </ul>
+    </li>
+    <li>model mutation
+        <ul>
+            <li>For mutations to be properly observed, you should make them only within the <code>scope.$apply()</code>.
+            </li>
+        </ul>
+    </li>
+    <li>... nachlesen in URL oben ... viel stuff</li>
+</ul><h3 id="scopes-and-directives">Scopes and directives</h3>
+<ul>
+    <li><p><em>Observing directives, such as double-curly expressions {{expression}}, register listeners using the
+        $watch() method. This type of directive needs to be notified whenever the expression changes so that it can
+        update the view.</em></p></li>
+    <li><p><em>Listener directives, such as ng-click, register a listener with the DOM. When the DOM listener fires, the
+        directive executes the associated expression and updates the view using the $apply() method.</em></p></li>
+</ul><h3 id="controllers-and-scopes">controllers and scopes</h3>
+<ul>
+    <li><p>Scopes and controllers interact with each other in the following situations:</p></li>
+    <li><p>Controllers use scopes to expose controller methods to templates (see ng-controller).</p></li>
+    <li><p>Controllers define methods (behavior) that can mutate the model (properties on the scope).</p></li>
+    <li><p>Controllers may register watches on the model. These watches execute immediately after the controller
+        behavior executes.</p></li>
+</ul><h2 id="dependency-injection">Dependency injection</h2>
+<ul>
+    <li><p>can be used when defining components or when providing <code>run</code> or <code>config</code> blocks for a
+        module</p></li>
+    <li><p><em>Components such as <strong>services, directives, filters, and animations</strong> are defined by an
+        <strong>injectable factory method or constructor function</strong>. These components can be injected with &quot;service&quot;
+        and &quot;value&quot; components as dependencies.</em></p></li>
+    <li><p><em>Controllers are defined by a <strong>constructor function, which can be injected with any of the &quot;service&quot;
+        and &quot;value&quot; components as dependencies</strong>, but they can also be provided with special
+        dependencies. See Controllers below for a list of these special dependencies.</em></p></li>
+    <li><p><em>The run method <strong>accepts a function, which can be injected with &quot;service&quot;, &quot;value&quot;
+        and &quot;constant&quot; components as dependencies</strong>. Note that you cannot inject &quot;providers&quot;
+        into run blocks.</em></p></li>
+    <li><p><em>The config method <strong>accepts a function, which can be injected with &quot;provider&quot; and &quot;constant&quot;
+        components as dependencies</strong>. Note that you cannot inject &quot;service&quot; or &quot;value&quot;
+        components into configuration.</em></p></li>
+</ul><h3 id="factory-methods">Factory methods</h3>
+<ul>
+    <li><strong>define directives, services or filters with factory function</strong></li>
+    <li>recommended way of declaring factories</li>
+</ul>
+<pre><code class="lang-javascript">angular.module(&#39;myModule&#39;, []).factory(&#39;serviceId&#39;, [&#39;depService&#39;,
+    function(depService) { // ...}]).directive(&#39;directiveName&#39;, [&#39;depService&#39;, function(depService) { //
+    ...}]).filter(&#39;filterName&#39;, [&#39;depService&#39;, function(depService) { // ...}]);</code></pre><h3
+        id="module-methods">Module methods</h3>
+<ul>
+    <li>we can specify functions to run at <strong>config or run time</strong> for a module by calling
+        <code>config</code> or <code>run</code>. They are dependency injectable too.
+    </li>
+</ul>
+<pre><code class="lang-javascript">angular.module(&#39;myModule&#39;, []).config([&#39;depProvider&#39;,
+    function(depProvider) { // ...}]).run([&#39;depService&#39;, function(depService) { // ...}]);</code></pre><h3
+        id="controllers">Controllers</h3>
+<ul>
+    <li>Unlike services, there can be <strong>many instances of the same type of controller</strong> in an application.
+    </li>
+    <li><p>additional dependencies for controllers: <code>$scope</code></p>
+        <ul>
+            <li>other components (like services) only have access to <code>$rootScope</code></li>
+            <li><em>resolves: If a controller is instantiated as part of a route, then any values that are resolved as
+                part of the route are made available for injection into the controller.</em></li>
+        </ul>
+    </li>
+    <li><p>recommended way of declaring Controllers is using the array notation:</p></li>
+</ul>
+<pre><code class="lang-javascript">someModule.controller(&#39;MyController&#39;, [&#39;$scope&#39;, &#39;dep1&#39;,
+    &#39;dep2&#39;, function($scope, dep1, dep2) { ... $scope.aMethod = function() { ... } ...}]);</code></pre><h3
+        id="dependency-annotation">Dependency annotation</h3>
+<ul>
+    <li><p>Using the <strong>inline array annotation</strong> (preferred) or Using the <code>$inject</code> <strong>property
+        annotation</strong></p></li>
+    <li><p><code>$inject</code> property annotation</p></li>
+</ul>
+<pre><code class="lang-javascript">var MyController = function($scope, greeter) { // ...}MyController.$inject = [&#39;$scope&#39;,
+    &#39;greeter&#39;];someModule.controller(&#39;MyController&#39;, MyController);</code></pre><h3
+        id="using-strict-dependency-injection">Using strict dependency injection</h3>
+<ul>
+    <li>use <code>ng-strict-di</code> directive</li>
+    <li>use tool <strong>ng-annotate</strong></li>
+</ul><h3 id="why-dependency-injection">Why dependency injection</h3>
+<ul>
+    <li>Because it&#39;s cool</li>
+</ul><h2 id="templates">Templates</h2>
+<ul>
+    <li>written in HTML and contains <strong>angular-specific elements and attributes</strong></li>
+    <li>angular combines template with infos from <strong>controller and model</strong> to render what the user sees
+    </li>
+    <li>usable elements and attributes inside templates:
+        <ul>
+            <li><strong>directives</strong> - augments an existing DOM element</li>
+            <li><strong>(angular) markup</strong> - <code>{{}}</code> - binds expressions to elements</li>
+            <li><strong>filters</strong> - formats data for display</li>
+            <li><strong>form controls</strong> - validates user input</li>
+        </ul>
+    </li>
+    <li><em>you can display <strong>multiple views within one main page</strong> using <strong>partials</strong> â€“
+        segments of template located in <strong>separate HTML files</strong>. You can use the <strong>ngView
+            directive</strong> to load partials based on configuration passed to the <code>$route</code> service.</em>
+    </li>
+    <li>see Angular tutorial step 7 and 8</li>
+</ul><h2 id="angular-expressions">Angular Expressions</h2><p><em>Angular expressions are JavaScript-like code snippets
+    that are usually placed in bindings such as <code>{{ expression }}</code></em></p><h3
+        id="angular-expressions-vs-js-expressions">Angular expressions vs JS expressions</h3>
+<ul>
+    <li><p><strong>Context</strong>: JavaScript expressions are evaluated against the global <code>window</code>. In
+        Angular, expressions are evaluated against a <code>scope</code> object.</p></li>
+    <li><p><strong>Forgiving</strong>: In JavaScript, trying to evaluate undefined properties generates ReferenceError
+        or TypeError. In Angular, expression evaluation is forgiving to <code>undefined</code> and <code>null</code>.
+    </p></li>
+    <li><p><strong>No Control Flow Statements</strong>: You cannot use the following in an Angular expression: <em>conditionals,
+        loops, or exceptions</em>.</p></li>
+    <li><p><strong>No Function Declarations:</strong> You cannot declare functions in an Angular expression, even inside
+        ng-init directive.</p></li>
+    <li><p><strong>No RegExp Creation With Literal Notation:</strong> You cannot create regular expressions in an
+        Angular expression.</p></li>
+    <li><p><strong>No Comma And Void Operators:</strong> You cannot use , or void in an Angular expression.</p></li>
+    <li><p><strong>Filters</strong>: You can use filters within expressions to format data before displaying it.</p>
+    </li>
+</ul><h3 id="context">Context</h3>
+<ul>
+    <li>angular expressions don&#39;t have access to the global state like <code>window</code> or <code>document</code>
+        - <strong>use services like <code>$windows</code> in functions called from expressions, which provide access to
+            globals</strong></li>
+</ul><h3 id="-event">$event</h3>
+<ul>
+    <li>Directives like <code>ngClick</code> and <code>ngFocus</code> expose a <code>$event</code> object within the
+        scope of that expression.
+    </li>
+</ul><h3 id="one-time-binding">One time binding</h3>
+<ul>
+    <li>an expression starting with <code>::</code> will <strong>stop recalculating</strong> once they are stable</li>
+    <li>example : <code>&lt;p id=&quot;one-time-binding-example&quot;&gt;One time binding: {{::name}}&lt;/p&gt;</code>
+    </li>
+</ul><p><img src="http://www11.pic-upload.de/03.05.15/l6n34jfslv2.png"></p><h2 id="filters">Filters</h2>
+<ul>
+    <li>formats value of expression for <strong>display to the user</strong></li>
+    <li>can be used in <strong>view templates, controllers or services</strong></li>
+</ul><h3 id="filters-in-view-templates">filters in view templates</h3>
+<ul>
+    <li>can be <strong>applied to expressions</strong> in view templates like following
+        <ul>
+            <li><code>{{ expression | filter }}</code></li>
+            <li><em>E.g. the markup {{ 12 | currency }} formats the number 12 as a currency using the currency
+                filter.</em></li>
+        </ul>
+    </li>
+    <li>chanining possible:
+        <ul>
+            <li><code>{{ expression | filter1 | filter2 | ... }}</code></li>
+        </ul>
+    </li>
+    <li>filters <strong>may have arguments</strong>
+        <ul>
+            <li><code>{{ expression | filter:argument1:argument2:... }}</code></li>
+            <li><em>E.g. the markup {{ 1234 | number:2 }} formats the number 1234 with 2 decimal points using the number
+                filter</em></li>
+        </ul>
+    </li>
+</ul><h3 id="using-filters-in-controllers-services-and-directives">Using filters in controllers, services and
+    directives</h3>
+<ul>
+    <li>used via injecting a dependency with name <code>&lt;filterName&gt;Filter</code>, e.g. <code>numberFilter</code>
+    </li>
+    <li>the injected argument is a function that takes the <strong>value to format as first argument</strong> and
+        <strong>filter parameters from second parameter on</strong></li>
+    <li>example```javascript</li>
+</ul><p>angular.module(&#39;FilterInControllerModule&#39;, []).controller(&#39;FilterController&#39;, [&#39;filterFilter&#39;,
+    function(filterFilter) { // filterFilter is dependency injected into the FilterController this.array = [ {name:
+    &#39;Tobias&#39;}, {name: &#39;Jeff&#39;}, {name: &#39;Brian&#39;}, {name: &#39;Igor&#39;}, {name: &#39;James&#39;},
+    {name: &#39;Brad&#39;} ]; // filters array - only entries with &#39;a&#39; in it go into filteredArray
+    this.filteredArray = filterFilter(this.array, &#39;a&#39;);}]);</p>
+<pre><code>### Creating custom filters* register new **filter factory** with Module * should **return a filter function
+    which takes input as **first parameter** * example:```javascriptangular.module(&#39;myReverseFilterApp&#39;,
+    []).filter(&#39;reverse&#39;, function() { return function(input, uppercase) { input = input || &#39;&#39;; var out
+    = &quot;&quot;; for (var i = 0; i &lt; input.length; i++) { out = input.charAt(i) + out; } // conditional based on
+    optional argument if (uppercase) { out = out.toUpperCase(); } return out; };}).controller(&#39;MyController&#39;, [&#39;$scope&#39;,
+    function($scope) { $scope.greeting = &#39;hello&#39;;}]);</code></pre><h2 id="forms">Forms</h2>
+<ul>
+    <li><em>Controls (<code>input</code>, <code>select</code>, <code>textarea</code>) are ways for a user to enter data.
+        A Form is a collection of controls for the purpose of grouping related controls together.</em></li>
+    <li>client side verification of forms</li>
+</ul><h3 id="simple-forms">Simple forms</h3>
+<ul>
+    <li><strong>key directive is <code>ngModel</code> - it provides two-way data binding</strong></li>
+    <li>it <strong>synchronizes model with the view and vice versa.</strong></li>
+    <li>example:</li>
+</ul>
+<pre><code class="lang-html">&lt;div ng-controller=&quot;ExampleController&quot;&gt; &lt;form novalidate class=&quot;simple-form&quot;&gt;
+    Name: &lt;input type=&quot;text&quot; ng-model=&quot;user.name&quot; /&gt;&lt;br /&gt; E-mail: &lt;input type=&quot;email&quot;
+    ng-model=&quot;user.email&quot; /&gt;&lt;br /&gt; Gender: &lt;input type=&quot;radio&quot; ng-model=&quot;user.gender&quot;
+    value=&quot;male&quot; /&gt;male &lt;input type=&quot;radio&quot; ng-model=&quot;user.gender&quot; value=&quot;female&quot;
+    /&gt;female&lt;br /&gt; &lt;input type=&quot;button&quot; ng-click=&quot;reset()&quot; value=&quot;Reset&quot; /&gt;
+    &lt;input type=&quot;submit&quot; ng-click=&quot;update(user)&quot; value=&quot;Save&quot; /&gt; &lt;/form&gt; &lt;pre&gt;form
+    = {{user | json}}&lt;/pre&gt; &lt;pre&gt;master = {{master | json}}&lt;/pre&gt;&lt;/div&gt;&lt;script&gt;
+    angular.module(&#39;formExample&#39;, []) .controller(&#39;ExampleController&#39;, [&#39;$scope&#39;,
+    function($scope) { $scope.master = {}; $scope.update = function(user) { //copies user values from template to master
+    $scope.master = angular.copy(user); }; $scope.reset = function() { //copies master property to `user` which triggers
+    updating the view $scope.user = angular.copy($scope.master); }; $scope.reset(); }]);&lt;/script&gt;</code></pre><h3
+        id="using-css-classes">Using CSS classes</h3>
+<ul>
+    <li>for styling forms, angular provides following <strong>CSS classes</strong>:
+        <pre><code>ng-valid: the model is validng-invalid: the model is invalidng-valid-[key]: for each valid key added
+            by $setValidityng-invalid-[key]: for each invalid key added by $setValidityng-pristine: the control hasn&#39;t
+            been interacted with yetng-dirty: the control has been interacted withng-touched: the control has been
+            blurredng-untouched: the control hasn&#39;t been blurredng-pending: any $asyncValidators are
+            unfulfilled</code></pre>
+    </li>
+</ul><h3 id="binding-to-form-and-control-state">Binding to form and control state</h3>
+<pre><code class="lang-html">&lt;div ng-controller=&quot;ExampleController&quot;&gt; &lt;form name=&quot;form&quot;
+    class=&quot;css-form&quot; novalidate&gt; Name: &lt;input type=&quot;text&quot; ng-model=&quot;user.name&quot; name=&quot;uName&quot;
+    required=&quot;&quot; /&gt; &lt;br /&gt; &lt;div ng-show=&quot;form.$submitted || form.uName.$touched`&quot;&gt;
+    &lt;!-- if form got submitted, check for errors. If not, check if it got touched. If yes, check for errors --&gt; `
+    &lt;div ng-show=&quot;form.uName.$error.required&quot;&gt;Tell us your name.&lt;/div&gt; &lt;/div&gt; E-mail: &lt;input
+    type=&quot;email&quot; ng-model=&quot;user.email&quot; name=&quot;uEmail&quot; required=&quot;&quot; /&gt; &lt;br /&gt;
+    &lt;div ng-show=&quot;form.$submitted || form.uEmail.$touched&quot;&gt; &lt;span ng-show=&quot;form.uEmail.$error.required&quot;&gt;Tell
+    us your email.&lt;/span&gt; &lt;span ng-show=&quot;form.uEmail.$error.email&quot;&gt;This is not a valid email.&lt;/span&gt;
+    &lt;/div&gt; Gender: &lt;input type=&quot;radio&quot; ng-model=&quot;user.gender&quot; value=&quot;male&quot; /&gt;male
+    &lt;input type=&quot;radio&quot; ng-model=&quot;user.gender&quot; value=&quot;female&quot; /&gt;female &lt;br /&gt;
+    &lt;input type=&quot;checkbox&quot; ng-model=&quot;user.agree&quot; name=&quot;userAgree&quot; required=&quot;&quot;
+    /&gt; I agree: &lt;input ng-show=&quot;user.agree&quot; type=&quot;text&quot; ng-model=&quot;user.agreeSign&quot;
+    required=&quot;&quot; /&gt; &lt;br /&gt; &lt;div ng-show=&quot;form.$submitted || form.userAgree.$touched&quot;&gt;
+    &lt;div ng-show=&quot;!user.agree || !user.agreeSign&quot;&gt;Please agree and sign.&lt;/div&gt; &lt;/div&gt; &lt;input
+    type=&quot;button&quot; ng-click=&quot;reset(form)&quot; value=&quot;Reset&quot; /&gt; &lt;input type=&quot;submit&quot;
+    ng-click=&quot;update(user)&quot; value=&quot;Save&quot; /&gt; &lt;/form&gt;&lt;/div&gt;</code></pre><h3
+        id="custom-model-update-triggers">Custom model update triggers</h3><p><em>By default, any change to the content
+    will trigger a model update and form validation. You can override this behavior using the ngModelOptions directive
+    to bind only to specified list of events.</em></p>
+<pre><code class="lang-html">&lt;div ng-controller=&quot;ExampleController&quot;&gt; &lt;form&gt; Name: &lt;input type=&quot;text&quot;
+    ng-model=&quot;user.name&quot; ng-model-options=&quot;{ updateOn: &#39;blur&#39; }&quot; /&gt;&lt;br /&gt; &lt;!--
+    IMPORTANT PART - ng-model-options --&gt; Other data: &lt;input type=&quot;text&quot; ng-model=&quot;user.data&quot;
+    /&gt;&lt;br /&gt; &lt;/form&gt; &lt;pre&gt;username = &quot;{{user.name}}&quot;&lt;/pre&gt; &lt;pre&gt;userdata =
+    &quot;{{user.data}}&quot;&lt;/pre&gt;&lt;/div&gt;</code></pre><h2 id="directives">Directives</h2>
+<ul>
+    <li>markers on <strong>DOM element</strong> which attach <strong>special behaviour to it</strong></li>
+    <li>examples <code>ngBind</code>, <code>ngModel</code>, <code>ngClass</code></li>
+</ul><h3 id="ng-app">ng-app</h3>
+<ul>
+    <li>starts an AngularJS application</li>
+</ul><h3 id="ng-show">ng-show</h3>
+<ul>
+    <li>shows or hides HTML elements</li>
+</ul><h3 id="ng-model">ng-model</h3>
+<ul>
+    <li>defines the model to be used</li>
+</ul><h3 id="ng-repeat">ng-repeat</h3>
+<ul>
+    <li>repeats HTML elements for each item in a collection</li>
+</ul><h3 id="ng-input">ng-input</h3>
+<ul>
+    <li>when used together with <code>ng-model</code> provides data binding, input state control and validation</li>
+</ul><h3 id="ng-form">ng-form</h3>
+<ul>
+    <li>see Forms section</li>
+</ul><h3 id="ng-class">ng-class</h3>
+<ul>
+    <li>set CSS classes on elements</li>
+</ul><h3 id="ng-controller">ng-controller</h3>
+<ul>
+    <li>attaches a controller class to view, see Controller section</li>
+</ul><h3 id="ng-click">ng-click</h3>
+<ul>
+    <li>custom behaviour to element that is clicked</li>
+</ul><h3 id="ng-switch">ng-switch</h3>
+<ul>
+    <li>conditionally swap DOM structure based on scope expression</li>
+</ul><h3 id="ng-view">ng-view</h3>
+<ul>
+    <li>complements the <code>$route</code> service by rendering the current layout in the main template (usually
+        <strong>index.html</strong>)
+    </li>
+</ul><h2 id="animations">Animations</h2>
+<ul>
+    <li>angular provies animation hooks for common directives like <code>ng-repeat</code></li>
+    <li><em>saved for later</em></li>
+</ul><h2 id="modules">Modules</h2>
+<ul>
+    <li>container for different parts of your app (<strong>controllers, services, filters, directives</strong>)</li>
+    <li><p>example in a hurry:</p>
+        <pre><code class="lang-html">&lt;div ng-app=&quot;myApp&quot;&gt;&lt;div&gt; {{ &#39;World&#39; | greet }}&lt;/div&gt;&lt;/div&gt;</code></pre>
+    </li>
+    <li><p>empty array in <code>var myAppModule = angular.module(&#39;myApp&#39;, []);</code> means that this app
+        depends on nothing else</p></li>
+</ul><h3 id="recommended-setup">Recommended setup</h3>
+<ul>
+    <li>A module for each feature</li>
+    <li>A module for each reusable component (especially directives and filters)</li>
+    <li>an application level module which depends on the above modules and contains any initialization code.</li>
+</ul><h3 id="module-loading-dependencies">Module loading &amp; dependencies</h3>
+<ul>
+    <li>consists of 2 kind of blocks</li>
+    <li><strong>configuration and run blocks</strong></li>
+    <li>Configuration blocks - get executed during the <strong>provider registrations</strong> and configuration phase.
+        Only providers and constants can be injected into configuration blocks. This is to prevent accidental
+        instantiation of services before they have been fully configured.
+    </li>
+    <li>Run blocks - get executed <strong>after the injector is created</strong> and are used to kickstart the
+        application. Only instances and constants can be injected into run blocks. This is to prevent further system
+        configuration during application run time.
+    </li>
+</ul>
+<pre><code class="lang-javascript">angular.module(&#39;myModule&#39;, []).config(function(injectables) { //
+    provider-injector // This is an example of config block. // You can have as many of these as you want. // You can
+    only inject Providers (not instances) // into config blocks.}).run(function(injectables) { // instance-injector //
+    This is an example of a run block. // You can have as many of these as you want. // You can only inject instances
+    (not Providers) // into run blocks});</code></pre><p><strong>Beware that using angular.module(&#39;myModule&#39;,
+    []) will create the module myModule and overwrite any existing module named myModule. Use angular.module(&#39;myModule&#39;)
+    to retrieve an existing module.</strong></p><h3 id="unit-testing">Unit testing</h3>
+<pre><code class="lang-javascript">angular.module(&#39;greetMod&#39;, []).// alert service registeredfactory(&#39;alert&#39;,
+    function($window) { return function(text) { $window.alert(text); }}).// shortcut -&gt; registers a &#39;static&#39;
+    salutation dervice which returns &#39;Hello&#39;//as its value service value(&#39;salutation&#39;, &#39;Hello&#39;).//
+    which produces a &quot;Hello&quot; + name alert in the greet servicefactory(&#39;greet&#39;, function(alert,
+    salutation) { return function(name) { alert(salutation + &#39; &#39; + name + &#39;!&#39;); }});</code></pre><p>The
+    corresponding unit test:</p>
+<pre><code class="lang-javascript">describe(&#39;myApp&#39;, function() { // load application module (`greetMod`) then
+    load a special // test module which overrides `$window` with a mock version, // so that calling `window.alert()`
+    will not block the test // runner with a real alert box. beforeEach(module(&#39;greetMod&#39;, function($provide) {
+    $provide.value(&#39;$window&#39;, { alert: jasmine.createSpy(&#39;alert&#39;) }); })); // inject() will create the
+    injector and inject the `greet` and // `$window` into the tests. it(&#39;should alert on $window&#39;,
+    inject(function(greet, $window) { greet(&#39;World&#39;); expect($window.alert).toHaveBeenCalledWith(&#39;Hello
+    World!&#39;); })); // this is another way of overriding configuration in the // tests using inline `module` and
+    `inject` methods. it(&#39;should alert using the alert service&#39;, function() { var alertSpy = jasmine.createSpy(&#39;alert&#39;);
+    module(function($provide) { $provide.value(&#39;alert&#39;, alertSpy); }); inject(function(greet) { greet(&#39;World&#39;);
+    expect(alertSpy).toHaveBeenCalledWith(&#39;Hello World!&#39;); }); });});</code></pre><p>```</p><h2 id="providers">
+    Providers</h2><h2 id="unit-test">Unit Test</h2><h2 id="end-to-end-test">End to End test</h2>
