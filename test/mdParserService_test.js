@@ -2,7 +2,7 @@
  * Created by sebastian on 5/7/15.
  */
 
-describe('Chrome Storage Service', function () {
+describe('Markdown Parser Service', function () {
 
 
     var formMockup, mdParserService;
@@ -83,7 +83,7 @@ describe('Chrome Storage Service', function () {
     });
 
     it("should accept HTML as well and style it accordingly", function () {
-        formMockup = "\<h2\> My Text \<\/h2\>";
+        formMockup = "\< h2\ random stuff > My Text \<\/h2\>";
         var parsedHTML = mdParserService.parse(formMockup);
         expect(mdParserService.parse).toHaveBeenCalledWith(formMockup);
         expect(parsedHTML).toBeDefined();

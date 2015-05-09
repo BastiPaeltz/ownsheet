@@ -52,7 +52,7 @@ ownsheetApp.service('chromeStorageService', function ($q) {
 
     this.removeFromStorage = function (sheet) {
 
-        var deferred = q.defer();
+        var deferred = $q.defer();
         storage.remove(sheet.name, function () {
             if (chrome.runtime.LastError) {
                 deferred.resolve("Error removing " + sheet.name);

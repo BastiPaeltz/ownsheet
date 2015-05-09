@@ -8,15 +8,20 @@ ownsheetApp.service('mdParserService', function () {
 
     this.parse = function (textToParse) {
 
-        if(textToParse.indexOf('h2') !== -1 ) {
-            textToParse = textToParse.replace(/<(h2)>/g, "<$1 class=\"box\">");
+       /* if(textToParse.indexOf('h2') !== -1 ) {
+            textToParse = textToParse.replace(/\<[^/]*?(h2).*?\>/g, "<$1 class=\"box\">");
         }
+
+        if(textToParse.indexOf('h1') !== -1 ) {
+            textToParse = textToParse.replace(/\<[^/]*?(h1).*?\>/g, "<$1 class=\"hidden\">");
+        }*/
+
         var customRenderer = new marked.Renderer();
         customRenderer.heading = function (text, level) {
             if (level === 1) {
-                return '\<h1 class="hideH1"\>' + text + '\<\/h1>';
+                return '\<h1 class\=\"hideH1\"\>' + text + '\<\/h1\>';
             } else if (level === 2) {
-                return '\<h2 class="box"\>' + text + '\<\/h2\>';
+                return '\<h2 class\=\"box\"\>' + text + '\<\/h2\>';
             } else {
                 return '<h' + level + '>' + text + '</h' + level + '>';
             }
@@ -28,7 +33,7 @@ ownsheetApp.service('mdParserService', function () {
             tables: true,
             breaks: false,
             pedantic: false,
-            sanitize: false,
+            sanitize: true,
             smartLists: true,
             smartypants: false
         });

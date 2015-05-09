@@ -5,6 +5,10 @@ body, section {
     overflow-x: hidden;
 }
 
+h1 {
+    margin-left: 15px;
+}
+
 section {
     padding: 5px;
 }

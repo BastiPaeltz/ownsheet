@@ -11,10 +11,22 @@ describe('popupController', function () {
     }));
 
     it("should populate the scope with emptyMessage when no items are returned", function () {
-        expect(False).toBeTruthy()
+        expect(false).toBeTruthy()
     });
 
     it("should populate the scope with sheets when items are returned", function () {
-        expect(False).toBeTruthy()
+        expect(false).toBeTruthy()
+    });
+
+    it("should route to empty edit.html when add new sheet is clicked", function () {
+        expect(false).toBeTruthy()
+    });
+
+    it("should route to populated edit.html when an item is clicked", function () {
+        expect(false).toBeTruthy()
+    });
+
+    it("should route to populated edit.html when an item is clicked", function () {
+        expect(false).toBeTruthy()
     });
 });
