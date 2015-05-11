@@ -47,23 +47,23 @@ describe('Markdown Parser Service', function () {
         expect(isHTMLSecond).not.toEqual(-1);
     });
 
-    //it("should style h2 headings accordingly", function () {
-    //    var parsedHTML = mdParserService.parse(formMockup);
-    //    var correctH2 = parsedHTML.indexOf("\<h2 class=\"box\"\>");
-    //    expect(mdParserService.parse).toHaveBeenCalledWith(formMockup);
-    //    expect(correctH2).not.toEqual(-1);
-    //});
-    //
-    //it("should ignore h1 headings and its content", function () {
-    //    formMockup = "# Javascript \n\
-    //    this text should not be displayed\n\
-    //    ## Best Practices \n\
-    //    \n\
-    //    * compare with `===` \n";
-    //    var parsedHTML = mdParserService.parse(formMockup);
-    //    var correctH1 = parsedHTML.indexOf("\<h1 class=\"hideH1\"\>");
-    //    expect(mdParserService.parse).toHaveBeenCalledWith(formMockup);
-    //});
+    it("should style h2 headings accordingly", function () {
+        var parsedHTML = mdParserService.parse(formMockup);
+        var correctH2 = parsedHTML.indexOf("\<h2 class=\"box\"\>");
+        expect(mdParserService.parse).toHaveBeenCalledWith(formMockup);
+        expect(correctH2).not.toEqual(-1);
+    });
+
+    it("should ignore h1 headings and its content", function () {
+        formMockup = "# Javascript \n\
+        this text should not be displayed\n\
+        ## Best Practices \n\
+        \n\
+        * compare with `===` \n";
+        var parsedHTML = mdParserService.parse(formMockup);
+        var correctH1 = parsedHTML.indexOf("\<h1 class=\"hideH1\"\>");
+        expect(mdParserService.parse).toHaveBeenCalledWith(formMockup);
+    });
 
     it("should not error out on chinese text", function () {
         formMockup = "###殷公路撰 ## 北戶錄（唐）殷公路撰 ";
@@ -82,12 +82,12 @@ describe('Markdown Parser Service', function () {
         expect(parsedHTML).toEqual("");
     });
 
-    //it("should accept HTML as well and style it accordingly", function () {
-    //    formMockup = "\< h2\ random stuff > My Text \<\/h2\>";
-    //    var parsedHTML = mdParserService.parse(formMockup);
-    //    expect(mdParserService.parse).toHaveBeenCalledWith(formMockup);
-    //    expect(parsedHTML).toBeDefined();
-    //    expect(parsedHTML).toEqual("\<h2\ class=\"box\"> My Text \<\/h2\>");
-    //});
+    it("should accept HTML as well and style it accordingly", function () {
+        formMockup = "\< h2\ random stuff > My Text \<\/h2\>";
+        var parsedHTML = mdParserService.parse(formMockup);
+        expect(mdParserService.parse).toHaveBeenCalledWith(formMockup);
+        expect(parsedHTML).toBeDefined();
+        expect(parsedHTML).toEqual("\<h2\ class=\"box\"> My Text \<\/h2\>");
+    });
 
 });

@@ -35,7 +35,7 @@ describe('Chrome Storage Service', function () {
 
     });
 
-    it("should be able to get a single item from storage asybchronously", function () {
+    it("should be able to get a single item from storage", function () {
         spyOn(chromeStorageService, 'getFromStorage').and.returnValue(deferred.promise);
         result = chromeStorageService.getFromStorage(sheet.name);
         expect(chromeStorageService.getFromStorage).toHaveBeenCalledWith(sheet.name);

@@ -13,42 +13,55 @@
 var editController;
 var getSpy;
 var setSpy;
-var localStorageService;
 var chromeStorageService;
 var routeParams;
 var $scope;
 var $controller;
+var $rootScope;
+var chromePushSpy;
+var deferred;
+var $q;
+var promise;
 
 describe('editController', function () {
 
     beforeEach(module("ownsheetApp"));
-    beforeEach(inject(function (_$controller_) {
+
+    beforeEach(inject(function (_$rootScope_, _$q_, _$controller_) {
         // The injector unwraps the underscores (_) from around the parameter names when matching
         $controller = _$controller_;
-
+        $rootScope = _$rootScope_;
+        $q = _$q_;
+        deferred = $q.defer();
+        promise = deferred.promise;
         $scope = {};
         routeParams = {
             sheetName: 'git'
         };
-        getSpy = jasmine.createSpy('getSpy').and.returnValue('Hello from git.');
+        getSpy = jasmine.createSpy('getSpy').and.returnValue(promise);
         setSpy = jasmine.createSpy('setSpy');
-
-        localStorageService = {
-            get: getSpy,
-            set: setSpy
+        chromePushSpy = jasmine.createSpy('chromePushSpy');
+        chromeStorageService = {
+            getFromStorage: getSpy,
+            pushToStorage: chromePushSpy
         };
 
     }));
 
     it("should populate the scope with sheet content if any is present", function () {
+        var chromeStorageService = {
+            getFromStorage: getSpy
+        };
+        deferred.resolve({name: 'git', content: 'hello from git!'});
         editController = $controller('editController', {
             $routeParams: routeParams,
             $scope: $scope,
-            localStorageService: localStorageService
+            chromeStorageService: chromeStorageService
         });
+        $rootScope.$apply();
         expect(getSpy).toHaveBeenCalledWith('git');
-        expect($scope.sheet.name).toEqual('git');
-        expect($scope.content).toEqual('Hello from git.');
+        expect($scope.sheet.message).toEqual('Edit sheet git');
+        expect($scope.content).toEqual('hello from git!');
     });
 
     it("should populate the scope with default content if no sheet content is present", function () {
@@ -58,47 +71,45 @@ describe('editController', function () {
         editController = $controller('editController', {
             $routeParams: routeParams,
             $scope: $scope,
-            localStorageService: localStorageService
+            chromeStorageService: chromeStorageService
         });
         expect(getSpy).not.toHaveBeenCalled();
-        expect($scope.sheet.name).toEqual('Add new sheet');
+        expect($scope.sheet.message).toEqual('Add new sheet');
         expect($scope.content.length).toBeGreaterThan(20);
     });
 
-    it("should route to view template of same sheet", function () {
-        expect(false).toBeTruthy()
+    it("should populate the scope with \"nothing here yet\" message if sheet was in route but no content was found", function () {
+        deferred.resolve({});
+        editController = $controller('editController', {
+            $routeParams: routeParams,
+            $scope: $scope,
+            chromeStorageService: chromeStorageService
+        });
+        $rootScope.$apply();
+        expect(getSpy).toHaveBeenCalled();
+        expect($scope.sheet.message).toEqual('You currently have no sheet named git but you can easily add one below.');
+        expect($scope.content.length).toBeGreaterThan(20);
     });
 
-    it("should be able to save changes on submit event", function () {
-        var chromePushSpy = jasmine.createSpy();
+    it("should be able to save changes on submit event and redirect to that view.", function () {
+
         var windowSpy = jasmine.createSpy();
 
         var window = {
-            open : windowSpy
-        };
-
-        chromeStorageService = {
-            pushToStorage: chromePushSpy
+            open: windowSpy
         };
 
         editController = $controller('editController', {
             $routeParams: routeParams,
             $scope: $scope,
-            localStorageService: localStorageService,
             chromeStorageService: chromeStorageService,
             $window: window
         });
-
-        $scope = {
-            sheet : {
-                name : 'git'
-            },
-            content : 'Hello my friends from git'
-        };
+        $scope.content = 'Hello my friends from git.';
+        $rootScope.$apply();
         expect(editController.submit).toBeDefined();
         editController.submit();
-        expect(setSpy).toHaveBeenCalledWith("git", "Hello from git.");
-        expect(chromePushSpy).toHaveBeenCalledWith("git", "Hello from git.");
+        expect(chromePushSpy).toHaveBeenCalledWith("git", "Hello my friends from git.");
         expect(windowSpy).toHaveBeenCalledWith('main.html#/view/git');
     });
 

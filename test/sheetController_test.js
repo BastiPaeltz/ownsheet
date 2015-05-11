@@ -10,7 +10,7 @@
  * Created by sebastian on 5/4/15.
  */
 var chromeStorageService, spy, deferred;
-describe('editController', function () {
+describe('sheetController', function () {
 
     beforeEach(module("ownsheetApp"));
     beforeEach(inject(function (_$controller_) {
@@ -18,7 +18,7 @@ describe('editController', function () {
         $controller = _$controller_;
     }));
 
-    it("should be able to retrieve json (content) for the sheet", function () {
+    it("should be able to retrieve content for the sheet", function () {
         expect(false).toBeTruthy()
     });
 
@@ -26,11 +26,11 @@ describe('editController', function () {
         expect(false).toBeTruthy()
     });
 
-    it("should route to edit template", function () {
+    it("should call the markdown parser to transform content to HTML", function () {
         expect(false).toBeTruthy()
     });
 
-    it("should route to edit template", function () {
+    it("should populate the view with the parsed HTML content.", function () {
         expect(false).toBeTruthy()
     });
 

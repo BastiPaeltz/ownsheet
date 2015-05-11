@@ -14,10 +14,10 @@ ownsheetApp.service('chromeStorageService', function ($q) {
         var deferred = $q.defer();
         storage.set(sheet, function () {
             if (chrome.runtime.LastError) {
-                deferred.resolve("Error pushing sheet. " + sheet.name);
+                deferred.resolve("Error");
             } else {
                 console.log(1);
-                deferred.resolve("Success pushing sheet " + sheet.name);
+                deferred.resolve("Success");
             }
         });
         return deferred.promise;
@@ -28,18 +28,18 @@ ownsheetApp.service('chromeStorageService', function ($q) {
 
         var deferred = $q.defer();
         if (sheet) {
-            storage.get(sheet.name, function (item) {
+            storage.get(sheet, function (item) {
                 if (chrome.runtime.LastError) {
-                    deferred.resolve("Error getting sheet " + sheet.name);
+                    deferred.resolve("Error");
                 } else {
-                    deferred.resolve(item);
+                    deferred.resolve(item[sheet]);
                 }
             });
         }
         else {
             storage.get(null, function (items) {
                 if (chrome.runtime.LastError) {
-                    deferred.resolve("Error getting all sheets");
+                    deferred.resolve("Error");
                 } else {
 
                     deferred.resolve(items);
@@ -53,11 +53,11 @@ ownsheetApp.service('chromeStorageService', function ($q) {
     this.removeFromStorage = function (sheet) {
 
         var deferred = $q.defer();
-        storage.remove(sheet.name, function () {
+        storage.remove(sheet, function () {
             if (chrome.runtime.LastError) {
-                deferred.resolve("Error removing " + sheet.name);
+                deferred.resolve("Error");
             } else {
-                deferred.resolve("Removed " + sheet.name);
+                deferred.resolve("Removed");
             }
         });
         return deferred.promise;

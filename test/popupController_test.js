@@ -1,6 +1,9 @@
 /**
  * Created by sebastian on 5/4/15.
  */
+
+"use strict";
+
 var popupController;
 var storageItemsMock;
 var storageSpy;
@@ -54,12 +57,12 @@ describe('popupController', function () {
     it("should populate the scope with emptyMessage when no items are returned", function () {
         // TODO double check how chrome storage handles misses
         popupController = $controller('popupController', {$scope: $scope, chromeStorageService: chromeStorageService});
-        deferred.resolve(null);
+        deferred.resolve({});
         expect(storageSpy).toHaveBeenCalledWith(null);
         $rootScope.$apply();
         expect($scope.sheets).toBeFalsy();
-        expect(returnedValue).toEqual(null);
-        expect($scope.emptyMessage).toBe("No sheets added yet.");
+        expect(returnedValue).toEqual({});
+        expect($scope.message).toBe("No sheets added yet.");
     });
 
     it("should populate the scope with sheets when items are returned", function () {
@@ -68,7 +71,7 @@ describe('popupController', function () {
         expect(storageSpy).toHaveBeenCalledWith(null);
         $rootScope.$apply();
         expect(returnedValue).not.toBeFalsy();
-        expect($scope.emptyMessage).toBeFalsy();
+        expect($scope.message).toBeFalsy();
         expect($scope.sheets.length).toBe(2);
     });
 
@@ -105,19 +108,20 @@ describe('popupController', function () {
         expect(windowSpy).toHaveBeenCalledWith('main.html#/view/git');
     });
 
-    it("should remove items from storage when del is clicked", function () {
-        var removeSpy = jasmine.createSpy();
-        var lSS = {
-            remove: removeSpy
-        };
+    it("should remove items from storage and scope when del is clicked", function () {
+        $scope.sheets = [{
+            git:{
+                content:'i will be removed.'
+            }
+        }];
         popupController = $controller('popupController', {
             $scope: $scope,
-            chromeStorageService: chromeStorageService,
-            localStorageService: lSS
+            chromeStorageService: chromeStorageService
         });
         expect(popupController.removeSheet).toBeDefined();
+        expect($scope.sheets.indexOf('git')).not.toEqual(-1);
         popupController.removeSheet('git');
-        expect(removeSpy).toHaveBeenCalledWith('git');
         expect(chromeRemoveSpy).toHaveBeenCalledWith('git');
+        expect($scope.sheets.indexOf('git')).toEqual(-1);
     });
 });

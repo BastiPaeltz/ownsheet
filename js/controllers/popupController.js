@@ -7,20 +7,19 @@
 
 var ownsheetApp = angular.module("ownsheetApp");
 
-ownsheetApp.controller('popupController', ["$scope", "$window", "localStorageService", "chromeStorageService",
-    function ($scope, $window, localStorageService, chromeStorageService) {
+ownsheetApp.controller('popupController', ["$scope", "$window", "chromeStorageService",
+    function ($scope, $window, chromeStorageService) {
 
         chromeStorageService.getFromStorage(null).then(function (value) {
-            if (!value) {
-                $scope.emptyMessage = "No sheets added yet."
+            // value = whole storage
+            if (Object.getOwnPropertyNames(value).length === 0) {
+                $scope.message = "No sheets added yet."
             }
             else {
                 $scope.sheets = [];
-                for (var sheet in value) {
-
-                    $scope.sheets.push(value[sheet]);
-                    localStorageService.set(value[sheet].name, value[sheet].content);
-                }
+                Object.keys(value).forEach(function(sheet){
+                   $scope.sheets.push(value[sheet]);
+                });
 
             }
         });
@@ -35,9 +34,14 @@ ownsheetApp.controller('popupController', ["$scope", "$window", "localStorageSer
 
         this.removeSheet = function (sheetName) {
             // TODO: question - "are you sure" before removing
-            localStorageService.remove(sheetName);
             chromeStorageService.removeFromStorage(sheetName);
-            // TODO: launch some animation
+            var indexOfRemovedSheet = $scope.sheets.indexOf(sheetName);
+            $scope.sheets.splice(indexOfRemovedSheet,1);
+
+            if ($scope.sheets.length === 0){
+                $scope.message = "No sheets added yet."
+            }
+
         };
 
         this.goToSheet = function (sheetName) {

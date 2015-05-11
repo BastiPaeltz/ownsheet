@@ -4,6 +4,9 @@
 
     <h3>{{sheet.name}}</h3>
 
+    <form name="name" ng-if="newSheet" novalidate class="simple-form">
+        Name: <input type="text" required="" ng-model="sheet.newName"/><br/>
+    </form>
     <div class="container-fluid">
         <textarea class="form-control" ng-model="content" type="text" rows="25">
             {{content}}

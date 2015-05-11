@@ -2,8 +2,9 @@
  *
  * Created by sebastian on 5/3/15.
  */
+"use strict";
 
-var ownsheetApp = angular.module("ownsheetApp", ["ngRoute", "LocalStorageModule"]);
+var ownsheetApp = angular.module("ownsheetApp", ["ngRoute"]);
 
 ownsheetApp.config(function ($routeProvider) {
     $routeProvider

@@ -2,34 +2,16 @@
  * Created by sebastian on 5/8/15.
  */
 
-/**
- *
- * Created by sebastian on 5/3/15.
- */
 "use strict";
 
 var ownsheetApp = angular.module("ownsheetApp");
 
 ownsheetApp.controller('editController', ["$scope", "$routeParams", "mdParserService",
-    "localStorageService", "$window",
-    function ($scope, $routeParams, mdParserService, localStorageService, $window) {
-        var sheetContent;
+    "chromeStorageService", "$window",
+    function ($scope, $routeParams, mdParserService, chromeStorageService, $window) {
 
-
-        var sheetName = $routeParams.sheetName;
-
-        $scope.sheet = {};
-        if (sheetName) {
-            sheetContent = localStorageService.get(sheetName);
-            $scope.sheet.name = sheetName;
-        } else {
-            $scope.sheet.name = "Add new sheet";
-        }
-
-        if (sheetContent) {
-            $scope.content = sheetContent;
-        } else {
-            $scope.content = "# ownsheet ignores these headings\n\
+        var sheet;
+        var defaultContent = "# ownsheet ignores these headings\n\
 \n\
 this text will be ignored\n\
 \n\
@@ -49,12 +31,43 @@ this text will be content of a box\n\
 ## Note however that there are better options for editing markdown (online or offline)\n\
 \n\
 ### ownsheet shines when it comes to displaying markdown not so much when it comes to editing it"
+
+        var sheetNameParam = $routeParams.sheetName;
+
+        $scope.sheet = {};
+        if (sheetNameParam) {
+            sheet = chromeStorageService.getFromStorage(sheetNameParam);
+            sheet.then(function (value) {
+                if (value[sheetNameParam]) {
+                    $scope.content = value[sheetNameParam].content;
+                } else {
+                    $scope.content = defaultContent;
+                }
+            });
+            $scope.sheet.name = sheetNameParam;
+        } else {
+            $scope.newSheet = true;
+            $scope.sheet.name = "Add new sheet";
+            $scope.content = defaultContent;
         }
 
+
         this.submit = function () {
-            localStorageService.set($scope.sheet.name, $scope.content);
-            chromeStorageService.pushToStorage($scope.sheet.name, $scope.content);
-            $window.open('main.html#/view/'+$scope.sheet.name);
+            var sheetKey;
+            if ($scope.sheet.name !== "Add new sheet") {
+                sheetKey = $scope.sheet.name;
+            }
+            else {
+                sheetKey = $scope.sheet.newName;
+            }
+            var storageObject = {};
+            storageObject[sheetKey] = {
+                name: sheetKey,
+                content: $scope.content
+            };
+            chromeStorageService.pushToStorage(storageObject);
+            $window.open('main.html#/view/' + sheetKey);
         }
-    }]);
+    }])
+;
 
