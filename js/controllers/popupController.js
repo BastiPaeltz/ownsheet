@@ -11,14 +11,14 @@ ownsheetApp.controller('popupController', ["$scope", "$window", "chromeStorageSe
     function ($scope, $window, chromeStorageService) {
 
         chromeStorageService.getFromStorage(null).then(function (value) {
-            // value = whole storage
             if (Object.getOwnPropertyNames(value).length === 0) {
                 $scope.message = "No sheets added yet."
             }
             else {
-                $scope.sheets = [];
-                Object.keys(value).forEach(function(sheet){
-                   $scope.sheets.push(value[sheet]);
+                $scope.sheets = {};
+                Object.keys(value).forEach(function (sheet) {
+                    $scope.sheets[sheet] = value[sheet];
+                    console.log(value);
                 });
 
             }
@@ -29,23 +29,22 @@ ownsheetApp.controller('popupController', ["$scope", "$window", "chromeStorageSe
         };
 
         this.editSheet = function (sheetName) {
-            $window.open('main.html#/edit/'+sheetName);
+            $window.open('main.html#/edit/' + sheetName);
         };
 
         this.removeSheet = function (sheetName) {
             // TODO: question - "are you sure" before removing
             chromeStorageService.removeFromStorage(sheetName);
-            var indexOfRemovedSheet = $scope.sheets.indexOf(sheetName);
-            $scope.sheets.splice(indexOfRemovedSheet,1);
+            delete $scope.sheets[sheetName];
 
-            if ($scope.sheets.length === 0){
+            if (Object.getOwnPropertyNames($scope.sheets).length === 0) {
                 $scope.message = "No sheets added yet."
             }
 
         };
 
         this.goToSheet = function (sheetName) {
-            $window.open('main.html#/view/'+sheetName);
+            $window.open('main.html#/view/' + sheetName);
         };
 
     }]);

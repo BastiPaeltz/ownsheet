@@ -1,14 +1,14 @@
-/**
- * Created by sebastian on 5/10/15.
- */
 
+/**
+ * Created by sebastian on 5/8/15.
+ */
 
 "use strict";
 
 var ownsheetApp = angular.module("ownsheetApp");
 
-ownsheetApp.controller('mainController', ["$scope", "$window", "$routeParams",
-    function ($scope, $window, $routeParams) {
+ownsheetApp.controller('viewController', ["$scope", "$window", "$routeParams", "chromeStorageService",
+    function ($scope, $window, $routeParams, chromeStorageService) {
 
         var sheetName = $routeParams.sheetName;
         $scope.sheet = {};
@@ -16,6 +16,7 @@ ownsheetApp.controller('mainController', ["$scope", "$window", "$routeParams",
             $scope.sheet.name = sheetName;
         } else {
             $scope.sheet.name = "";
+            $scope.sheet.message = "No sheet here. Do you want to add one?"
         }
 
         this.goToView = function(){

@@ -41,12 +41,12 @@ describe('popupController', function () {
         });
 
         storageItemsMock = {
-            0: {
+            git: {
                 name: 'git',
                 content: 'hello world'
             },
 
-            1: {
+            json: {
                 name: 'json',
                 content: 'hello from json'
             }
@@ -70,9 +70,11 @@ describe('popupController', function () {
         deferred.resolve(storageItemsMock);
         expect(storageSpy).toHaveBeenCalledWith(null);
         $rootScope.$apply();
+        console.log($scope);
         expect(returnedValue).not.toBeFalsy();
         expect($scope.message).toBeFalsy();
-        expect($scope.sheets.length).toBe(2);
+        expect($scope.sheets.git).toBeTruthy();
+        expect($scope.sheets.json).toBeTruthy();
     });
 
     it("should route to empty edit.html when add new sheet is clicked", function () {
@@ -108,20 +110,33 @@ describe('popupController', function () {
         expect(windowSpy).toHaveBeenCalledWith('main.html#/view/git');
     });
 
-    it("should remove items from storage and scope when del is clicked", function () {
-        $scope.sheets = [{
-            git:{
-                content:'i will be removed.'
-            }
-        }];
+    it("should remove items from storage and scope when del is clicked.", function () {
         popupController = $controller('popupController', {
             $scope: $scope,
             chromeStorageService: chromeStorageService
         });
         expect(popupController.removeSheet).toBeDefined();
-        expect($scope.sheets.indexOf('git')).not.toEqual(-1);
+        deferred.resolve(storageItemsMock);
+        $rootScope.$apply();
+        expect($scope.sheets.git).toBeTruthy();
         popupController.removeSheet('git');
         expect(chromeRemoveSpy).toHaveBeenCalledWith('git');
-        expect($scope.sheets.indexOf('git')).toEqual(-1);
+        expect($scope.sheets.git).toBeFalsy();
+        expect($scope.sheets.json).toBeTruthy();
+    });
+
+    it("When last sheet is removed, empty-message should be displayed", function () {
+        popupController = $controller('popupController', {
+            $scope: $scope,
+            chromeStorageService: chromeStorageService
+        });
+        expect(popupController.removeSheet).toBeDefined();
+        deferred.resolve({git : {}});
+        $rootScope.$apply();
+        expect($scope.sheets.git).toBeTruthy();
+        popupController.removeSheet('git');
+        expect(chromeRemoveSpy).toHaveBeenCalledWith('git');
+        expect($scope.sheets.git).toBeFalsy();
+        expect($scope.message).toEqual('No sheets added yet.')
     });
 });

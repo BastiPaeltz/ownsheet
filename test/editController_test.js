@@ -52,7 +52,7 @@ describe('editController', function () {
         var chromeStorageService = {
             getFromStorage: getSpy
         };
-        deferred.resolve({name: 'git', content: 'hello from git!'});
+        deferred.resolve({git: {name: 'git', content: 'hello from git!'}});
         editController = $controller('editController', {
             $routeParams: routeParams,
             $scope: $scope,
@@ -106,11 +106,46 @@ describe('editController', function () {
             $window: window
         });
         $scope.content = 'Hello my friends from git.';
+        deferred.resolve({'macherie':{content : 'im already defined!'}});
         $rootScope.$apply();
         expect(editController.submit).toBeDefined();
+        expect(getSpy).toHaveBeenCalled();
+        expect($scope.sheet.name).toEqual('git');
+        $rootScope.$apply();
         editController.submit();
-        expect(chromePushSpy).toHaveBeenCalledWith("git", "Hello my friends from git.");
+        deferred.resolve({'git':{content : 'im already defined!'}});
+        $rootScope.$apply();
+        expect(chromePushSpy).toHaveBeenCalled();
         expect(windowSpy).toHaveBeenCalledWith('main.html#/view/git');
+    });
+
+    it("should be able to reject new sheets which are already defined.", function () {
+        routeParams = {
+            sheetName: undefined
+        };
+        var windowSpy = jasmine.createSpy('winSpy');
+        var window = {
+            open: windowSpy
+        };
+
+        editController = $controller('editController', {
+            $routeParams: routeParams,
+            $scope: $scope,
+            chromeStorageService: chromeStorageService,
+            $window : window
+        });
+        $scope.sheet.name = '';
+        $scope.sheet.newName = 'macherie';
+        deferred.resolve({'git':{content : 'im already defined!'}});
+        $rootScope.$apply();
+        editController.submit();
+        expect(getSpy).toHaveBeenCalledWith('macherie');
+        deferred.resolve({'macherie':{content : 'im already defined!'}});
+        $rootScope.$apply();
+        console.log($scope);
+        expect(setSpy).not.toHaveBeenCalled();
+        expect($scope.errorMessage).toEqual('sheet with name git already exists! Please try another name.')
+
     });
 
     it("should be able to preview changes on preview event", function () {

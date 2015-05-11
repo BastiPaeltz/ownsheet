@@ -36,37 +36,50 @@ this text will be content of a box\n\
 
         $scope.sheet = {};
         if (sheetNameParam) {
+            $scope.sheet.name = sheetNameParam;
             sheet = chromeStorageService.getFromStorage(sheetNameParam);
             sheet.then(function (value) {
                 if (value[sheetNameParam]) {
                     $scope.content = value[sheetNameParam].content;
+                    $scope.sheet.message = "Edit sheet "
+                        + sheetNameParam;
                 } else {
+                    $scope.sheet.message = "You currently have no sheet named " + sheetNameParam + " but you can easily add one below.";
                     $scope.content = defaultContent;
                 }
             });
-            $scope.sheet.name = sheetNameParam;
         } else {
             $scope.newSheet = true;
-            $scope.sheet.name = "Add new sheet";
+            $scope.sheet.message = "Add new sheet";
             $scope.content = defaultContent;
         }
 
 
         this.submit = function () {
-            var sheetKey;
-            if ($scope.sheet.name !== "Add new sheet") {
+            var sheetKey, alreadyDefined, storageObject;
+            if ($scope.sheet.name) {
                 sheetKey = $scope.sheet.name;
             }
             else {
                 sheetKey = $scope.sheet.newName;
             }
-            var storageObject = {};
-            storageObject[sheetKey] = {
-                name: sheetKey,
-                content: $scope.content
-            };
-            chromeStorageService.pushToStorage(storageObject);
-            $window.open('main.html#/view/' + sheetKey);
+            alreadyDefined = chromeStorageService.getFromStorage(sheetKey);
+            alreadyDefined.then(function (value) {
+                if (!value[sheetKey]) {
+                    //push to storage
+                    console.log(value);
+                    storageObject = {};
+                    storageObject[sheetKey] = {
+                        name: sheetKey,
+                        content: $scope.content
+                    };
+                    chromeStorageService.pushToStorage(storageObject);
+                    $window.open('main.html#/view/' + sheetKey);
+                } else {
+                    // TODO implement this
+                    $scope.errorMessage = "sheet with name " + sheetKey + " is already defined. Please try another name."
+                }
+            });
         }
     }])
 ;

@@ -18,13 +18,13 @@
 
 
     <div class="container">
-        <p>{{emptyMessage}}</p>
+        <p>{{message}}</p>
 
 
         <section>
             <table class="table table-hover">
                 <tbody>
-                <tr ng-repeat="sheet in sheets">
+                <tr ng-repeat="(key, sheet) in sheets">
                     <td class="tableSheetName">
                         <a href="" ng-click="popup.goToSheet(sheet.name)" target="_blank">
                             {{sheet.name}}

@@ -37,12 +37,17 @@ describe('mainController', function () {
     });
 
     it("should route to view when link is clicked", function(){
+        var openSpy = jasmine.createSpy('openSpy');
+        var window = {
+            open : openSpy
+        };
         routeParams = {
             sheetName: "git"
         };
-        mainController = $controller('mainController', {$scope: $scope, $routeParams: routeParams});
+        mainController = $controller('mainController', {$scope: $scope, $window: window, $routeParams: routeParams});
         expect($scope.sheet.name).toEqual('git');
         mainController.goToView();
+        expect(openSpy).toHaveBeenCalledWith('main.html#/view/git');
     });
 
 
