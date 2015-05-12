@@ -11,6 +11,8 @@ var mdSpy;
 var $scope;
 var $rootScope;
 var $q;
+var mdParserService;
+var parseSpy;
 
 describe('viewController', function () {
 
@@ -18,11 +20,17 @@ describe('viewController', function () {
     beforeEach(inject(function (_$q_, _$rootScope_, _$controller_) {
         // The injector unwraps the underscores (_) from around the parameter names when matching
         $controller = _$controller_;
+        $q = _$q_;
         deferred = $q.defer();
         promise = deferred.promise;
-        mdSpy = jasmine.createSpy('mdSpy').andReturnValue(promise);
         routeParams = {
             sheetName: 'git'
+        };
+
+        parseSpy = jasmine.createSpy('parseSpy').and.returnValue('\<p\>my content\<\/p\>');
+
+        mdParserService = {
+            parse: parseSpy
         };
 
         $scope = {};
@@ -41,7 +49,8 @@ describe('viewController', function () {
         controller = $controller('viewController', {
             $scope: $scope,
             $routeParams: routeParams,
-            chromeStorageService: chromeStorageService
+            chromeStorageService: chromeStorageService,
+            mdParserService : mdParserService
         });
         expect(storageSpy).toHaveBeenCalledWith('git');
         deferred.resolve({
@@ -50,7 +59,7 @@ describe('viewController', function () {
             }
         });
         $rootScope.$apply();
-        expect(mdSpy).toHaveBeenCalledWith('my content');
+        expect(parseSpy).toHaveBeenCalledWith('my content');
 
     });
 
@@ -58,7 +67,8 @@ describe('viewController', function () {
         controller = $controller('viewController', {
             $scope: $scope,
             $routeParams: routeParams,
-            chromeStorageService: chromeStorageService
+            chromeStorageService: chromeStorageService,
+            mdParserService : mdParserService
         });
         deferred.resolve({
             git: {
@@ -66,19 +76,20 @@ describe('viewController', function () {
             }
         });
         $rootScope.$apply();
-        expect($sheet.content).toEqual('\<p\>my content\<\/p\>');
+        expect($scope.sheet.content).toEqual('\<p\>my content\<\/p\>');
     });
 
     it("should act accordingly on an empty sheet (content)", function () {
         controller = $controller('viewController', {
             $scope: $scope,
             $routeParams: routeParams,
-            chromeStorageService: chromeStorageService
+            chromeStorageService: chromeStorageService,
+            mdParserService : mdParserService
         });
         deferred.resolve({});
         $rootScope.$apply();
-        expect($sheet.message).toEqual('No sheet here. Do you want to add one?');
-        expect(mdSpy).not.toHaveBeenCalled();
+        expect($scope.sheet.message).toEqual('No sheet here. Do you want to add one?');
+        expect(parseSpy).not.toHaveBeenCalled();
     });
 
 });

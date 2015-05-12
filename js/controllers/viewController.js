@@ -1,4 +1,3 @@
-
 /**
  * Created by sebastian on 5/8/15.
  */
@@ -7,24 +6,30 @@
 
 var ownsheetApp = angular.module("ownsheetApp");
 
-ownsheetApp.controller('viewController', ["$scope", "$window", "$routeParams", "chromeStorageService",
-    function ($scope, $window, $routeParams, chromeStorageService) {
+ownsheetApp.controller('viewController', ["$scope", "$window", "$routeParams", "$sce",
+    "chromeStorageService", "mdParserService",
+    function ($scope, $window, $routeParams, $sce, chromeStorageService, mdParserService) {
 
-        var sheetName = $routeParams.sheetName;
+        var mdContent, sheetPromise;
+        var sheetNameParam = $routeParams.sheetName;
         $scope.sheet = {};
-        if (sheetName) {
-            $scope.sheet.name = sheetName;
+        if (sheetNameParam) {
+            $scope.sheet.name = sheetNameParam;
+            $scope.sheet.message = "cheat sheet for " + sheetNameParam;
+            sheetPromise = chromeStorageService.getFromStorage(sheetNameParam);
+            sheetPromise.then(function (value) {
+                if (value[sheetNameParam]) {
+                    mdContent = value[sheetNameParam].content;
+                    $scope.sheet.content = $sce.trustAsHtml(mdParserService.parse(mdContent));
+                } else {
+                    $scope.sheet.name = "";
+                    $scope.sheet.message = "No sheet here. Do you want to add one?"
+                }
+            });
         } else {
             $scope.sheet.name = "";
             $scope.sheet.message = "No sheet here. Do you want to add one?"
         }
 
-        this.goToView = function(){
-            $window.open('main.html#/view/'+$scope.sheet.name);
-        };
-
-        this.goToEdit = function(){
-            $window.open('main.html#/edit/'+$scope.sheet.name);
-        };
     }]);
 

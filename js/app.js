@@ -9,16 +9,14 @@ var ownsheetApp = angular.module("ownsheetApp", ["ngRoute"]);
 ownsheetApp.config(function ($routeProvider) {
     $routeProvider
         .when("/edit/:sheetName?", {
-            // TODO implement me
             templateUrl: "../partials/edit.html",
             controller: "editController"
         })
 
         .when("/view/:sheetName?", {
-            // TODO implement me
             templateUrl: "../partials/sheet.html",
-            controller: "sheetController"
+            controller: "viewController"
         })
 
-        .otherwise({redirectTo: '/edit'});
+        .otherwise({redirectTo: '/'});
 });

@@ -30,7 +30,7 @@ this text will be content of a box\n\
 \n\
 ## Note however that there are better options for editing markdown (online or offline)\n\
 \n\
-### ownsheet shines when it comes to displaying markdown not so much when it comes to editing it"
+### ownsheet shines when it comes to displaying markdown not so much when it comes to editing it";
 
         var sheetNameParam = $routeParams.sheetName;
 
@@ -44,6 +44,7 @@ this text will be content of a box\n\
                     $scope.sheet.message = "Edit sheet "
                         + sheetNameParam;
                 } else {
+                    $scope.newSheet = true;
                     $scope.sheet.message = "You currently have no sheet named " + sheetNameParam + " but you can easily add one below.";
                     $scope.content = defaultContent;
                 }
@@ -67,7 +68,6 @@ this text will be content of a box\n\
             alreadyDefined.then(function (value) {
                 if (!value[sheetKey]) {
                     //push to storage
-                    console.log(value);
                     storageObject = {};
                     storageObject[sheetKey] = {
                         name: sheetKey,
@@ -76,7 +76,6 @@ this text will be content of a box\n\
                     chromeStorageService.pushToStorage(storageObject);
                     $window.open('main.html#/view/' + sheetKey);
                 } else {
-                    // TODO implement this
                     $scope.errorMessage = "sheet with name " + sheetKey + " is already defined. Please try another name."
                 }
             });

@@ -7,7 +7,8 @@ var ownsheetApp = angular.module("ownsheetApp");
 ownsheetApp.service('mdParserService', function () {
 
     this.parse = function (textToParse) {
-
+        var customRenderer;
+        
         if(textToParse.indexOf('h2') !== -1 ) {
             textToParse = textToParse.replace(/\<[^/]*?(h2).*?\>/g, "<$1 class=\"box\">");
         }
@@ -16,7 +17,7 @@ ownsheetApp.service('mdParserService', function () {
             textToParse = textToParse.replace(/\<[^/]*?(h1).*?\>/g, "<$1 class=\"hidden\">");
         }
 
-        var customRenderer = new marked.Renderer();
+        customRenderer = new marked.Renderer();
         customRenderer.heading = function (text, level) {
             if (level === 1) {
                 return '\<h1 class\=\"hideH1\"\>' + text + '\<\/h1\>';
