@@ -8,7 +8,7 @@ ownsheetApp.service('mdParserService', function () {
 
     this.parse = function (textToParse) {
         var customRenderer;
-        
+
         if(textToParse.indexOf('h2') !== -1 ) {
             textToParse = textToParse.replace(/\<[^/]*?(h2).*?\>/g, "<$1 class=\"box\">");
         }

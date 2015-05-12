@@ -57,29 +57,40 @@ this text will be content of a box\n\
 
 
         this.submit = function () {
-            var sheetKey, alreadyDefined, storageObject;
+            var sheetKey, storagePromise, storageObject;
             if ($scope.sheet.name) {
                 sheetKey = $scope.sheet.name;
+                storageObject = {};
+                storageObject[sheetKey] = {
+                    name: sheetKey,
+                    content: $scope.content
+                };
+                chromeStorageService.pushToStorage(storageObject);
+                $window.open('main.html#/view/' + sheetKey, "_self");
             }
             else {
                 sheetKey = $scope.sheet.newName;
-            }
-            alreadyDefined = chromeStorageService.getFromStorage(sheetKey);
-            alreadyDefined.then(function (value) {
-                if (!value[sheetKey]) {
-                    //push to storage
-                    storageObject = {};
-                    storageObject[sheetKey] = {
-                        name: sheetKey,
-                        content: $scope.content
-                    };
-                    chromeStorageService.pushToStorage(storageObject);
-                    $window.open('main.html#/view/' + sheetKey);
+                if (!sheetKey) {
+                    $scope.sheet.message = "Give your sheet a name."
                 } else {
-                    $scope.errorMessage = "sheet with name " + sheetKey + " is already defined. Please try another name."
+                    storagePromise = chromeStorageService.getFromStorage(sheetKey);
+                    storagePromise.then(function (value) {
+                        console.log(value[sheetKey]);
+                        if (value[sheetKey]) {
+                            $scope.sheet.message = "sheet with name " + sheetKey + " is already defined. Please try another name."
+                        } else {
+                            storageObject = {};
+                            storageObject[sheetKey] = {
+                                name: sheetKey,
+                                content: $scope.content
+                            };
+                            chromeStorageService.pushToStorage(storageObject);
+                            $window.open('main.html#/view/' + sheetKey, "_self");
+                        }
+                    });
                 }
-            });
+            }
         }
-    }])
-;
+    }
+]);
 

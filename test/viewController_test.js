@@ -64,11 +64,16 @@ describe('viewController', function () {
     });
 
     it("should be able to retrieve content for the sheet", function () {
+        var sceSpy = jasmine.createSpy('sceSpy').and.returnValue('\<p\>my content\<\/p\>');
+        var sce = {
+            trustAsHtml : sceSpy
+        };
         controller = $controller('viewController', {
             $scope: $scope,
             $routeParams: routeParams,
             chromeStorageService: chromeStorageService,
-            mdParserService : mdParserService
+            mdParserService : mdParserService,
+            $sce : sce
         });
         deferred.resolve({
             git: {
@@ -76,6 +81,7 @@ describe('viewController', function () {
             }
         });
         $rootScope.$apply();
+        expect(parseSpy).toHaveBeenCalled();
         expect($scope.sheet.content).toEqual('\<p\>my content\<\/p\>');
     });
 

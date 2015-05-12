@@ -9,12 +9,12 @@ var ownsheetApp = angular.module("ownsheetApp", ["ngRoute"]);
 ownsheetApp.config(function ($routeProvider) {
     $routeProvider
         .when("/edit/:sheetName?", {
-            templateUrl: "../partials/edit.html",
+            templateUrl: "../templates/edit.html",
             controller: "editController"
         })
 
         .when("/view/:sheetName?", {
-            templateUrl: "../partials/sheet.html",
+            templateUrl: "../templates/sheet.html",
             controller: "viewController"
         })
 

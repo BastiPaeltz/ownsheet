@@ -21,6 +21,10 @@ section {
     width: 70%;
 }
 
+.removeButton{
+    margin-right: 15px;
+}
+
 .tableGlyph{
     width: 15%;
 }

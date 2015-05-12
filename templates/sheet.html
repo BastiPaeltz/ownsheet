@@ -1,0 +1,14 @@
+<div ng-controller="viewController as view">
+    <div class="heading">
+        <h1>View your sheet - {{sheet.name}}</h1>
+
+        <h3>{{sheet.message}}</h3>
+    </div>
+    <br/>
+    <br/>
+    <div class="content">
+        <div id="container" class="js-masonry">
+            <div ng-bind-html="sheet.content"></div>
+        </div>
+    </div>
+</div>

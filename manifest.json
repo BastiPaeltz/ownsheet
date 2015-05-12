@@ -1,7 +1,7 @@
 {
   "name": "ownsheet",
   "description": "Generate a nice view of your cheat sheets from Markdown",
-  "version": "0.1",
+  "version": "0.7",
   "browser_action": {
     "default_icon": {
       "19": "images/document.png",
