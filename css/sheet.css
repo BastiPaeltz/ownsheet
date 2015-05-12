@@ -11,5 +11,5 @@
 }
 
 .hideH1{
-    visibility: hidden;
+    display: none;
 }
