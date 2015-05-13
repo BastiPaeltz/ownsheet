@@ -13,7 +13,7 @@ ownsheetApp.controller('editController', ["$scope", "$routeParams", "mdParserSer
         var sheet;
         var defaultContent = "# ownsheet ignores these headings\n\
 \n\
-this text will be ignored\n\
+this text will be ignored as well\n\
 \n\
 ## each of these headings will form a box\n\
 \n\
@@ -24,13 +24,12 @@ this text will be content of a box\n\
 * you can fill in any markdown you want\n\
 * it will be part of the box\n\
 \n\
-`Like these`\n\
+`Like this`\n\
+\<strong\>Even HTML will work <\/strong>\
 \n\
-\
-\n\
-## Note however that there are better options for editing markdown (online or offline)\n\
-\n\
-### ownsheet shines when it comes to displaying markdown not so much when it comes to editing it";
+## Note however\n\
+**There are better options for editing markdown (online or offline)**  \n\
+ownsheet shines when it comes to displaying markdown not so much when it comes to editing it";
 
         var sheetNameParam = $routeParams.sheetName;
 
@@ -75,7 +74,6 @@ this text will be content of a box\n\
                 } else {
                     storagePromise = chromeStorageService.getFromStorage(sheetKey);
                     storagePromise.then(function (value) {
-                        console.log(value[sheetKey]);
                         if (value[sheetKey]) {
                             $scope.sheet.message = "sheet with name " + sheetKey + " is already defined. Please try another name."
                         } else {

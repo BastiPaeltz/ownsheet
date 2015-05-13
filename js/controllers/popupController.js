@@ -18,9 +18,7 @@ ownsheetApp.controller('popupController', ["$scope", "$window", "chromeStorageSe
                 $scope.sheets = {};
                 Object.keys(value).forEach(function (sheet) {
                     $scope.sheets[sheet] = value[sheet];
-                    console.log(value);
                 });
-
             }
         });
 

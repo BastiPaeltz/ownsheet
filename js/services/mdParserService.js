@@ -5,24 +5,36 @@
 var ownsheetApp = angular.module("ownsheetApp");
 
 ownsheetApp.service('mdParserService', function () {
+    var isFirst = true;
 
     this.parse = function (textToParse) {
         var customRenderer;
 
-        if(textToParse.indexOf('h2') !== -1 ) {
+        if (textToParse.indexOf('h2') !== -1) {
             textToParse = textToParse.replace(/\<[^/]*?(h2).*?\>/g, "<$1 class=\"box\">");
         }
 
-        if(textToParse.indexOf('h1') !== -1 ) {
+        if (textToParse.indexOf('h1') !== -1) {
             textToParse = textToParse.replace(/\<[^/]*?(h1).*?\>/g, "<$1 class=\"hidden\">");
         }
 
         customRenderer = new marked.Renderer();
         customRenderer.heading = function (text, level) {
+            console.log(isFirst);
             if (level === 1) {
-                return '\<h1 class\=\"hideH1\"\>' + text + '\<\/h1\>';
+                if (isFirst) {
+                    isFirst = false;
+                    return '\<div class\=\"hideH1\"\> \<\h1\>' + text + '\<\/h1\>';
+                }else {
+                    return '<\/div> \<div class\=\"hideH1\"\> \<\h2\>' + text + '\<\/h1\>';
+                }
             } else if (level === 2) {
-                return '\<h2 class\=\"box\"\>' + text + '\<\/h2\>';
+                if (isFirst) {
+                    isFirst = false;
+                    return '\<div class\=\"box\"\> \<\h2\>' + text + '\<\/h2\>';
+                }else{
+                    return '<\/div> \<div class\=\"box\"\> \<\h2\>' + text + '\<\/h2\>';
+                }
             } else {
                 return '<h' + level + '>' + text + '</h' + level + '>';
             }
