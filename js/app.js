@@ -18,5 +18,15 @@ ownsheetApp.config(function ($routeProvider) {
             controller: "viewController"
         })
 
-        .otherwise({redirectTo: '/'});
+        .when("/preview", {
+            templateUrl: "../templates/sheet.html",
+            controller: "viewController"
+        })
+
+        .when("/general", {
+            templateUrl: "../templates/general.html",
+            controller: "generalController"
+        })
+
+        .otherwise({redirectTo: '/general'});
 });

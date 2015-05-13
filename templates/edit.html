@@ -1,9 +1,9 @@
 <div ng-controller="editController as edit">
+    <div class="heading">
+        <h1>Edit your sheet</h1>
 
-    <h1>Edit your sheet</h1>
-
-    <h3>{{sheet.message}}</h3>
-
+        <h3>{{sheet.message}}</h3>
+    </div>
     <form name="name" ng-if="newSheet" novalidate class="simple-form">
         Name: <input type="text" required="" ng-model="sheet.newName"/><br/>
     </form>

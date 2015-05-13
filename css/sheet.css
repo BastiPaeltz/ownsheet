@@ -9,3 +9,7 @@
 .hideH1{
     display: none;
 }
+
+button {
+    margin-left: 10px;
+}

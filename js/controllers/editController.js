@@ -7,8 +7,9 @@
 var ownsheetApp = angular.module("ownsheetApp");
 
 ownsheetApp.controller('editController', ["$scope", "$routeParams", "mdParserService",
-    "chromeStorageService", "$window",
-    function ($scope, $routeParams, mdParserService, chromeStorageService, $window) {
+    "chromeStorageService", "$window", "previewContentService",
+    function ($scope, $routeParams, mdParserService,
+              chromeStorageService, $window, previewContentService) {
 
         var sheet;
         var defaultContent = "# ownsheet ignores these headings\n\
@@ -25,11 +26,11 @@ this text will be content of a box\n\
 * it will be part of the box\n\
 \n\
 `Like this`\n\
-\<strong\>Even HTML will work <\/strong>\
+\<strong\>Even HTML will work <\/strong>\n\
 \n\
 ## Note however\n\
 **There are better options for editing markdown (online or offline)**  \n\
-ownsheet shines when it comes to displaying markdown not so much when it comes to editing it";
+ownsheet shines when it comes to displaying not so much when it comes to editing markdown";
 
         var sheetNameParam = $routeParams.sheetName;
 
@@ -54,6 +55,10 @@ ownsheet shines when it comes to displaying markdown not so much when it comes t
             $scope.content = defaultContent;
         }
 
+        this.preview = function () {
+            previewContentService.add($scope.content);
+            $window.open('main.html#/preview', "_self");
+        };
 
         this.submit = function () {
             var sheetKey, storagePromise, storageObject;

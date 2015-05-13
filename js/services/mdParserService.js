@@ -20,7 +20,6 @@ ownsheetApp.service('mdParserService', function () {
 
         customRenderer = new marked.Renderer();
         customRenderer.heading = function (text, level) {
-            console.log(isFirst);
             if (level === 1) {
                 if (isFirst) {
                     isFirst = false;

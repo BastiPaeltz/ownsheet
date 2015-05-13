@@ -29,6 +29,10 @@ section {
     width: 15%;
 }
 
+.btn-success{
+   margin : 10px 15px 15px 10px;
+}
+
 ::-webkit-scrollbar {
     width: 6px;
 }
