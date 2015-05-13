@@ -18,9 +18,13 @@ ownsheetApp.controller('viewController', ["$scope", "$window", "$routeParams", "
         if ($window.location.href.endsWith('/preview')) {
             $scope.sheet.name = "preview";
             $scope.mode = "preview";
-            renderContent(previewContentService.get(), mdParserService);
-        }
-        else {
+            $scope.mdContent= previewContentService.get();
+            if ($scope.mdContent) {
+                renderContent($scope.mdContent, mdParserService);
+            } else {
+                $scope.sheet.message = "No preview here";
+            }
+        } else {
             if (sheetNameParam) {
                 $scope.sheet.name = sheetNameParam;
                 $scope.sheet.message = "";
@@ -46,7 +50,8 @@ ownsheetApp.controller('viewController', ["$scope", "$window", "$routeParams", "
             if ($scope.mode !== "preview") {
                 $window.open('main.html#/edit/' + $scope.sheet.name, "_self");
             } else {
-                // TODO: go back to edit sheet
+                previewContentService.buffer($scope.mdContent);
+                $window.history.back();
             }
         }
 

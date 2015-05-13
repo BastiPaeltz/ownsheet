@@ -33,26 +33,38 @@ this text will be content of a box\n\
 ownsheet shines when it comes to displaying not so much when it comes to editing markdown";
 
         var sheetNameParam = $routeParams.sheetName;
+        var bufferedContent = previewContentService.getBuffer();
 
         $scope.sheet = {};
         if (sheetNameParam) {
             $scope.sheet.name = sheetNameParam;
-            sheet = chromeStorageService.getFromStorage(sheetNameParam);
-            sheet.then(function (value) {
-                if (value[sheetNameParam]) {
-                    $scope.content = value[sheetNameParam].content;
-                    $scope.sheet.message = "Edit sheet "
-                        + sheetNameParam;
-                } else {
-                    $scope.newSheet = true;
-                    $scope.sheet.message = "You currently have no sheet named " + sheetNameParam + " but you can easily add one below.";
-                    $scope.content = defaultContent;
-                }
-            });
+            if (!bufferedContent) {
+                sheet = chromeStorageService.getFromStorage(sheetNameParam);
+                sheet.then(function (value) {
+                    if (value[sheetNameParam]) {
+                        $scope.content = value[sheetNameParam].content;
+                        $scope.sheet.message = "Edit sheet "
+                            + sheetNameParam;
+                    } else {
+                        $scope.newSheet = true;
+                        $scope.sheet.message = "You currently have no sheet named " + sheetNameParam + " but you can easily add one below.";
+                        $scope.content = defaultContent;
+                    }
+                });
+            } else {
+                $scope.content = bufferedContent;
+                $scope.sheet.message = "Edit sheet "
+                    + sheetNameParam;
+            }
         } else {
+
             $scope.newSheet = true;
             $scope.sheet.message = "Add new sheet";
-            $scope.content = defaultContent;
+            if (!bufferedContent) {
+                $scope.content = defaultContent;
+            } else {
+                $scope.content = bufferedContent;
+            }
         }
 
         this.preview = function () {

@@ -16,6 +16,14 @@ ownsheetApp.service('previewContentService', function () {
         return preview.content;
     };
 
+    preview.buffer = function(bufferedContent){
+        preview.bufferedContent = bufferedContent;
+    };
+
+    preview.getBuffer = function(){
+        return preview.bufferedContent;
+    };
+
 });
 
 
