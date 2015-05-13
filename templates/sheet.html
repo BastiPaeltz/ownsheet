@@ -5,7 +5,15 @@
         <h3>{{sheet.message}}</h3>
     </div>
     <br/>
-    <button ng-click="view.goToEdit()" class="btn btn-primary btn-lg">Edit this sheet</button>
+    <div ng-switch on="buttonType">
+        <div ng-switch-when="edit">
+            <button ng-click="view.goToEdit()" class="btn btn-primary btn-lg">Edit this sheet</button>
+        </div>
+        <div ng-switch-when="new">
+            <button ng-click="view.new()" class="btn btn-success btn-lg">New sheet</button>
+        </div>
+
+    </div>
     <br/>
     <br/>
     <div id="masonry-container" class="content">

@@ -62,7 +62,7 @@ ownsheet shines when it comes to displaying not so much when it comes to editing
             $scope.sheet.message = "Add new sheet";
             if (!bufferedContent) {
                 $scope.content = defaultContent;
-            } else {
+            }else {
                 $scope.content = bufferedContent;
             }
         }
