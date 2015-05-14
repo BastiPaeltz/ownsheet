@@ -18,11 +18,19 @@ section {
 
 .tableSheetName{
     font-size: 17px;
-    width: 200px;
+    width: 250px;
+}
+
+.tableGlyphs{
+    width: 130px
 }
 
 .tableButton{
     width: 100px;
+}
+
+.editGlyph{
+    margin-left: 40px;
 }
 
 .navbar {

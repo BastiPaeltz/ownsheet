@@ -17,12 +17,5 @@ ownsheetApp.controller('mainController', ["$scope", "$window", "$routeParams",
             $scope.sheet.name = "";
         }
 
-        //this.goToView = function(){
-        //    $window.open('main.html#/view/'+$scope.sheet.name);
-        //};
-        //
-        //this.goToEdit = function(){
-        //    $window.open('main.html#/edit/'+$scope.sheet.name);
-        //};
     }]);
 
