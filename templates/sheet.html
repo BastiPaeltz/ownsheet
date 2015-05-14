@@ -5,6 +5,7 @@
         <h3>{{sheet.message}}</h3>
     </div>
     <br/>
+
     <div ng-switch on="buttonType">
         <div ng-switch-when="edit">
             <button ng-click="view.goToEdit()" class="btn btn-primary btn-lg">Edit this sheet</button>
@@ -14,10 +15,11 @@
         </div>
 
     </div>
-    <br/>
-    <br/>
-    <div id="masonry-container" class="content">
-        <div id="content"></div>
+
+    <div class="content content-250" style="display: block">
+        <div id="masonry-container">
+            <div id="ms-content"></div>
+        </div>
     </div>
 </div>
 </div>

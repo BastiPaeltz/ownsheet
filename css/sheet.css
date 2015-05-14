@@ -1,15 +1,227 @@
-.content{
-    margin-left: 10px;
+
+html {
+    color: #000;
 }
 
-.heading{
-    margin-left: 15px;
+body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6,
+pre, code, form, fieldset, legend, input, textarea, p, blockquote,
+th, td, hr, button, article, aside, details, figcaption, figure, footer, header,
+menu, nav, section {
+    margin: 0;
+    padding: 0;
 }
 
-.hideH1{
+article, aside, details, figcaption, figure, footer, header, menu, nav, section {
+    display: block;
+}
+
+body, button, input, select, textarea {
+    font-size: 15px;
+}
+
+input, select, textarea {
+    font-size: 100%;
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+th {
+    text-align: inherit;
+}
+
+fieldset, img, a img {
+    border: 0;
+}
+
+iframe {
+    display: block;
+}
+
+abbr, acronym {
+    border: 0;
+    font-variant: normal;
+}
+
+del {
+    text-decoration: line-through;
+}
+
+address, caption, cite, code, dfn, em, th, var {
+    font-style: normal;
+    font-weight: 500;
+}
+
+ol, ul {
+    list-style: none;
+}
+
+caption, th {
+    text-align: left;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-size: 100%;
+    font-weight: 500;
+}
+
+q:before, q:after {
+    content: '';
+}
+
+sup {
+    vertical-align: text-top;
+}
+
+sub {
+    vertical-align: text-bottom;
+}
+
+.clearfix:after {
+    visibility: hidden;
+    display: block;
+    font-size: 0;
+    content: " ";
+    clear: both;
+    height: 0;
+}
+
+body .hideH1 {
     display: none;
 }
 
-button {
-    margin-left: 10px;
+.left, .right {
+    display: inline;
+}
+
+.left {
+    float: left;
+}
+
+.right {
+    float: right;
+}
+
+body {
+    background: #f5f3ef;
+    font-family: 'Lato', sans-serif;
+}
+
+.cheat-detail {
+    background: grey fixed 100% 100%;
+}
+
+.loading {
+    margin: 0 auto;
+    font-style: italic;
+    font-size: 20px;
+    color: #999;
+    padding-top: 350px;
+}
+
+.content {
+    padding-top: 45px;
+    margin: 0 auto;
+    display: none;
+}
+
+.heading h1{
+    font-size: 5em;
+}
+
+.box {
+    border-radius: 8px;
+    margin: 5px 8px;
+    padding: 15px;
+    width: 200px;
+    color: #fff;
+    opacity: 0.9;
+}
+
+.content-250 {
+    margin: 0 auto;
+}
+
+.content-250 .box {
+    width: 250px;
+    margin: 5px 10px;
+    background-color: grey;
+}
+
+.content-400 {
+    margin: 0 auto;
+}
+
+.content-400 .box {
+    width: 400px;
+    margin: 40px 10px 5px;
+}
+
+.box h2 {
+    font-size: 28px;
+    font-weight: bold;
+    padding-right: 10px;
+    margin-bottom: 5px;
+    text-align: right;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 3px;
+}
+
+.box {
+    margin-bottom: 15px;
+    word-break: normal
+}
+
+.box a {
+    font-size: 14px;
+    color: #fff;
+    text-decoration: none;
+    display: block;
+}
+
+.box a:hover {
+    background: #ccc;
+    color: #000;
+}
+
+.box h3 {
+    font-size: 16px;
+    font-weight: bold;
+    color: #ba9d37;
+}
+
+.box img {
+    display: none
+}
+
+
+.box code {
+    font-size: 14px;
+    text-decoration: none;
+    display: block;
+    word-break: normal;
+    background-color: #269abc;
+}
+
+.box ul { /* targets all ul elements */
+    /* general styles */
+    padding-left: 5px;
+}
+.box ul li { /* targets all li elements within a ul */
+    /* general styles */
+    padding-left: 10px;
+    list-style-type: circle;
+    list-style-position: inside;
+}
+
+.box ul li ul { /* targets all ul elements within an li element, itself within a ul */
+    /* overrule general 'outer' styles */
+    padding-left: 12px;
+}
+.box ul li ul li { /* targets all li elements within a ul element,
+                 within an li element, itself within a ul...and so on */
+    /* overrule general 'outer' styles */
+    padding-left: 13px;
 }

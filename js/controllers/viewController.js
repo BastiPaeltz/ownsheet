@@ -35,6 +35,7 @@ ownsheetApp.controller('viewController', ["$scope", "$window", "$routeParams", "
                     if (value[sheetNameParam]) {
                         // if there is content in storage
                         renderContent(value[sheetNameParam].content, mdParserService);
+                        colorBoxes();
                         $scope.buttonType = "edit";
                     } else {
                         // if there isn't
@@ -76,8 +77,16 @@ function initializeMasonry() {
     });
 }
 
+function colorBoxes(){
+    var colorList = ["#2d9f34", "#4b65c3", "#48456a", "#4f7a4e",
+        "#d61115", "rgba(89, 88, 47, 0.99)"];
+    $('.box').each(function (index) {
+        $(this).css("background-color", colorList[index% colorList.length]);
+    });
+}
+
 function renderContent(mdContent, mdParserService) {
-    var content = document.getElementById('content');
+    var content = document.getElementById('ms-content');
     content.innerHTML = mdParserService.parse(mdContent) + "\</div>\</div>";
     initializeMasonry();
 }
