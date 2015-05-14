@@ -2,7 +2,7 @@
     <div class="heading">
         <h1>Edit your sheet</h1>
 
-        <h3>{{sheet.message}}</h3>
+        <p>{{sheet.message}}</p>
     </div>
     <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
     <form name="name" ng-if="newSheet" novalidate class="simple-form newName">

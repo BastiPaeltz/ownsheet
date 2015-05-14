@@ -14,11 +14,11 @@ ownsheetApp.controller('editController', ["$scope", "$routeParams", "mdParserSer
         var sheet;
         var defaultContent = "# ownsheet ignores these headings\n\
 \n\
-this text will be ignored as well\n\
+This text will be ignored as well.\n\
 \n\
 ## each of these headings will form a box\n\
 \n\
-this text will be content of a box\n\
+This text will be content of a box.\n\
 \n\
 ## another box\n\
 \n\
@@ -30,7 +30,7 @@ this text will be content of a box\n\
 \n\
 ## Note however\n\
 **There are better options for editing markdown (online or offline)**  \n\
-ownsheet shines when it comes to displaying not so much when it comes to editing markdown";
+ownsheet shines when it comes to displaying not so much when it comes to editing markdown.";
 
         var sheetNameParam = $routeParams.sheetName;
         var bufferedContent = previewContentService.getBuffer();
@@ -43,15 +43,18 @@ ownsheet shines when it comes to displaying not so much when it comes to editing
                 sheet.then(function (value) {
                     if (value[sheetNameParam]) {
                         $scope.content = value[sheetNameParam].content;
+                        $scope.initialContent = $scope.content;
                         $scope.sheet.message = sheetNameParam;
                     } else {
                         $scope.newSheet = true;
                         $scope.sheet.message = "You currently have no sheet named " + sheetNameParam + " but you can easily add one below.";
                         $scope.content = defaultContent;
+                        $scope.initialContent = $scope.content;
                     }
                 });
             } else {
                 $scope.content = bufferedContent;
+                $scope.initialContent = $scope.content;
                 $scope.sheet.message = sheetNameParam;
             }
         } else {
@@ -60,17 +63,31 @@ ownsheet shines when it comes to displaying not so much when it comes to editing
             $scope.sheet.message = "Add new sheet";
             if (!bufferedContent) {
                 $scope.content = defaultContent;
+                $scope.initialContent = $scope.content;
             } else {
                 $scope.content = bufferedContent;
+                $scope.initialContent = $scope.content;
             }
         }
 
 
         document.title = "ownsheet - edit sheet";
 
+        //prevent from leaving page
+        $scope.$on('$locationChangeStart', function( event ) {
+            if($scope.initialContent !== $scope.content && !$scope.safeToNavigate) {
+                var answer = confirm("You started editing  - are you sure you want to leave this page?");
+                if (!answer) {
+                    event.preventDefault();
+                }
+            }
+        });
+
         this.preview = function () {
             previewContentService.add($scope.content);
+            $scope.safeToNavigate = true;
             $window.open('main.html#/preview', "_self");
+
         };
 
         this.submit = function () {
@@ -83,6 +100,7 @@ ownsheet shines when it comes to displaying not so much when it comes to editing
                     content: $scope.content
                 };
                 chromeStorageService.pushToStorage(storageObject);
+                $scope.safeToNavigate = true;
                 $window.open('main.html#/view/' + sheetKey, "_self");
             }
             else {
@@ -114,6 +132,7 @@ ownsheet shines when it comes to displaying not so much when it comes to editing
                                 content: $scope.content
                             };
                             chromeStorageService.pushToStorage(storageObject);
+                            $scope.safeToNavigate = true;
                             $window.open('main.html#/view/' + sheetKey, "_self");
                         }
                     });

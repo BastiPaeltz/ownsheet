@@ -31,14 +31,14 @@ ownsheetApp.controller('popupController', ["$scope", "$window", "chromeStorageSe
         };
 
         this.removeSheet = function (sheetName) {
-            // TODO: question - "are you sure" before removing
-            chromeStorageService.removeFromStorage(sheetName);
-            removeFromScope($scope, sheetName);
-
-            if ($scope.sheets.length === 0) {
-                $scope.message = "No sheets added yet."
+            var confirmed = confirm('Do you really want to do delete this sheet?');
+            if (confirmed) {
+                chromeStorageService.removeFromStorage(sheetName);
+                removeFromScope($scope, sheetName);
+                if ($scope.sheets.length === 0) {
+                    $scope.message = "No sheets added yet."
+                }
             }
-
         };
 
         this.goToSheet = function (sheetName) {
@@ -51,7 +51,7 @@ ownsheetApp.controller('popupController', ["$scope", "$window", "chromeStorageSe
 
     }]);
 
-function removeFromScope($scope, sheetName){
+function removeFromScope($scope, sheetName) {
     var sheetIndex = $scope.sheets.indexOf(sheetName);
     $scope.sheets.splice(sheetIndex, 1);
 }
