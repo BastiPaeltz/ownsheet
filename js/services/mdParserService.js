@@ -5,17 +5,18 @@
 var ownsheetApp = angular.module("ownsheetApp");
 
 ownsheetApp.service('mdParserService', function () {
+
     var isFirst = true;
 
     this.parse = function (textToParse) {
         var customRenderer;
 
         if (textToParse.indexOf('h2') !== -1) {
-            textToParse = textToParse.replace(/\<[^/]*?(h2).*?\>/g, "<$1 class=\"box\">");
+            textToParse = textToParse.replace(/\<.*?h2[^>]*\>(.*?)\<\/.*?h2[^>]*\>/g, "## $1");
         }
 
         if (textToParse.indexOf('h1') !== -1) {
-            textToParse = textToParse.replace(/\<[^/]*?(h1).*?\>/g, "<$1 class=\"hidden\">");
+            textToParse = textToParse.replace(/\<.*?h1[^>]*\>(.*?)\<\/.*?h1[^>]*\>/g, "# $1");
         }
 
         customRenderer = new marked.Renderer();

@@ -45,6 +45,10 @@ ownsheetApp.controller('popupController', ["$scope", "$window", "chromeStorageSe
             $window.open('main.html#/view/' + sheetName);
         };
 
+        this.goToGeneral = function (sheetName) {
+            $window.open('main.html#/general');
+        };
+
     }]);
 
 function removeFromScope($scope, sheetName){

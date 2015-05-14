@@ -51,6 +51,7 @@ ownsheetApp.controller('viewController', ["$scope", "$window", "$routeParams", "
                 $scope.buttonType = "new";
             }
         }
+        document.title = $scope.sheet.name + " cheat sheet";
 
         this.goToEdit = function () {
             if ($scope.mode !== "preview") {

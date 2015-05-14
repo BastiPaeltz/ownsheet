@@ -65,6 +65,8 @@ ownsheet shines when it comes to displaying not so much when it comes to editing
             }
         }
 
+        document.title = "ownsheet - edit sheet";
+
         this.preview = function () {
             previewContentService.add($scope.content);
             $window.open('main.html#/preview', "_self");
