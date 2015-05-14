@@ -9,7 +9,6 @@ var ownsheetApp = angular.module("ownsheetApp");
 
 ownsheetApp.controller('mainController', ["$scope", "$window", "$routeParams",
     function ($scope, $window, $routeParams) {
-
         var sheetName = $routeParams.sheetName;
         $scope.sheet = {};
         if (sheetName) {

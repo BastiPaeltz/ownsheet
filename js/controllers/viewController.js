@@ -10,7 +10,6 @@ ownsheetApp.controller('viewController', ["$scope", "$window", "$routeParams", "
     "chromeStorageService", "mdParserService", "previewContentService",
     function ($scope, $window, $routeParams, $sce, chromeStorageService,
               mdParserService, previewContentService) {
-
         var mdContent, sheetPromise;
         var sheetNameParam = $routeParams.sheetName;
         $scope.sheet = {};
@@ -89,6 +88,7 @@ function renderContent(mdContent, mdParserService) {
     var content = document.getElementById('ms-content');
     content.innerHTML = mdParserService.parse(mdContent) + "\</div>\</div>";
     initializeMasonry();
+
 }
 
 String.prototype.endsWith = function (suffix) {

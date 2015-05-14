@@ -3,6 +3,7 @@ body, section {
     width: 500px;
     height: 400px;
     overflow-x: hidden;
+    font-family: 'Lato', sans-serif;
 }
 
 h1 {
@@ -11,22 +12,20 @@ h1 {
 
 section {
     padding: 5px;
+    position: relative;
+}
+
+.tableSheetName{
+    font-size: 17px;
+    width: 200px;
+}
+
+.tableButton{
+    width: 100px;
 }
 
 .navbar {
     margin-bottom: 2px;
-}
-
-.tableSheetName {
-    width: 70%;
-}
-
-.removeButton{
-    margin-right: 15px;
-}
-
-.tableGlyph{
-    width: 15%;
 }
 
 .btn-success{

@@ -43,8 +43,7 @@ ownsheet shines when it comes to displaying not so much when it comes to editing
                 sheet.then(function (value) {
                     if (value[sheetNameParam]) {
                         $scope.content = value[sheetNameParam].content;
-                        $scope.sheet.message = "Edit sheet "
-                            + sheetNameParam;
+                        $scope.sheet.message = sheetNameParam;
                     } else {
                         $scope.newSheet = true;
                         $scope.sheet.message = "You currently have no sheet named " + sheetNameParam + " but you can easily add one below.";
@@ -53,8 +52,7 @@ ownsheet shines when it comes to displaying not so much when it comes to editing
                 });
             } else {
                 $scope.content = bufferedContent;
-                $scope.sheet.message = "Edit sheet "
-                    + sheetNameParam;
+                $scope.sheet.message = sheetNameParam;
             }
         } else {
 
