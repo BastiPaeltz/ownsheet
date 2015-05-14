@@ -13,31 +13,32 @@
 </head>
 
 <body>
-<h1>Your sheets</h1>
 
 <div ng-controller="popupController as popup">
+    <div class="topRow">
+        <h1 id="heading">Your sheets</h1>
 
-
+        <label id="searchField">Search: <input ng-model="searchText"></label>
+    </div>
+    <h3>{{message}}</h3>
     <div class="container">
-        <p>{{message}}</p>
-
 
         <section>
             <table class="table table-hover sheetTable">
                 <tbody>
-                <tr ng-repeat="(key, sheet) in sheets">
+                <tr ng-repeat="sheet in sheets | filter:searchText">
                     <td class="tableSheetName">
-                        <a href="" ng-click="popup.goToSheet(sheet.name)" target="_blank">
-                            {{sheet.name}}
+                        <a href="" ng-click="popup.goToSheet(sheet)" target="_blank">
+                            {{sheet}}
                         </a>
                     </td>
                     <td class="tableGlyph">
-                        <button type="button" ng-click="popup.editSheet(sheet.name)" class="btn btn-primary tableButton">
+                        <button type="button" ng-click="popup.editSheet(sheet)" class="btn btn-primary tableButton">
                             <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Edit
                         </button>
                     </td>
                     <td class="tableGlyph">
-                        <button type="button" ng-click="popup.removeSheet(sheet.name)"
+                        <button type="button" ng-click="popup.removeSheet(sheet)"
                                 class="btn btn-danger tableButton">
                             <span class="glyphicon glyphicon-remove"></span> Delete
                         </button>

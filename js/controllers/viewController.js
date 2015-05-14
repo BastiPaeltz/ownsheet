@@ -14,12 +14,13 @@ ownsheetApp.controller('viewController', ["$scope", "$window", "$routeParams", "
         var sheetNameParam = $routeParams.sheetName;
         $scope.sheet = {};
 
-        if ($window.location.href.endsWith('/preview')) {
+        if ($window.location.href.endsWith('main.html#/preview')) {
             $scope.sheet.name = "preview";
             $scope.mode = "preview";
             $scope.mdContent = previewContentService.get();
             if ($scope.mdContent) {
                 renderContent($scope.mdContent, mdParserService);
+                colorBoxes();
                 $scope.buttonType = "edit";
             } else {
                 $scope.sheet.message = "No preview here";
@@ -76,11 +77,11 @@ function initializeMasonry() {
     });
 }
 
-function colorBoxes(){
+function colorBoxes() {
     var colorList = ["#2d9f34", "#4b65c3", "#48456a", "#4f7a4e",
         "#d61115", "rgba(89, 88, 47, 0.99)"];
     $('.box').each(function (index) {
-        $(this).css("background-color", colorList[index% colorList.length]);
+        $(this).css("background-color", colorList[index % colorList.length]);
     });
 }
 

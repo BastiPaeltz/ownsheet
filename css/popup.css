@@ -7,7 +7,8 @@ body, section {
 }
 
 h1 {
-    margin-left: 15px;
+    margin-left: 18px;
+    margin-top: 25px;
 }
 
 section {
@@ -42,4 +43,20 @@ section {
 
 ::-webkit-scrollbar-thumb, ::-webkit-scrollbar-thumb:window-inactive {
     background: red;
+}
+
+
+.topRow h1{
+    display: inline-block;
+}
+
+.topRow label{
+    display: inline-block;
+    margin-left: 60px;
+    margin-right: auto;
+    font-size: 15px;
+}
+
+h3{
+    margin-left: 15px;
 }

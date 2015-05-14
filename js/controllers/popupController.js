@@ -15,9 +15,9 @@ ownsheetApp.controller('popupController', ["$scope", "$window", "chromeStorageSe
                 $scope.message = "No sheets added yet."
             }
             else {
-                $scope.sheets = {};
+                $scope.sheets = [];
                 Object.keys(value).forEach(function (sheet) {
-                    $scope.sheets[sheet] = value[sheet];
+                    $scope.sheets.push(sheet);
                 });
             }
         });
@@ -33,9 +33,9 @@ ownsheetApp.controller('popupController', ["$scope", "$window", "chromeStorageSe
         this.removeSheet = function (sheetName) {
             // TODO: question - "are you sure" before removing
             chromeStorageService.removeFromStorage(sheetName);
-            delete $scope.sheets[sheetName];
+            removeFromScope($scope, sheetName);
 
-            if (Object.getOwnPropertyNames($scope.sheets).length === 0) {
+            if ($scope.sheets.length === 0) {
                 $scope.message = "No sheets added yet."
             }
 
@@ -47,3 +47,7 @@ ownsheetApp.controller('popupController', ["$scope", "$window", "chromeStorageSe
 
     }]);
 
+function removeFromScope($scope, sheetName){
+    var sheetIndex = $scope.sheets.indexOf(sheetName);
+    $scope.sheets.splice(sheetIndex, 1);
+}
