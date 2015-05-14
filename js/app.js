@@ -4,7 +4,7 @@
  */
 "use strict";
 
-var ownsheetApp = angular.module("ownsheetApp", ["ngRoute"]);
+var ownsheetApp = angular.module("ownsheetApp", ['ngRoute', 'ui.bootstrap']);
 
 ownsheetApp.config(function ($routeProvider) {
     $routeProvider
@@ -29,4 +29,6 @@ ownsheetApp.config(function ($routeProvider) {
         })
 
         .otherwise({redirectTo: '/general'});
+
+
 });

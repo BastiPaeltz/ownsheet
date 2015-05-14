@@ -4,6 +4,7 @@
 
         <h3>{{sheet.message}}</h3>
     </div>
+    <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
     <form name="name" ng-if="newSheet" novalidate class="simple-form newName">
         Name: <input type="text" required="" ng-model="sheet.newName"/><br/>
     </form>

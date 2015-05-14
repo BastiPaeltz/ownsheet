@@ -36,3 +36,9 @@ form {
     padding: 8px;
     font-size: 20px;
 }
+
+.alert{
+    margin-top: 10px;
+    margin-left: 15px;
+    width: 500px;
+}

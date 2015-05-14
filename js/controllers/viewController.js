@@ -73,7 +73,7 @@ function initializeMasonry() {
     var container = document.querySelector('#masonry-container');
     var msnry = new Masonry(container, {
         // options
-        columnWidth: 50, // width between each box
+        columnWidth: 50,
         itemSelector: '.box'
     });
 }

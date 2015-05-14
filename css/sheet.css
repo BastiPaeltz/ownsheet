@@ -11,6 +11,14 @@ menu, nav, section {
     padding: 0;
 }
 
+.navbar-brand{
+    font-size: 30px;
+}
+
+.navbar-default{
+    height: 60px;
+}
+
 article, aside, details, figcaption, figure, footer, header, menu, nav, section {
     display: block;
 }
@@ -122,7 +130,7 @@ body {
 }
 
 .content {
-    padding-top: 45px;
+    padding-top: 25px;
     margin: 0 auto;
     display: none;
 }
@@ -222,4 +230,16 @@ body {
                  within an li element, itself within a ul...and so on */
     /* overrule general 'outer' styles */
     padding-left: 13px;
+}
+
+.sheetButtons{
+    margin-top: 5px;
+    margin-left: 15px;
+    margin-bottom: 10px;
+}
+
+#message{
+    font-size: 2.5em;
+    margin-left: 15px;
+    margin-bottom: 15px;
 }

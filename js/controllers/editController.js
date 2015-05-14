@@ -34,7 +34,7 @@ ownsheet shines when it comes to displaying not so much when it comes to editing
 
         var sheetNameParam = $routeParams.sheetName;
         var bufferedContent = previewContentService.getBuffer();
-
+        $scope.alerts = [];
         $scope.sheet = {};
         if (sheetNameParam) {
             $scope.sheet.name = sheetNameParam;
@@ -60,10 +60,11 @@ ownsheet shines when it comes to displaying not so much when it comes to editing
             $scope.sheet.message = "Add new sheet";
             if (!bufferedContent) {
                 $scope.content = defaultContent;
-            }else {
+            } else {
                 $scope.content = bufferedContent;
             }
         }
+
 
         document.title = "ownsheet - edit sheet";
 
@@ -74,7 +75,7 @@ ownsheet shines when it comes to displaying not so much when it comes to editing
 
         this.submit = function () {
             var sheetKey, storagePromise, storageObject;
-            if ($scope.sheet.name) {
+            if ($scope.sheet.name && !$scope.newSheet) {
                 sheetKey = $scope.sheet.name;
                 storageObject = {};
                 storageObject[sheetKey] = {
@@ -87,12 +88,25 @@ ownsheet shines when it comes to displaying not so much when it comes to editing
             else {
                 sheetKey = $scope.sheet.newName;
                 if (!sheetKey) {
-                    $scope.sheet.message = "Give your sheet a name."
-                } else {
+                    $scope.alerts.push({
+                        type: "danger",
+                        msg: "Give your sheet a name."
+                    });
+                    $scope.closeAlert = function(index) {
+                        $scope.alerts.splice(index, 1);
+                    };
+                }
+                else {
                     storagePromise = chromeStorageService.getFromStorage(sheetKey);
                     storagePromise.then(function (value) {
                         if (value[sheetKey]) {
-                            $scope.sheet.message = "sheet with name " + sheetKey + " is already defined. Please try another name."
+                            $scope.alerts.push({
+                                type: "danger",
+                                msg: "sheet with name " + sheetKey + " is already defined. Please try another name."
+                            });
+                            $scope.closeAlert = function(index) {
+                                $scope.alerts.splice(index, 1);
+                            };
                         } else {
                             storageObject = {};
                             storageObject[sheetKey] = {
