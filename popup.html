@@ -55,8 +55,12 @@
             </div>
         </section>
 
-        <button ng-click="popup.newSheet()" class="btn btn-success btn-lg">Add new sheet</button>
-        <button ng-click="popup.goToGeneral()" class="btn btn-info btn-lg">Explore</button>
+        <button type="button" ng-click="popup.newSheet()" class="btn btn-success btn-lg">
+            <span class="glyphicon glyphicon-file"></span> Add new sheet
+        </button>
+        <button type="button" ng-click="popup.goToGeneral()" class="btn btn-info btn-lg">
+            <span class="glyphicon glyphicon-cog"></span> Explore
+        </button>
     </div>
 </div>
 

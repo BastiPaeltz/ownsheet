@@ -75,7 +75,7 @@ ownsheet shines when it comes to displaying not so much when it comes to editing
 
         //prevent from leaving page
         $scope.$on('$locationChangeStart', function( event ) {
-            if($scope.initialContent !== $scope.content && !$scope.safeToNavigate) {
+            if(!$scope.safeToNavigate && ($scope.initialContent !== $scope.content)) {
                 var answer = confirm("You started editing  - are you sure you want to leave this page?");
                 if (!answer) {
                     event.preventDefault();
