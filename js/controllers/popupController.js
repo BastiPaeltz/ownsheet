@@ -31,7 +31,7 @@ ownsheetApp.controller('popupController', ["$scope", "$window", "chromeStorageSe
         };
 
         this.removeSheet = function (sheetName) {
-            var confirmed = confirm('Do you really want to do delete this sheet?');
+            var confirmed = $window.confirm('Do you really want to do delete this sheet?');
             if (confirmed) {
                 chromeStorageService.removeFromStorage(sheetName);
                 removeFromScope($scope, sheetName);

@@ -26,7 +26,7 @@ ownsheetApp.service('mdParserService', function () {
                     isFirst = false;
                     return '\<div class\=\"hideH1\"\> \<\h1\>' + text + '\<\/h1\>';
                 }else {
-                    return '<\/div> \<div class\=\"hideH1\"\> \<\h2\>' + text + '\<\/h1\>';
+                    return '<\/div> \<div class\=\"hideH1\"\> \<\h1\>' + text + '\<\/h1\>';
                 }
             } else if (level === 2) {
                 if (isFirst) {

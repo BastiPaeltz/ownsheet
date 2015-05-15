@@ -55,7 +55,6 @@ describe('popupController', function () {
     }));
 
     it("should populate the scope with emptyMessage when no items are returned", function () {
-        // TODO double check how chrome storage handles misses
         popupController = $controller('popupController', {$scope: $scope, chromeStorageService: chromeStorageService});
         deferred.resolve({});
         expect(storageSpy).toHaveBeenCalledWith(null);
@@ -70,11 +69,9 @@ describe('popupController', function () {
         deferred.resolve(storageItemsMock);
         expect(storageSpy).toHaveBeenCalledWith(null);
         $rootScope.$apply();
-        console.log($scope);
         expect(returnedValue).not.toBeFalsy();
         expect($scope.message).toBeFalsy();
-        expect($scope.sheets.git).toBeTruthy();
-        expect($scope.sheets.json).toBeTruthy();
+        expect($scope.sheets.length).toEqual(2);
     });
 
     it("should route to empty edit.html when add new sheet is clicked", function () {
@@ -87,6 +84,18 @@ describe('popupController', function () {
         popupController.newSheet();
         expect(windowSpy).toHaveBeenCalledWith('main.html#/edit');
     });
+
+    it("should route to 'general' when explore button is clicked", function () {
+        var windowSpy = jasmine.createSpy('windowSpy');
+        var myWindow = {
+            open: windowSpy
+        };
+        popupController = $controller('popupController', {$scope: $scope, $window: myWindow});
+        expect(popupController.goToGeneral).toBeDefined();
+        popupController.goToGeneral();
+        expect(windowSpy).toHaveBeenCalledWith('main.html#/general');
+    });
+
 
     it("should route to populated edit template when edit item is clicked", function () {
         var windowSpy = jasmine.createSpy('windowSpy');
@@ -111,32 +120,43 @@ describe('popupController', function () {
     });
 
     it("should remove items from storage and scope when del is clicked.", function () {
+        var confirmSpy = jasmine.createSpy('confirmSpy').and.returnValue('yes');
+        var myWindow = {
+            confirm: confirmSpy
+        };
         popupController = $controller('popupController', {
             $scope: $scope,
-            chromeStorageService: chromeStorageService
+            chromeStorageService: chromeStorageService,
+            $window: myWindow
         });
         expect(popupController.removeSheet).toBeDefined();
         deferred.resolve(storageItemsMock);
         $rootScope.$apply();
-        expect($scope.sheets.git).toBeTruthy();
+        expect($scope.sheets.indexOf('git')).not.toEqual(-1);
         popupController.removeSheet('git');
+        expect(confirmSpy).toHaveBeenCalled();
         expect(chromeRemoveSpy).toHaveBeenCalledWith('git');
-        expect($scope.sheets.git).toBeFalsy();
-        expect($scope.sheets.json).toBeTruthy();
+        expect($scope.sheets.indexOf('git')).toEqual(-1);
+        expect($scope.sheets.indexOf('json')).not.toEqual(-1);
     });
 
     it("When last sheet is removed, empty-message should be displayed", function () {
+        var confirmSpy = jasmine.createSpy('confirmSpy').and.returnValue('yes');
+        var myWindow = {
+            confirm: confirmSpy
+        };
         popupController = $controller('popupController', {
             $scope: $scope,
-            chromeStorageService: chromeStorageService
+            chromeStorageService: chromeStorageService,
+            $window: myWindow
         });
         expect(popupController.removeSheet).toBeDefined();
         deferred.resolve({git : {}});
         $rootScope.$apply();
-        expect($scope.sheets.git).toBeTruthy();
+        expect($scope.sheets.indexOf('git')).not.toEqual(-1);
         popupController.removeSheet('git');
         expect(chromeRemoveSpy).toHaveBeenCalledWith('git');
-        expect($scope.sheets.git).toBeFalsy();
+        expect($scope.sheets.indexOf('git')).toEqual(-1);
         expect($scope.message).toEqual('No sheets added yet.')
     });
 });

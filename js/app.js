@@ -4,7 +4,7 @@
  */
 "use strict";
 
-var ownsheetApp = angular.module("ownsheetApp", ['ngRoute', 'ui.bootstrap']);
+var ownsheetApp = angular.module("ownsheetApp", ['ngRoute', 'ui.bootstrap', 'LocalStorageModule']);
 
 ownsheetApp.config(function ($routeProvider) {
     $routeProvider
@@ -13,7 +13,7 @@ ownsheetApp.config(function ($routeProvider) {
             controller: "editController"
         })
 
-        .when("/view/:sheetName?", {
+        .when("/view/:sheetName", {
             templateUrl: "../templates/sheet.html",
             controller: "viewController"
         })

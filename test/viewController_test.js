@@ -45,6 +45,18 @@ describe('viewController', function () {
         };
     }));
 
+    it("should be able to distinguish preview and normal view", function () {
+        routeParams = "not-imporant/main.html#/preview";
+        controller = $controller('viewController', {
+            $scope: $scope,
+            $routeParams: routeParams,
+            chromeStorageService: chromeStorageService,
+            mdParserService : mdParserService
+        });
+        expect($scope.sheet.name).toEqual('preview');
+        expect($scope.mode).toEqual('preview');
+    });
+
     it("should call the markdown parser to transform content to HTML", function () {
         controller = $controller('viewController', {
             $scope: $scope,
@@ -96,6 +108,38 @@ describe('viewController', function () {
         $rootScope.$apply();
         expect($scope.sheet.message).toEqual('No sheet here. Do you want to add one?');
         expect(parseSpy).not.toHaveBeenCalled();
+    });
+
+    it("should route (back) to edit based on preview or not", function () {
+        var windowSpy = jasmine.createSpy('windowSpy');
+        var myWindow = {
+            open : windowSpy
+        };
+        controller = $controller('viewController', {
+            $scope: $scope,
+            $window: myWindow
+        });
+        $scope.mode = "preview";
+        $scope.sheet.name = "git";
+        expect(controller.goToEdit).toBeDefined();
+        controller.goToEdit();
+        expect(windowSpy).toHaveBeenCalledWith('main.html#/edit/git', "_self")
+    });
+
+    it("should route to empty edit on newSheet ng click event", function () {
+        var windowSpy = jasmine.createSpy('windowSpy');
+        var myWindow = {
+            open : windowSpy
+        };
+        controller = $controller('viewController', {
+            $scope: $scope,
+            $window: myWindow
+
+        });
+        expect(controller.new).toBeDefined();
+        controller.new();
+        expect(windowSpy).toHaveBeenCalledWith('main.html#/edit', "_self")
+
     });
 
 });

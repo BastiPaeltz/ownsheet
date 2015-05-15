@@ -1,6 +1,11 @@
-<strong>To be implemented</strong>
-<ul>
-    <li>Import feature</li>
-    <li>Export feature</li>
-    <li>Like / Share </li>
-</ul>
+<h1>Explore ownsheet</h1>
+<div ng-controller="generalController as general">
+    <button ng-click="general.addFont()" class="btn btn-success">Add font color</button>
+    <button ng-click="general.removeFont()" class="btn btn-danger">Remove last color</button>
+    <h3>Customize your colors</h3>
+    <div class="form-group" ng-repeat="color in colors track by $index">
+        <input type="text" class="form-control" placeholder="{{color}}">
+    </div>
+    <button ng-click="general.submit()" class="btn btn-success">Save colors</button>
+    <button ng-click="general.reset()" class="btn btn-warning">Reset to default</button>
+</div>

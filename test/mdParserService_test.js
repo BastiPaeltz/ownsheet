@@ -13,6 +13,8 @@ describe('Markdown Parser Service', function () {
         formMockup = "\
 # Javascript \n\
 \n\
+# Second h1 heading\
+\
 ## Best Practices \n\
 \n\
 * compare with `===` \n\
@@ -41,15 +43,15 @@ describe('Markdown Parser Service', function () {
         expect(mdParserService.parse).toBeDefined();
         var parsedHTML = mdParserService.parse(formMockup);
         expect(mdParserService.parse).toHaveBeenCalledWith(formMockup);
-        var isHTML = parsedHTML.indexOf('<');
-        var isHTMLSecond = parsedHTML.indexOf('>');
+        var isHTML = parsedHTML.indexOf('\<strong>');
+        var isHTMLSecond = parsedHTML.indexOf('\</h2>');
         expect(isHTML).not.toEqual(-1);
         expect(isHTMLSecond).not.toEqual(-1);
     });
 
     it("should style h2 headings accordingly", function () {
         var parsedHTML = mdParserService.parse(formMockup);
-        var correctH2 = parsedHTML.indexOf("\<h2 class=\"box\"\>");
+        var correctH2 = parsedHTML.indexOf("<\/div> \<div class\=\"box\"\> \<h2\>Values\</h2>");
         expect(mdParserService.parse).toHaveBeenCalledWith(formMockup);
         expect(correctH2).not.toEqual(-1);
     });
@@ -61,7 +63,16 @@ describe('Markdown Parser Service', function () {
         \n\
         * compare with `===` \n";
         var parsedHTML = mdParserService.parse(formMockup);
-        var correctH1 = parsedHTML.indexOf("\<h1 class=\"hideH1\"\>");
+        var correctH1 = parsedHTML.indexOf("\<div class\=\"hideH1\"\> \<\h1\>Javascript\<\/h1\>");
+        expect(mdParserService.parse).toHaveBeenCalledWith(formMockup);
+    });
+
+    it("should style the very first h1 or h2 heading differently than the rest", function () {
+        var parsedHTML = mdParserService.parse(formMockup);
+        var wrongH1 = parsedHTML.indexOf("\</div> \<div class\=\"hideH1\"\> \<\h1\>Javascript\<\/h1\>");
+        var correctH2 = parsedHTML.indexOf("<\/div> \<div class\=\"box\"\> \<h2\>Values\</h2>");
+        expect(wrongH1).toEqual(-1);
+        expect(correctH2).not.toEqual(-1);
         expect(mdParserService.parse).toHaveBeenCalledWith(formMockup);
     });
 
@@ -83,11 +94,11 @@ describe('Markdown Parser Service', function () {
     });
 
     it("should accept HTML as well and style it accordingly", function () {
-        formMockup = "\< h2\ random stuff > My Text \<\/h2\>";
+        formMockup = "\< h2\ random stuff > My Text \<\/ h2 \>";
         var parsedHTML = mdParserService.parse(formMockup);
         expect(mdParserService.parse).toHaveBeenCalledWith(formMockup);
         expect(parsedHTML).toBeDefined();
-        expect(parsedHTML).toEqual("\<h2\ class=\"box\"> My Text \<\/h2\>");
+        expect(parsedHTML).toEqual("\<div class\=\"box\"\> \<h2\>My Text\</h2>");
     });
 
 });

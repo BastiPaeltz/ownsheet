@@ -27,29 +27,24 @@ ownsheetApp.controller('viewController', ["$scope", "$window", "$routeParams", "
                 $scope.buttonType = "new";
             }
         } else {
-            if (sheetNameParam) {
-                $scope.sheet.name = sheetNameParam;
-                $scope.sheet.message = "";
-                sheetPromise = chromeStorageService.getFromStorage(sheetNameParam);
-                sheetPromise.then(function (value) {
-                    if (value[sheetNameParam]) {
-                        // if there is content in storage
-                        renderContent(value[sheetNameParam].content, mdParserService);
-                        colorBoxes();
-                        $scope.buttonType = "edit";
-                    } else {
-                        // if there isn't
-                        $scope.sheet.name = "";
-                        $scope.sheet.message = "No sheet here. Do you want to add one?";
-                        $scope.buttonType = "new"
-                    }
-                });
-            } else {
-                // when just /view gets entered, show error message
-                $scope.sheet.name = "";
-                $scope.sheet.message = "No sheet here. Do you want to add one?";
-                $scope.buttonType = "new";
-            }
+            // sheetNameParam is definitely defined
+            $scope.sheet.name = sheetNameParam;
+            $scope.sheet.message = "";
+            sheetPromise = chromeStorageService.getFromStorage(sheetNameParam);
+            sheetPromise.then(function (value) {
+                if (value[sheetNameParam]) {
+                    // if there is content in storage
+                    renderContent(value[sheetNameParam].content, mdParserService);
+                    colorBoxes();
+                    $scope.buttonType = "edit";
+                } else {
+                    // if there isn't
+                    $scope.sheet.name = "";
+                    $scope.sheet.message = "No sheet here. Do you want to add one?";
+                    $scope.buttonType = "new"
+                }
+            });
+
         }
         document.title = $scope.sheet.name + " cheat sheet";
 
@@ -80,7 +75,7 @@ function initializeMasonry() {
 
 function colorBoxes() {
     var colorList = ["#2d9f34", "#4b65c3", "#48456a", "#4f7a4e",
-        "#d61115", "rgba(89, 88, 47, 0.99)"];
+        "#d61115", "#59582f"];
     $('.box').each(function (index) {
         $(this).css("background-color", colorList[index % colorList.length]);
     });
@@ -90,7 +85,6 @@ function renderContent(mdContent, mdParserService) {
     var content = document.getElementById('ms-content');
     content.innerHTML = mdParserService.parse(mdContent) + "\</div>\</div>";
     initializeMasonry();
-
 }
 
 String.prototype.endsWith = function (suffix) {
