@@ -1,11 +1,26 @@
-<h1>Explore ownsheet</h1>
+<div class="heading">
+    <h1>Explore ownsheet</h1>
+</div>
 <div ng-controller="generalController as general">
-    <button ng-click="general.addFont()" class="btn btn-success">Add font color</button>
-    <button ng-click="general.removeFont()" class="btn btn-danger">Remove last color</button>
-    <h3>Customize your colors</h3>
-    <div class="form-group" ng-repeat="color in colors track by $index">
-        <input type="text" class="form-control" ng-model="color.code">
+    <h3 class="generalHeading">Customize your colors</h3>
+    <button ng-click="general.addFont()" class="btn btn-success btn-lg generalLeftButton">
+        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add font color
+    </button>
+    <button ng-click="general.removeFont()" class="btn btn-danger btn-lg generalButton">Remove last color</button>
+    <div class="form-group colorForms" ng-repeat="color in colors track by $index">
+        <input type="text" class="form-control colorInput" ng-model="color.code">
     </div>
-    <button ng-click="general.submit()" class="btn btn-success">Save colors</button>
-    <button ng-click="general.reset()" class="btn btn-warning">Reset to default</button>
+    <button ng-click="general.submit()" class="btn btn-success btn-lg generalLeftButton">Save colors</button>
+    <button ng-click="general.reset()" class="btn btn-warning btn-lg generalButton">
+        <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span> Reset to default
+    </button>
+
+    <h3 class="generalHeading">Import/Export</h3>
+
+    <div class="import">
+        <label for="importFile">Import your ownsheet</label>
+        <input type="file" id="importFile">
+        <button ng-click="general.import()" id="import" class="btn btn-success btn-lg ">Import into ownsheet</button>
+        <button ng-click="general.export()" id="export" class="btn btn-primary btn-lg ">Export your sheets</button>
+    </div>
 </div>

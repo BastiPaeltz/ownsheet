@@ -42,3 +42,52 @@ form {
     margin-left: 15px;
     width: 500px;
 }
+
+.generalHeading{
+    margin: 20px 15px;
+    font-size: 2.5em;
+}
+
+.colorForms{
+    margin: 20px 15px;
+}
+
+.colorInput{
+    width: 600px;
+}
+
+.generalButton{
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+#export{
+    margin-top: 5px;
+    margin-bottom: 5px;
+    margin-left: 5px;
+}
+
+.generalLeftButton{
+    margin-left: 15px;
+    margin-right: 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.import{
+    margin-left: 15px;
+    margin-right: 5px;
+    margin-top: 15px;
+    margin-bottom: 5px;
+}
+
+.import label{
+    font-size: 18px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+
+.import input{
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
