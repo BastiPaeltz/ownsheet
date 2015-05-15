@@ -4,7 +4,7 @@
     <button ng-click="general.removeFont()" class="btn btn-danger">Remove last color</button>
     <h3>Customize your colors</h3>
     <div class="form-group" ng-repeat="color in colors track by $index">
-        <input type="text" class="form-control" placeholder="{{color}}">
+        <input type="text" class="form-control" ng-model="color.code">
     </div>
     <button ng-click="general.submit()" class="btn btn-success">Save colors</button>
     <button ng-click="general.reset()" class="btn btn-warning">Reset to default</button>

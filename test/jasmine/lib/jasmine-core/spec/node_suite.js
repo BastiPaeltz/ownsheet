@@ -161,7 +161,7 @@ var perfSuite = false;
 
 process.argv.forEach(function(arg) {
   switch (arg) {
-    case '--color':
+    case '--code':
       showColors = true;
       break;
     case '--noColor':

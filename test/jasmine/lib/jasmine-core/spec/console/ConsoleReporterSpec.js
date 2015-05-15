@@ -208,7 +208,7 @@ describe("ConsoleReporter", function() {
     });
   });
 
-  describe("with color", function() {
+  describe("with code", function() {
     it("reports that the suite has started to the console", function() {
       var reporter = new j$.ConsoleReporter({
         print: out.print,

@@ -7,9 +7,9 @@
 var ownsheetApp = angular.module("ownsheetApp");
 
 ownsheetApp.controller('viewController', ["$scope", "$window", "$routeParams", "$sce",
-    "chromeStorageService", "mdParserService", "previewContentService",
+    "chromeStorageService", "mdParserService", "previewContentService", "localStorageService",
     function ($scope, $window, $routeParams, $sce, chromeStorageService,
-              mdParserService, previewContentService) {
+              mdParserService, previewContentService, localStorageService) {
         var mdContent, sheetPromise;
         var sheetNameParam = $routeParams.sheetName;
         $scope.sheet = {};
@@ -20,7 +20,7 @@ ownsheetApp.controller('viewController', ["$scope", "$window", "$routeParams", "
             $scope.mdContent = previewContentService.get();
             if ($scope.mdContent) {
                 renderContent($scope.mdContent, mdParserService);
-                colorBoxes();
+                colorBoxes(localStorageService);
                 $scope.buttonType = "edit";
             } else {
                 $scope.sheet.message = "No preview here";
@@ -35,7 +35,7 @@ ownsheetApp.controller('viewController', ["$scope", "$window", "$routeParams", "
                 if (value[sheetNameParam]) {
                     // if there is content in storage
                     renderContent(value[sheetNameParam].content, mdParserService);
-                    colorBoxes();
+                    colorBoxes(localStorageService);
                     $scope.buttonType = "edit";
                 } else {
                     // if there isn't
@@ -73,9 +73,18 @@ function initializeMasonry() {
     });
 }
 
-function colorBoxes() {
-    var colorList = ["#2d9f34", "#4b65c3", "#48456a", "#4f7a4e",
-        "#d61115", "#59582f"];
+function colorBoxes(localStorageService) {
+    var colorList = [];
+    var colorsFromStorage = localStorageService.get('colors');
+    if (!colorsFromStorage) {
+        colorList = ["#2d9f34", "#4b65c3", "#48456a", "#4f7a4e",
+            "#d61115", "#59582f"];
+    } else {
+      for(var indx in colorsFromStorage){
+          colorList.push(colorsFromStorage[indx].code);
+      }
+    }
+    console.log(colorList)
     $('.box').each(function (index) {
         $(this).css("background-color", colorList[index % colorList.length]);
     });
