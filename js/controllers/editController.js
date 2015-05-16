@@ -6,10 +6,9 @@
 
 var ownsheetApp = angular.module("ownsheetApp");
 
-ownsheetApp.controller('editController', ["$scope", "$routeParams", "mdParserService",
+ownsheetApp.controller('editController', ["$scope", "$routeParams",
     "chromeStorageService", "$window", "previewContentService",
-    function ($scope, $routeParams, mdParserService,
-              chromeStorageService, $window, previewContentService) {
+    function ($scope, $routeParams, chromeStorageService, $window, previewContentService) {
 
         var sheet;
         var defaultContent = "# ownsheet ignores these headings\n\
@@ -74,8 +73,8 @@ ownsheet shines when it comes to displaying not so much when it comes to editing
         document.title = "ownsheet - edit sheet";
 
         //prevent from leaving page
-        $scope.$on('$locationChangeStart', function( event ) {
-            if(!$scope.safeToNavigate && ($scope.initialContent !== $scope.content)) {
+        $scope.$on('$locationChangeStart', function (event) {
+            if (!$scope.safeToNavigate && ($scope.initialContent !== $scope.content)) {
                 var answer = confirm("You started editing  - are you sure you want to leave this page?");
                 if (!answer) {
                     event.preventDefault();
@@ -84,58 +83,77 @@ ownsheet shines when it comes to displaying not so much when it comes to editing
         });
 
         this.preview = function () {
-            previewContentService.add($scope.content);
-            $scope.safeToNavigate = true;
-            $window.open('main.html#/preview', "_self");
-
+            if ($scope.content.indexOf('##') === -1) {
+                $scope.alerts.push({
+                    type: "danger",
+                    msg: "Please include at least one '##' heading inside your text."
+                });
+                $scope.closeAlert = function (index) {
+                    $scope.alerts.splice(index, 1);
+                };
+            } else {
+                previewContentService.add($scope.content);
+                $scope.safeToNavigate = true;
+                $window.open('main.html#/preview', "_self");
+            }
         };
 
         this.submit = function () {
-            var sheetKey, storagePromise, storageObject;
-            if ($scope.sheet.name && !$scope.newSheet) {
-                sheetKey = $scope.sheet.name;
-                storageObject = {};
-                storageObject[sheetKey] = {
-                    name: sheetKey,
-                    content: $scope.content
+            if ($scope.content.indexOf('##') === -1) {
+                $scope.alerts.push({
+                    type: "danger",
+                    msg: "Please include at least one '##' heading inside your text."
+                });
+                $scope.closeAlert = function (index) {
+                    $scope.alerts.splice(index, 1);
                 };
-                chromeStorageService.pushToStorage(storageObject);
-                $scope.safeToNavigate = true;
-                $window.open('main.html#/view/' + sheetKey, "_self");
-            }
-            else {
-                sheetKey = $scope.sheet.newName;
-                if (!sheetKey) {
-                    $scope.alerts.push({
-                        type: "danger",
-                        msg: "Give your sheet a name."
-                    });
-                    $scope.closeAlert = function(index) {
-                        $scope.alerts.splice(index, 1);
+            } else {
+                var sheetKey, storagePromise, storageObject;
+                if ($scope.sheet.name && !$scope.newSheet) {
+                    sheetKey = $scope.sheet.name;
+                    storageObject = {};
+                    storageObject[sheetKey] = {
+                        name: sheetKey,
+                        content: $scope.content
                     };
+                    chromeStorageService.pushToStorage(storageObject);
+                    $scope.safeToNavigate = true;
+                    $window.open('main.html#/view/' + sheetKey, "_self");
                 }
                 else {
-                    storagePromise = chromeStorageService.getFromStorage(sheetKey);
-                    storagePromise.then(function (value) {
-                        if (value[sheetKey]) {
-                            $scope.alerts.push({
-                                type: "danger",
-                                msg: "sheet with name " + sheetKey + " is already defined. Please try another name."
-                            });
-                            $scope.closeAlert = function(index) {
-                                $scope.alerts.splice(index, 1);
-                            };
-                        } else {
-                            storageObject = {};
-                            storageObject[sheetKey] = {
-                                name: sheetKey,
-                                content: $scope.content
-                            };
-                            chromeStorageService.pushToStorage(storageObject);
-                            $scope.safeToNavigate = true;
-                            $window.open('main.html#/view/' + sheetKey, "_self");
-                        }
-                    });
+                    sheetKey = $scope.sheet.newName;
+                    if (!sheetKey) {
+                        $scope.alerts.push({
+                            type: "danger",
+                            msg: "Give your sheet a name."
+                        });
+                        $scope.closeAlert = function (index) {
+                            $scope.alerts.splice(index, 1);
+                        };
+                    }
+                    else {
+                        storagePromise = chromeStorageService.getFromStorage(sheetKey);
+                        storagePromise.then(function (value) {
+                            if (value[sheetKey]) {
+                                $scope.alerts.push({
+                                    type: "danger",
+                                    msg: "sheet with name " + sheetKey + " is already defined. Please try another name."
+                                });
+                                $scope.closeAlert = function (index) {
+                                    $scope.alerts.splice(index, 1);
+                                };
+                            } else {
+                                storageObject = {};
+                                storageObject[sheetKey] = {
+                                    name: sheetKey,
+                                    content: $scope.content
+                                };
+                                chromeStorageService.pushToStorage(storageObject);
+                                $scope.safeToNavigate = true;
+                                $window.open('main.html#/view/' + sheetKey, "_self");
+                            }
+                        });
+                    }
                 }
             }
         }
