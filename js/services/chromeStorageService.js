@@ -35,16 +35,7 @@ ownsheetApp.service('chromeStorageService', function ($q) {
     var storage = chrome.storage.local;
 
     this.pushToStorage = function (sheet) {
-        var deferred = $q.defer();
-        storage.set(sheet, function () {
-            if (chrome.runtime.LastError) {
-                deferred.resolve("Error");
-            } else {
-                console.log(1);
-                deferred.resolve("Success");
-            }
-        });
-        return deferred.promise;
+        storage.set(sheet)
     };
 
 
@@ -75,16 +66,7 @@ ownsheetApp.service('chromeStorageService', function ($q) {
 
 
     this.removeFromStorage = function (sheet) {
-
-        var deferred = $q.defer();
-        storage.remove(sheet, function () {
-            if (chrome.runtime.LastError) {
-                deferred.resolve("Error");
-            } else {
-                deferred.resolve("Removed");
-            }
-        });
-        return deferred.promise;
+        storage.remove(sheet);
     };
 
 });

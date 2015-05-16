@@ -10,12 +10,13 @@
 
 var ownsheetApp = angular.module("ownsheetApp");
 
-ownsheetApp.controller('generalController', ["$scope", "$window", "chromeStorageService", "localStorageService",
-    function ($scope, $window, chromeStorageService, localStorageService) {
+ownsheetApp.controller('generalController', ["$scope", "$window", "$q", "chromeStorageService", "localStorageService",
+    function ($scope, $window, $q, chromeStorageService, localStorageService) {
         $scope.colors = localStorageService.get('colors') || [
                 {code: "#2d9f34"}, {code: "#4b65c3"}, {code: "#48456a"}, {code: "#4f7a4e"},
                 {code: "#d61115"}, {code: "#59582f"}];
 
+        $scope.alerts = [];
         document.title = "Explore ownsheet";
         this.addFont = function () {
             $scope.colors.push({code: "Enter a hex color code."})
@@ -51,7 +52,7 @@ ownsheetApp.controller('generalController', ["$scope", "$window", "chromeStorage
 
         this.import = function () {
             readFile(document.getElementById('importFile').files[0], $scope, function (readyCallback) {
-                validateAndCheckForDuplicates(readyCallback.target.result, chromeStorageService, $scope);
+                validateAndCheckForDuplicates(readyCallback.target.result, chromeStorageService, $scope, $q);
 
             });
         };
@@ -67,52 +68,47 @@ ownsheetApp.controller('generalController', ["$scope", "$window", "chromeStorage
     }]);
 
 
-function startImportDialog(summary, $scope) {
-    console.log(summary);
-    if (summary.conflicts !== []) {
-        console.log(summary);
-        for (var index = 0; index < summary.conflicts.length; index++) {
+function startImportDialog(summary, $scope, $q, chromeStorageService) {
 
-            var decision;
-            var length = summary.conflicts.length - index;
-            bootbox.dialog({
-                message: summary.safe + " out of " + summary.total +
-                " sheets were imported. Conflicts on " + length +
-                " remaining sheets. \<br\/>\<br\/> Conflict on sheet:<b>'" + summary.conflicts[index].name + "'\<\/b>",
-                title: "Import into ownsheet",
-                buttons: {
-                    success: {
-                        label: "Skip",
-                        className: "btn-success",
-                        callback: function () {
-                        }
-                    },
-                    main: {
-                        label: "Override",
-                        className: "btn-primary",
-                        callback: function () {
-                            chromeStorageService.pushToStorage(summary.conflicts[index]);
-                        }
-                    },
-                    danger: {
-                        label: "Override all",
-                        className: "btn-danger",
-                        callback: function () {
-                            for (i = index; i < summary.conflicts.length; i++) {
-                                chromeStorageService.pushToStorage(summary.conflicts[index]);
-                            }
-                        }
-                    }
-                }
-            });
-        }
+    if (summary.conflicts.length === 0) {
+        printSuccessBootBox(summary);
     } else {
-        console.log("Hier");
-        $scope.message = "Importing successful without conflicts."
+        printAndProcessBootBox(summary, 0, $q, chromeStorageService);
     }
 }
 
-function validateAndCheckForDuplicates(fileContent, chromeStorageService, $scope) {
+function printAndProcessBootBox(summary, index, $q, chromeStorageService) {
+    if (index === summary.conflicts.length) {
+        var boxPromise = bootBoxDialog(summary, index, $q);
+        boxPromise.then(function (value) {
+            // value = decision
+            switch (value) {
+                case "skip":
+                    index += 1;
+                    printAndProcessBootBox(summary, index, $q, chromeStorageService);
+                    break;
+                case "override":
+                    var storageObject = {};
+                    storageObject[summary.conflicts[index].name] = summary.conflicts[index];
+                    chromeStorageService.pushToStorage(storageObject);
+                    index += 1;
+                    printAndProcessBootBox(summary, index, $q, chromeStorageService);
+                    break;
+                case "override-all":
+                    var storageObject = {};
+                    for (var i = index; i < summary.conflicts.length; i++) {
+                        storageObject[summary.conflicts[index].name] = summary.conflicts[index];
+                        chromeStorageService.pushToStorage(storageObject);
+                    }
+                    break;
+            }
+        });
+    }else{
+        printSuccessBootBox(summary);
+    }
+};
+
+function validateAndCheckForDuplicates(fileContent, chromeStorageService, $scope, $q) {
     function isValidSheetObject(sheet) {
         return sheet === json[sheet].name &&
             Object.getOwnPropertyNames(json[sheet]).length === 2
@@ -123,25 +119,39 @@ function validateAndCheckForDuplicates(fileContent, chromeStorageService, $scope
     try {
         json = JSON.parse(fileContent);
     } catch (e) {
-        $scope.error = "Couldn't parse JSON file."
+        $scope.alerts.push({
+            type: "danger",
+            msg: "Couldn't parse input file." +
+            " Make sure this is the ownsheet-content.json file you exported earlier."
+        });
+        $scope.closeAlert = function(index) {
+            $scope.alerts.splice(index, 1);
+        };
     }
 
     var storagePromise = chromeStorageService.getFromStorage(null);
     storagePromise.then(function (value) {
         var conflicts = [];
-        var safeImports;
-        var totalItems;
-        var failedImports;
-        console.log(value);
-        console.log(json);
+        var safeImports = 0;
+        var totalItems = 0;
+        var failedImports = 0;
         Object.keys(json).forEach(function (sheet) {
             if (isValidSheetObject(sheet)) {
                 totalItems += 1;
-                // check for conflict
+                // check for conflict - conflict case when sheet is already defined and
+                // contents differ.
                 if (value[sheet]) {
-                    conflicts.push(json[sheet]);
+                    // case: conflict
+                    if (value[sheet].content !== json[sheet].content) {
+                        conflicts.push(json[sheet]);
+                    } else {
+                        safeImports += 1;
+                    }
                 } else {
-                    chromeStorageService.pushToStorage(json[sheet]);
+                    // case: no conflict
+                    var storageObject = {};
+                    storageObject[sheet] = json[sheet];
+                    chromeStorageService.pushToStorage(storageObject);
                     safeImports += 1;
                 }
             } else {
@@ -155,7 +165,8 @@ function validateAndCheckForDuplicates(fileContent, chromeStorageService, $scope
             safe: safeImports,
             total: totalItems
         };
-        startImportDialog(summary, $scope);
+        console.log(summary);
+        startImportDialog(summary, $scope, $q, chromeStorageService);
     });
 
 }
@@ -166,6 +177,54 @@ function readFile(file, $scope, onLoadCallback) {
     try {
         reader.readAsText(file);
     } catch (e) {
-        $scope.error = "Not a valid JSON file."
+        $scope.alerts.push({
+            type: "danger",
+            msg: "Can't read import file."
+        });
+        $scope.closeAlert = function(index) {
+            $scope.alerts.splice(index, 1);
+        };
     }
+}
+
+function bootBoxDialog(summary, index, $q) {
+    var deferred = $q.defer();
+    bootbox.dialog({
+        message: "Detected " + summary.failed + " invalid sheet. " + summary.safe +
+        " out of " + summary.total + " valid sheets were successfully imported. Conflicts on " +
+        (summary.conflicts.length - index) + " remaining sheets. \<br\/>\<br\/> Conflict on sheet <b>'"
+        + summary.conflicts[index].name + "'\<\/b>",
+        title: "Import into ownsheet",
+        buttons: {
+            success: {
+                label: "Keep",
+                className: "btn-success",
+                callback: function () {
+                    deferred.resolve("skip")
+                }
+            },
+            main: {
+                label: "Override",
+                className: "btn-primary",
+                callback: function () {
+                    deferred.resolve("override")
+                }
+            },
+            danger: {
+                label: "Override all",
+                className: "btn-danger",
+                callback: function () {
+                    deferred.resolve("override-all")
+                }
+
+            }
+        }
+    });
+    return deferred.promise;
+}
+
+function printSuccessBootBox(summary){
+    bootbox.alert("Detected " + summary.failed + " invalid sheet. " + summary.safe +
+        " out of " + summary.total +
+        " valid sheets were successfully imported. No remaining conflicts.\<br\/>\<br\/> <b>Import completed!\<\/b>")
 }

@@ -20,6 +20,7 @@
     <div class="import">
         <label for="importFile">Import your ownsheet</label>
         <input type="file" id="importFile">
+        <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
         <button ng-click="general.import()" id="import" class="btn btn-success btn-lg ">Import into ownsheet</button>
         <button ng-click="general.export()" id="export" class="btn btn-primary btn-lg ">Export your sheets</button>
     </div>
