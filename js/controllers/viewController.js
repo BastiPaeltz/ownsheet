@@ -84,7 +84,6 @@ function colorBoxes(localStorageService) {
           colorList.push(colorsFromStorage[indx].code);
       }
     }
-    console.log(colorList)
     $('.box').each(function (index) {
         $(this).css("background-color", colorList[index % colorList.length]);
     });
