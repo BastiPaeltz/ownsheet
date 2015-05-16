@@ -71,8 +71,11 @@ caption, th {
 }
 
 h1, h2, h3, h4, h5, h6 {
-    font-size: 100%;
     font-weight: 500;
+}
+
+h5, h6 {
+    font-size: 100%;
 }
 
 q:before, q:after {
@@ -146,9 +149,9 @@ body {
 
 .box {
     border-radius: 8px;
-    margin-top: 10px;
+    margin-top: 15px;
     margin-left: 15px;
-    margin-right: 15px;
+    margin-right: 10px;
     margin-bottom: 10px;
     padding: 15px;
     width: 200px;
@@ -185,10 +188,10 @@ body {
 }
 
 .box a {
-    font-size: 14px;
-    color: #fff;
+    font-size: 15px;
+    color: darkgray;
     text-decoration: none;
-    display: block;
+    display: inline-block;
 }
 
 .box a:hover {
@@ -197,9 +200,30 @@ body {
 }
 
 .box h3 {
-    font-size: 16px;
+    margin: 10px auto 5px auto;
+    font-size: 22px;
     font-weight: bold;
     color: #ba9d37;
+}
+
+.box h4 {
+    margin-top: 10px;
+    font-size: 17px;
+    font-weight: bold;
+    color: #ba9d37;
+}
+
+.box td {
+    padding-top: 12px;
+    padding-left: 7px;
+
+}
+
+.box th {
+    color: #ba9d37;
+    padding-top: 10px;
+    padding-left: 7px;
+    font-size: 17px;
 }
 
 .box img {
@@ -210,9 +234,26 @@ body {
 .box code {
     font-size: 14px;
     text-decoration: none;
-    display: block;
+    display: initial;
     word-break: normal;
-    background-color: whitesmoke;
+    background-color: rgb(245,245,245);
+    color: rgb(158, 24, 102);
+    border-radius: 2px;
+}
+
+.box pre {
+    margin: 10px auto;
+}
+
+.box pre code{
+    display: none;
+}
+
+.box li {
+    padding-left: 10px;
+    list-style-type: circle;
+    list-style-position: inside;
+    margin-top: 5px;
 }
 
 .box ul { /* targets all ul elements */
@@ -221,10 +262,12 @@ body {
 }
 .box ul li { /* targets all li elements within a ul */
     /* general styles */
+    margin-top: 5px;
     padding-left: 10px;
-    list-style-type: circle;
+    list-style: disc;
     list-style-position: inside;
 }
+
 
 .box ul li ul { /* targets all ul elements within an li element, itself within a ul */
     /* overrule general 'outer' styles */
@@ -233,7 +276,10 @@ body {
 .box ul li ul li { /* targets all li elements within a ul element,
                  within an li element, itself within a ul...and so on */
     /* overrule general 'outer' styles */
+    margin-top: 4px;
     padding-left: 13px;
+    list-style-type: circle;
+    list-style-position: inside;
 }
 
 .sheetButtons{

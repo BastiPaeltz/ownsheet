@@ -87,14 +87,15 @@ function colorPage(localStorageService) {
         }
     }
 
-    var boxSizeFromStorage = localStorageService.get('box-size');
-    if (!boxSizeFromStorage) {
-        boxSizeFromStorage = 250;
-    }
+    var boxSizeFromStorage = localStorageService.get('box-size') || 250;
 
     $('.box').each(function (index) {
-        $(this).css("background-color", colorList[index % colorList.length]);
         $(this).css("width", boxSizeFromStorage);
+        $(this).css("background-color", colorList[index % colorList.length]);
+    });
+
+    $('a').each(function(){
+        (this).target = "_blank";
     });
 
     var backgroundColorFromStorage = localStorageService.get('background-color');
