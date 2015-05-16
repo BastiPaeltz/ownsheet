@@ -83,15 +83,7 @@ ownsheet shines when it comes to displaying not so much when it comes to editing
         });
 
         this.preview = function () {
-            if ($scope.content.indexOf('##') === -1) {
-                $scope.alerts.push({
-                    type: "danger",
-                    msg: "Please include at least one '##' heading inside your text."
-                });
-                $scope.closeAlert = function (index) {
-                    $scope.alerts.splice(index, 1);
-                };
-            } else {
+            if (isValidContent($scope)) {
                 previewContentService.add($scope.content);
                 $scope.safeToNavigate = true;
                 $window.open('main.html#/preview', "_self");
@@ -99,15 +91,7 @@ ownsheet shines when it comes to displaying not so much when it comes to editing
         };
 
         this.submit = function () {
-            if ($scope.content.indexOf('##') === -1) {
-                $scope.alerts.push({
-                    type: "danger",
-                    msg: "Please include at least one '##' heading inside your text."
-                });
-                $scope.closeAlert = function (index) {
-                    $scope.alerts.splice(index, 1);
-                };
-            } else {
+            if (isValidContent($scope)) {
                 var sheetKey, storagePromise, storageObject;
                 if ($scope.sheet.name && !$scope.newSheet) {
                     sheetKey = $scope.sheet.name;
@@ -159,4 +143,18 @@ ownsheet shines when it comes to displaying not so much when it comes to editing
         }
     }
 ]);
+
+function isValidContent($scope) {
+    if ($scope.content.indexOf('##') === -1) {
+        $scope.alerts.push({
+            type: "danger",
+            msg: "Please include at least one '##' heading inside your text."
+        });
+        $scope.closeAlert = function (index) {
+            $scope.alerts.splice(index, 1);
+        };
+        return false;
+    }
+    return true;
+}
 

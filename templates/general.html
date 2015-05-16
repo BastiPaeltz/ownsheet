@@ -2,7 +2,7 @@
     <h1>Explore ownsheet</h1>
 </div>
 <div ng-controller="generalController as general">
-    <h3 class="generalHeading">Customize your colors</h3>
+    <h3 class="generalHeading">Customize your box colors</h3>
     <button ng-click="general.addFont()" class="btn btn-success btn-lg generalLeftButton">
         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add font color
     </button>
@@ -10,10 +10,26 @@
     <div class="form-group colorForms" ng-repeat="color in colors track by $index">
         <input type="text" class="form-control colorInput" ng-model="color.code">
     </div>
-    <button ng-click="general.submit()" class="btn btn-success btn-lg generalLeftButton">Save colors</button>
-    <button ng-click="general.reset()" class="btn btn-warning btn-lg generalButton">
+    <button ng-click="general.submitFonts()" class="btn btn-success btn-lg generalLeftButton">Save colors</button>
+    <button ng-click="general.resetFonts()" class="btn btn-warning btn-lg generalButton">
         <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span> Reset to default
     </button>
+
+    <h3 class="generalHeading">Customize the size of your boxes</h3>
+    <label style="margin-left: 15px">Input size in pixel</label>
+    <input type="text" class="form-control colorForms" style="margin-top: 0px" ng-model="boxSize">
+    <button ng-click="general.submitBoxSize()" class="btn btn-success btn-lg generalLeftButton">Save box size</button>
+    <button ng-click="general.resetBoxSize()" class="btn btn-warning btn-lg generalButton">
+        <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span> Reset to default
+    </button>
+
+    <h3 class="generalHeading">Set your background color</h3>
+    <input type="text" class="form-control colorForms" ng-model="backgroundColor">
+    <button ng-click="general.submitBGColor()" class="btn btn-success btn-lg generalLeftButton">Save background color</button>
+    <button ng-click="general.resetBGColor()" class="btn btn-warning btn-lg generalButton">
+        <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span> Reset to default
+    </button>
+
 
     <h3 class="generalHeading">Import/Export</h3>
 

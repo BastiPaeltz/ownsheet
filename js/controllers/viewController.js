@@ -20,7 +20,7 @@ ownsheetApp.controller('viewController', ["$scope", "$window", "$routeParams", "
             $scope.mdContent = previewContentService.get();
             if ($scope.mdContent) {
                 renderContent($scope.mdContent, mdParserService);
-                colorBoxes(localStorageService);
+                colorPage(localStorageService);
                 $scope.buttonType = "edit";
             } else {
                 $scope.sheet.message = "No preview here";
@@ -35,7 +35,7 @@ ownsheetApp.controller('viewController', ["$scope", "$window", "$routeParams", "
                 if (value[sheetNameParam]) {
                     // if there is content in storage
                     renderContent(value[sheetNameParam].content, mdParserService);
-                    colorBoxes(localStorageService);
+                    colorPage(localStorageService);
                     $scope.buttonType = "edit";
                 } else {
                     // if there isn't
@@ -73,26 +73,41 @@ function initializeMasonry() {
     });
 }
 
-function colorBoxes(localStorageService) {
+function colorPage(localStorageService) {
     var colorList = [];
     var colorsFromStorage = localStorageService.get('colors');
     if (!colorsFromStorage) {
-        colorList = ["#2d9f34", "#4b65c3", "#48456a", "#4f7a4e",
-            "#d61115", "#59582f"];
+        // default
+        colorList = [
+            {code: "#2d9f34"}, {code: "#4b65c3"}, {code: "#48456a"}, {code: "#4f7a4e"},
+            {code: "#d61115"}, {code: "#59582f"}];
     } else {
-      for(var indx in colorsFromStorage){
-          colorList.push(colorsFromStorage[indx].code);
-      }
+        for (var indx in colorsFromStorage) {
+            colorList.push(colorsFromStorage[indx].code);
+        }
     }
+
+    var boxSizeFromStorage = localStorageService.get('box-size');
+    if (!boxSizeFromStorage) {
+        boxSizeFromStorage = 250;
+    }
+
     $('.box').each(function (index) {
         $(this).css("background-color", colorList[index % colorList.length]);
+        $(this).css("width", boxSizeFromStorage);
     });
+
+    var backgroundColorFromStorage = localStorageService.get('background-color');
+    if (backgroundColorFromStorage) {
+        $('html, body').css('background-color', backgroundColorFromStorage);
+    }
+
+    initializeMasonry();
 }
 
 function renderContent(mdContent, mdParserService) {
     var content = document.getElementById('ms-content');
     content.innerHTML = mdParserService.parse(mdContent) + "\</div>\</div>";
-    initializeMasonry();
 }
 
 String.prototype.endsWith = function (suffix) {

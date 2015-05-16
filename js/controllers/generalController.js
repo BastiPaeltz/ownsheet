@@ -16,6 +16,10 @@ ownsheetApp.controller('generalController', ["$scope", "$window", "$q", "chromeS
                 {code: "#2d9f34"}, {code: "#4b65c3"}, {code: "#48456a"}, {code: "#4f7a4e"},
                 {code: "#d61115"}, {code: "#59582f"}];
 
+        $scope.backgroundColor = localStorageService.get('background-color') || "#b3b3b3";
+
+        $scope.boxSize = localStorageService.get('box-size') || 250;
+
         $scope.alerts = [];
         document.title = "Explore ownsheet";
         this.addFont = function () {
@@ -31,7 +35,7 @@ ownsheetApp.controller('generalController', ["$scope", "$window", "$q", "chromeS
             }
         };
 
-        this.submit = function () {
+        this.submitFonts = function () {
 
             for (var index in $scope.colors) {
                 // test if valid hex color
@@ -39,16 +43,62 @@ ownsheetApp.controller('generalController', ["$scope", "$window", "$q", "chromeS
                     $scope.colors.splice(index, 1);
                 }
             }
-            localStorageService.set('colors', $scope.colors)
+            if ($scope.colors.length < 1) {
+                $scope.colors = [
+                    {code: "#2d9f34"}, {code: "#4b65c3"}, {code: "#48456a"}, {code: "#4f7a4e"},
+                    {code: "#d61115"}, {code: "#59582f"}];
+                bootbox.alert("Please enter valid hex color codes!");
+            } else {
+                localStorageService.set('colors', $scope.colors);
+                bootbox.alert($scope.colors.length + " custom colors saved!");
+            }
         };
 
-        this.reset = function () {
+        this.resetFonts = function () {
 
             $scope.colors = [
                 {code: "#2d9f34"}, {code: "#4b65c3"}, {code: "#48456a"}, {code: "#4f7a4e"},
                 {code: "#d61115"}, {code: "#59582f"}];
-            localStorageService.set('colors', $scope.colors)
+            localStorageService.set('colors', $scope.colors);
+            bootbox.alert("Box colors reset!");
         };
+
+
+        this.submitBGColor = function () {
+
+            if (/^#[0-9A-F]{6}$/i.test($scope.backgroundColor) === false) {
+                $scope.backgroundColor = "#b3b3b3";
+                bootbox.alert("Please enter valid hex color codes!");
+            } else {
+                localStorageService.set('background-color', $scope.backgroundColor);
+                bootbox.alert("Background color saved!");
+            }
+        };
+
+        this.resetBGColor = function () {
+            $scope.backgroundColor = "#b3b3b3";
+            localStorageService.set('background-color', $scope.backgroundColor);
+            bootbox.alert("Background color reset!");
+        };
+
+
+        this.submitBoxSize = function () {
+            if($.isNumeric($scope.boxSize) && $scope.boxSize > 100 && $scope.boxSize < 700) {
+                localStorageService.set('box-size', $scope.boxSize);
+                bootbox.alert("Box size saved!");
+            }else{
+                $scope.boxSize = 250;
+                bootbox.alert("Please enter an integer number between 100 and 700.");
+            }
+        };
+
+        this.resetBoxSize = function () {
+
+            $scope.boxSize = 250;
+            localStorageService.set('box-size', $scope.boxSize);
+            bootbox.alert("Box size reset!");
+        };
+
 
         this.import = function () {
             readFile(document.getElementById('importFile').files[0], $scope, function (readyCallback) {
@@ -103,7 +153,7 @@ function printAndProcessBootBox(summary, index, $q, chromeStorageService) {
                     break;
             }
         });
-    }else{
+    } else {
         printSuccessBootBox(summary);
     }
 };
@@ -124,7 +174,7 @@ function validateAndCheckForDuplicates(fileContent, chromeStorageService, $scope
             msg: "Couldn't parse input file." +
             " Make sure this is the ownsheet-content.json file you exported earlier."
         });
-        $scope.closeAlert = function(index) {
+        $scope.closeAlert = function (index) {
             $scope.alerts.splice(index, 1);
         };
     }
@@ -181,7 +231,7 @@ function readFile(file, $scope, onLoadCallback) {
             type: "danger",
             msg: "Can't read import file."
         });
-        $scope.closeAlert = function(index) {
+        $scope.closeAlert = function (index) {
             $scope.alerts.splice(index, 1);
         };
     }
@@ -223,7 +273,7 @@ function bootBoxDialog(summary, index, $q) {
     return deferred.promise;
 }
 
-function printSuccessBootBox(summary){
+function printSuccessBootBox(summary) {
     bootbox.alert("Detected " + summary.failed + " invalid sheet. " + summary.safe +
         " out of " + summary.total +
         " valid sheets were successfully imported. No remaining conflicts.\<br\/>\<br\/> <b>Import completed!\<\/b>")

@@ -118,7 +118,7 @@ body {
 }
 
 .cheat-detail {
-    background: #999999 fixed 100% 100%;
+    background: #b3b3b3 fixed 100% 100%;
 }
 
 .loading {
@@ -137,6 +137,11 @@ body {
 
 .heading h1{
     font-size: 5em;
+    margin-left: 15px;
+}
+
+.template-content{
+    margin-left: 15px;
 }
 
 .box {
@@ -157,8 +162,7 @@ body {
 }
 
 .content-250 .box {
-    width: 250px;
-    background-color: grey;
+    width: 300px;
 }
 
 .content-400 {
