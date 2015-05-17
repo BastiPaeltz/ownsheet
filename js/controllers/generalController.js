@@ -22,6 +22,10 @@ ownsheetApp.controller('generalController', ["$scope", "$window", "$q", "chromeS
 
         $scope.alerts = [];
         document.title = "Explore ownsheet";
+
+        // TODO: set initial message
+        $scope.converter = "Initial Message. TODO";
+
         this.addFont = function () {
             $scope.colors.push({code: "Enter a hex color code."})
         };
@@ -63,6 +67,18 @@ ownsheetApp.controller('generalController', ["$scope", "$window", "$q", "chromeS
             bootbox.alert("Box colors reset!");
         };
 
+        this.convertUp = function(){
+            $scope.converter = ($scope.converter).replace(/\#\#\#/g, "####");
+            $scope.converter = ($scope.converter).replace(/\#\#/g, "###");
+            $scope.converter = ($scope.converter).replace(/\#/g, "##");
+
+        };
+
+        this.convertDown = function(){
+            $scope.converter = ($scope.converter).replace(/\#\#/g, "#");
+            $scope.converter = ($scope.converter).replace(/\#\#\#/g, "##");
+            $scope.converter = ($scope.converter).replace(/\#\#\#\#/g, "###");
+        };
 
         this.submitBGColor = function () {
 

@@ -221,6 +221,7 @@ body {
 
 .box blockquote {
     word-break: normal;
+    word-wrap: break-word;
 }
 
 .box td {
@@ -236,7 +237,7 @@ body {
     font-size: 17px;
 }
 
-.box img {
+img {
     display: none
 }
 
@@ -247,7 +248,6 @@ body {
     display: initial;
     word-wrap: break-word;
     background-color: rgb(245,245,245);
-    color: rgb(158, 24, 102);
     border-radius: 2px;
     white-space: inherit;
 }

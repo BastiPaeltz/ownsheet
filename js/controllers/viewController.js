@@ -93,7 +93,9 @@ function colorPage(localStorageService) {
     });
 
     $('a').each(function(){
-        (this).target = "_blank";
+        if(this.id !== "general") {
+            (this).target = "_blank";
+        }
     });
 
     var backgroundColorFromStorage = localStorageService.get('background-color');

@@ -42,6 +42,9 @@ ownsheetApp.service('mdParserService', function () {
 
         marked.setOptions({
             renderer: customRenderer,
+            highlight: function (code) {
+                return hljs.highlightAuto(code).value;
+            },
             gfm: true,
             tables: true,
             breaks: true,

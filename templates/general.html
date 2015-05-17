@@ -2,42 +2,64 @@
     <h1>Explore ownsheet</h1>
 </div>
 <div ng-controller="generalController as general">
-    <h3 class="generalHeading">Customize your box colors</h3>
-    <button ng-click="general.addFont()" class="btn btn-success btn-lg generalLeftButton">
-        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add font color
-    </button>
-    <button ng-click="general.removeFont()" class="btn btn-danger btn-lg generalButton">Remove last color</button>
-    <div class="form-group colorForms" ng-repeat="color in colors track by $index">
-        <input type="text" class="form-control colorInput" ng-model="color.code">
+    <div class="converter" style="float: right; width: 50%; margin-right: 30px">
+        <h3 class="generalHeading" style="margin-left: 0px">Header converter tool</h3>
+
+        <p style="margin-bottom: 10px; font-size: 18px">ownsheet creates a box for each <strong>## heading</strong>. So
+            each of your main logical points should
+            be under those level 2 headings. However a lot of cheat sheets out there, which are written in
+            markdown use other levels. <br/>This simple tool can convert those cheat sheets into <i>ownsheet friendly</i>
+            ones.</p>
+        <textarea height="80%" class="form-control" ng-model="converter" type="text" rows="20">
+
+        </textarea>
+        <button ng-click="general.convertUp()" style="margin-top: 10px; margin-right: 15px" class="btn btn-primary btn-lg ">Convert up (# -> ##)</button>
+        <button ng-click="general.convertDown()" style="margin-top: 10px;" class="btn btn-warning btn-lg ">Convert down (### -> ##)</button>
     </div>
-    <button ng-click="general.submitFonts()" class="btn btn-success btn-lg generalLeftButton">Save colors</button>
-    <button ng-click="general.resetFonts()" class="btn btn-warning btn-lg generalButton">
-        <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span> Reset to default
-    </button>
 
-    <h3 class="generalHeading">Customize the size of your boxes</h3>
-    <label style="margin-left: 15px">Input size in pixel</label>
-    <input type="text" class="form-control colorForms" style="margin-top: 0px" ng-model="boxSize">
-    <button ng-click="general.submitBoxSize()" class="btn btn-success btn-lg generalLeftButton">Save box size</button>
-    <button ng-click="general.resetBoxSize()" class="btn btn-warning btn-lg generalButton">
-        <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span> Reset to default
-    </button>
-
-    <h3 class="generalHeading">Set your background color</h3>
-    <input type="text" class="form-control colorForms" ng-model="backgroundColor">
-    <button ng-click="general.submitBGColor()" class="btn btn-success btn-lg generalLeftButton">Save background color</button>
-    <button ng-click="general.resetBGColor()" class="btn btn-warning btn-lg generalButton">
-        <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span> Reset to default
-    </button>
+    <div class="colors">
+        <h3 class="generalHeading">Customize your box colors</h3>
+        <button ng-click="general.addFont()" class="btn btn-success btn-lg generalLeftButton">
+            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add font color
+        </button>
+        <button ng-click="general.removeFont()" class="btn btn-danger btn-lg generalButton">Remove last color</button>
+        <div class="form-group colorForms" ng-repeat="color in colors track by $index">
+            <input type="text" class="form-control colorInput" ng-model="color.code">
+        </div>
+        <button ng-click="general.submitFonts()" class="btn btn-success btn-lg generalLeftButton">Save colors</button>
+        <button ng-click="general.resetFonts()" class="btn btn-warning btn-lg generalButton">
+            <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span> Reset to default
+        </button>
 
 
-    <h3 class="generalHeading">Import/Export</h3>
+        <h3 class="generalHeading">Customize the size of your boxes</h3>
+        <label style="margin-left: 15px">Input size in pixel</label>
+        <input type="text" class="form-control colorForms" style="margin-top: 0px" ng-model="boxSize">
+        <button ng-click="general.submitBoxSize()" class="btn btn-success btn-lg generalLeftButton">Save box size
+        </button>
+        <button ng-click="general.resetBoxSize()" class="btn btn-warning btn-lg generalButton">
+            <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span> Reset to default
+        </button>
 
-    <div class="import">
-        <label for="importFile">Import your ownsheet</label>
-        <input type="file" id="importFile">
-        <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
-        <button ng-click="general.import()" id="import" class="btn btn-success btn-lg ">Import into ownsheet</button>
-        <button ng-click="general.export()" id="export" class="btn btn-primary btn-lg ">Export your sheets</button>
+        <h3 class="generalHeading">Set your background color</h3>
+        <input type="text" class="form-control colorForms" ng-model="backgroundColor">
+        <button ng-click="general.submitBGColor()" class="btn btn-success btn-lg generalLeftButton">Save background
+            color
+        </button>
+        <button ng-click="general.resetBGColor()" class="btn btn-warning btn-lg generalButton">
+            <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span> Reset to default
+        </button>
+
+
+        <h3 class="generalHeading">Import/Export</h3>
+
+        <div class="import">
+            <label for="importFile">Import your ownsheet</label>
+            <input type="file" id="importFile">
+            <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
+            <button ng-click="general.import()" id="import" class="btn btn-success btn-lg ">Import into ownsheet
+            </button>
+            <button ng-click="general.export()" id="export" class="btn btn-primary btn-lg ">Export your sheets</button>
+        </div>
     </div>
 </div>
