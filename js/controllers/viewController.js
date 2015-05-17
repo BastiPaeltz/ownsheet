@@ -78,9 +78,8 @@ function colorPage(localStorageService) {
     var colorsFromStorage = localStorageService.get('colors');
     if (!colorsFromStorage) {
         // default
-        colorList = [
-            {code: "#2d9f34"}, {code: "#4b65c3"}, {code: "#48456a"}, {code: "#4f7a4e"},
-            {code: "#d61115"}, {code: "#59582f"}];
+        colorList = ["#2d9f34", "#4b65c3", "#48456a", "#4f7a4e",
+            "#d61115", "#59582f"];
     } else {
         for (var indx in colorsFromStorage) {
             colorList.push(colorsFromStorage[indx].code);
@@ -88,9 +87,8 @@ function colorPage(localStorageService) {
     }
 
     var boxSizeFromStorage = localStorageService.get('box-size') || 250;
-
     $('.box').each(function (index) {
-        $(this).css("width", boxSizeFromStorage);
+        $(this).css("width", boxSizeFromStorage+"px");
         $(this).css("background-color", colorList[index % colorList.length]);
     });
 
