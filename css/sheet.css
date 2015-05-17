@@ -157,11 +157,12 @@ body {
     width: 200px;
     color: #fff;
     opacity: 0.9;
-    word-break: normal
+    word-break: normal;
 }
 
 .box table{
     table-layout: fixed;
+    width: 100%;
 }
 
 .content-250 {
@@ -212,23 +213,26 @@ body {
 
 .box h4 {
     margin-top: 10px;
+    margin-bottom: 3px;
     font-size: 17px;
     font-weight: bold;
     color: #ba9d37;
 }
 
-.box td {
-    padding-top: 12px;
-    padding-left: 7px;
-    word-wrap: break-word;
-    word-break: break-all;
+.box blockquote {
+    word-break: normal;
 }
+
+.box td {
+    padding: 7px;
+    word-wrap: break-word;
+}
+
 
 .box th {
     word-wrap: break-word;
     color: #ba9d37;
-    padding-top: 10px;
-    padding-left: 7px;
+    padding: 6px;
     font-size: 17px;
 }
 
@@ -241,18 +245,23 @@ body {
     font-size: 14px;
     text-decoration: none;
     display: initial;
-    word-break: normal;
+    word-wrap: break-word;
     background-color: rgb(245,245,245);
     color: rgb(158, 24, 102);
     border-radius: 2px;
+    white-space: inherit;
 }
 
 .box pre {
     margin: 10px auto;
+    word-break: normal;
+    word-wrap: break-word;
 }
 
 .box pre code{
     display: inherit;
+    word-break: normal;
+    word-wrap: break-word;
 }
 
 .box li {
