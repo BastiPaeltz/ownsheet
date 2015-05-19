@@ -263,6 +263,10 @@ body {
     width: 100%;
 }
 
+.box em {
+    font-style: italic;
+}
+
 .content-class {
     margin: 0 auto;
 }

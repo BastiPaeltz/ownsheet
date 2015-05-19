@@ -11,21 +11,30 @@ ownsheetApp.controller('editController', ["$scope", "$routeParams",
     function ($scope, $routeParams, chromeStorageService, $window, previewContentService) {
 
         var sheet;
-        var defaultContent = "# ownsheet ignores these headings\n\
+        var defaultContent = "\
+## WELCOME TO OWNSHEET! \n\
+You can write your sheets with markdown. It is a **simple** and **easy to learn** markup language.\n\
 \n\
-This text will be ignored as well.\n\
+# Here is how ownsheet transforms markdown - it's really simple.\n\
 \n\
-## each of these headings will form a box\n\
+# Level 1 headings will be ignored\n\
+This text will be omitted as well.\n\
 \n\
+## each of these level 2 headings will form a box\n\
 This text will be content of a box.\n\
+* you can fill in **ANY** *markdown* you want\n\
+* it will be part of the *box*  \n\
 \n\
-## another box\n\
+## Github Flavored Markdown is supported as well\n\
+[Learn more about it!](https://help.github.com/articles/github-flavored-markdown//)\n\
 \n\
-* you can fill in any markdown you want\n\
-* it will be part of the box\n\
+## Fully customizable!\n\
+Don't like the default colors? Just head to the **Explore** section and define your own!\n\
 \n\
-`Like this`\n\
-\<strong\>Even HTML will work <\/strong>\n\
+## Compatible with a lot of cheat sheets out there.\n\
+Markdown is a common tool for writing cheat sheets, documentations and the likes.\n\
+So you can easily **incorporate parts or entire external sheets** into ownsheet.\n\
+*You may find the converter on the Explore section useful for this.*\n\
 \n\
 ## Note however\n\
 **There are better options for editing markdown (online or offline)**  \n\
@@ -72,15 +81,12 @@ ownsheet shines when it comes to displaying not so much when it comes to editing
 
         document.title = "ownsheet - edit sheet";
 
-        //prevent from leaving page
-        $scope.$on('$locationChangeStart', function (event) {
+        // prevent from leaving page unasked when not save to leave
+        window.onbeforeunload = function (event) {
             if (!$scope.safeToNavigate && ($scope.initialContent !== $scope.content)) {
-                var answer = confirm("You started editing  - are you sure you want to leave this page?");
-                if (!answer) {
-                    event.preventDefault();
-                }
+                return "You started editing  - are you sure you want to leave this page?";
             }
-        });
+        };
 
         this.preview = function () {
             if (isValidContent($scope)) {
