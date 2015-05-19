@@ -23,8 +23,15 @@ ownsheetApp.controller('generalController', ["$scope", "$window", "$q", "chromeS
         $scope.alerts = [];
         document.title = "Explore ownsheet";
 
-        // TODO: set initial message
-        $scope.converter = "Initial Message. TODO";
+        $scope.converter = "\
+## headings will be converted. \n\
+You can convert headings UP or DOWN.\n\
+\n\
+### Subheadings will be converted up to level 4.\n\
+\n\
+### You can test it with this example text.\n\
+\n\
+Any content will stay the same.\n";
 
         this.addFont = function () {
             $scope.colors.push({code: "Enter a hex color code."})
@@ -68,16 +75,16 @@ ownsheetApp.controller('generalController', ["$scope", "$window", "$q", "chromeS
         };
 
         this.convertUp = function(){
-            $scope.converter = ($scope.converter).replace(/\#\#\#/g, "####");
-            $scope.converter = ($scope.converter).replace(/\#\#/g, "###");
-            $scope.converter = ($scope.converter).replace(/\#/g, "##");
+            $scope.converter = ($scope.converter).replace(/(\n|^)[\#]{3}([^\#])/g, "$1####$2");
+            $scope.converter = ($scope.converter).replace(/(\n|^)[\#]{2}([^\#])/g, "$1###$2");
+            $scope.converter = ($scope.converter).replace(/(\n|^)[\#]{1}([^\#])/g, "$1##$2");
 
         };
 
         this.convertDown = function(){
-            $scope.converter = ($scope.converter).replace(/\#\#/g, "#");
-            $scope.converter = ($scope.converter).replace(/\#\#\#/g, "##");
-            $scope.converter = ($scope.converter).replace(/\#\#\#\#/g, "###");
+            $scope.converter = ($scope.converter).replace(/(\n|^)[\#]{2}([^\#])/g, "$1#$2");
+            $scope.converter = ($scope.converter).replace(/(\n|^)[\#]{3}([^\#])/g, "$1##$2");
+            $scope.converter = ($scope.converter).replace(/(\n|^)[\#]{4}([^\#])/g, "$1###$2");
         };
 
         this.submitBGColor = function () {

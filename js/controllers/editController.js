@@ -21,9 +21,9 @@ You can write your sheets with markdown. It is a **simple** and **easy to learn*
 This text will be omitted as well.\n\
 \n\
 ## each of these level 2 headings will form a box\n\
-This text will be content of a box.\n\
-* you can fill in **ANY** *markdown* you want\n\
-* it will be part of the *box*  \n\
+###This subheading will be content of a box\n\
+* you can fill in **ANY** markdown you want\n\
+* it will be part of the box  \n\
 \n\
 ## Github Flavored Markdown is supported as well\n\
 [Learn more about it!](https://help.github.com/articles/github-flavored-markdown//)\n\
