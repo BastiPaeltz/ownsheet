@@ -11,11 +11,11 @@ menu, nav, section {
     padding: 0;
 }
 
-.navbar-brand{
+.navbar-brand {
     font-size: 30px;
 }
 
-.navbar-default{
+.navbar-default {
     height: 60px;
 }
 
@@ -29,6 +29,104 @@ body, button, input, select, textarea {
 
 input, select, textarea {
     font-size: 100%;
+}
+
+.heading h1 {
+    margin-top: 3px;
+    margin-bottom: 5px;
+    padding: 10px;
+
+}
+
+.heading p {
+    margin: 8px;
+    padding: 8px;
+    font-size: 2.5em;
+}
+
+form {
+    margin-left: 15px;
+}
+
+.form-control {
+    font-size: 16px;
+}
+
+.btn-xlarge {
+    padding: 18px 28px;
+    font-size: 22px;
+    line-height: normal;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    border-radius: 8px;
+}
+
+.newName {
+    margin-top: 5px;
+    margin: 10px;
+    padding: 8px;
+    font-size: 20px;
+}
+
+.alert {
+    margin-top: 10px;
+    margin-left: 15px;
+    width: 500px;
+}
+
+.generalHeading {
+    margin: 20px 15px;
+    font-size: 2.5em;
+}
+
+.colorForms {
+    margin: 20px 15px;
+    width: 600px;
+}
+
+.colorInput {
+    width: 600px;
+}
+
+.generalButton {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+#export {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    margin-left: 5px;
+}
+
+.generalLeftButton {
+    margin-left: 15px;
+    margin-right: 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.import {
+    margin-left: 15px;
+    margin-right: 5px;
+    margin-top: 15px;
+    margin-bottom: 5px;
+}
+
+.import label {
+    font-size: 18px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+
+.import input {
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+
+.colors {
+    float: left;
+    width: 40%
 }
 
 table {
@@ -138,12 +236,12 @@ body {
     display: none;
 }
 
-.heading h1{
+.heading h1 {
     font-size: 5em;
     margin-left: 15px;
 }
 
-.template-content{
+.template-content {
     margin-left: 15px;
 }
 
@@ -160,26 +258,17 @@ body {
     word-break: normal;
 }
 
-.box table{
+.box table {
     table-layout: fixed;
     width: 100%;
 }
 
-.content-250 {
+.content-class {
     margin: 0 auto;
 }
 
-.content-250 .box {
+.content-class .box {
     width: 300px;
-}
-
-.content-400 {
-    margin: 0 auto;
-}
-
-.content-400 .box {
-    width: 400px;
-    margin: 40px 10px 5px;
 }
 
 .box h2 {
@@ -229,7 +318,6 @@ body {
     word-wrap: break-word;
 }
 
-
 .box th {
     word-wrap: break-word;
     color: #ba9d37;
@@ -241,13 +329,12 @@ img {
     display: none
 }
 
-
 .box code {
     font-size: 14px;
     text-decoration: none;
     display: initial;
     word-wrap: break-word;
-    background-color: rgb(245,245,245);
+    background-color: rgb(245, 245, 245);
     border-radius: 2px;
     white-space: inherit;
 }
@@ -258,10 +345,17 @@ img {
     word-wrap: break-word;
 }
 
-.box pre code{
-    display: inherit;
+.pre-button{
+    margin-top: 5px;
+    margin-bottom: 1px;
+    font-size: 13px;
+}
+
+.box pre code {
+
     word-break: normal;
     word-wrap: break-word;
+    display: none;
 }
 
 .box li {
@@ -271,11 +365,14 @@ img {
     margin-top: 5px;
 }
 
-.box ul { /* targets all ul elements */
+.box ul {
+    /* targets all ul elements */
     /* general styles */
     padding-left: 5px;
 }
-.box ul li { /* targets all li elements within a ul */
+
+.box ul li {
+    /* targets all li elements within a ul */
     /* general styles */
     margin-top: 5px;
     padding-left: 10px;
@@ -283,13 +380,15 @@ img {
     list-style-position: inside;
 }
 
-
-.box ul li ul { /* targets all ul elements within an li element, itself within a ul */
+.box ul li ul {
+    /* targets all ul elements within an li element, itself within a ul */
     /* overrule general 'outer' styles */
     padding-left: 12px;
 }
-.box ul li ul li { /* targets all li elements within a ul element,
-                 within an li element, itself within a ul...and so on */
+
+.box ul li ul li {
+    /* targets all li elements within a ul element,
+                    within an li element, itself within a ul...and so on */
     /* overrule general 'outer' styles */
     margin-top: 4px;
     padding-left: 13px;
@@ -297,13 +396,13 @@ img {
     list-style-position: inside;
 }
 
-.sheetButtons{
+.sheetButtons {
     margin-top: 5px;
     margin-left: 15px;
     margin-bottom: 10px;
 }
 
-#message{
+#message {
     font-size: 2.5em;
     margin-left: 15px;
     margin-bottom: 15px;

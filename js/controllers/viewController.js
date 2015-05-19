@@ -20,7 +20,7 @@ ownsheetApp.controller('viewController', ["$scope", "$window", "$routeParams", "
             $scope.mdContent = previewContentService.get();
             if ($scope.mdContent) {
                 renderContent($scope.mdContent, mdParserService);
-                colorPage(localStorageService);
+                customizePage(localStorageService);
                 $scope.buttonType = "edit";
             } else {
                 $scope.sheet.message = "No preview here";
@@ -35,7 +35,7 @@ ownsheetApp.controller('viewController', ["$scope", "$window", "$routeParams", "
                 if (value[sheetNameParam]) {
                     // if there is content in storage
                     renderContent(value[sheetNameParam].content, mdParserService);
-                    colorPage(localStorageService);
+                    customizePage(localStorageService);
                     $scope.buttonType = "edit";
                 } else {
                     // if there isn't
@@ -73,7 +73,7 @@ function initializeMasonry() {
     });
 }
 
-function colorPage(localStorageService) {
+function customizePage(localStorageService) {
     var colorList = [];
     var colorsFromStorage = localStorageService.get('colors');
     if (!colorsFromStorage) {
@@ -88,14 +88,20 @@ function colorPage(localStorageService) {
 
     var boxSizeFromStorage = localStorageService.get('box-size') || 250;
     $('.box').each(function (index) {
-        $(this).css("width", boxSizeFromStorage+"px");
+        $(this).css("width", boxSizeFromStorage + "px");
         $(this).css("background-color", colorList[index % colorList.length]);
     });
 
-    $('a').each(function(){
-        if(this.id !== "general") {
+    $('a').each(function () {
+        if (this.id !== "general") {
             (this).target = "_blank";
         }
+    });
+
+    $('pre').before("\<button class=\"pre-button\" \>Show/Hide code block\<\/button\>");
+    $(".pre-button").click(function () {
+        $(this).next().find("code").toggle();
+        initializeMasonry();
     });
 
     var backgroundColorFromStorage = localStorageService.get('background-color');
