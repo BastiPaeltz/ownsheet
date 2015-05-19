@@ -10,8 +10,9 @@
 
 var ownsheetApp = angular.module("ownsheetApp");
 
-ownsheetApp.controller('generalController', ["$scope", "$window", "$q", "chromeStorageService", "localStorageService",
-    function ($scope, $window, $q, chromeStorageService, localStorageService) {
+ownsheetApp.controller('generalController', ["$scope", "$window", "$q",
+    "localStorageWrapper", "localStorageService",
+    function ($scope, $window, $q, localStorageWrapper, localStorageService) {
         $scope.colors = localStorageService.get('colors') || [
                 {code: "#2d9f34"}, {code: "#4b65c3"}, {code: "#48456a"}, {code: "#4f7a4e"},
                 {code: "#d61115"}, {code: "#59582f"}];
@@ -118,14 +119,14 @@ ownsheetApp.controller('generalController', ["$scope", "$window", "$q", "chromeS
 
         this.import = function () {
             readFile(document.getElementById('importFile').files[0], $scope, function (readyCallback) {
-                validateAndCheckForDuplicates(readyCallback.target.result, chromeStorageService, $scope, $q);
+                validateAndCheckForDuplicates(readyCallback.target.result, localStorageWrapper, $scope, $q);
 
             });
         };
 
         this.export = function () {
 
-            var entireStoragePromise = chromeStorageService.getFromStorage(null);
+            var entireStoragePromise = localStorageWrapper.getFromStorage(null);
             entireStoragePromise.then(function (value) {
                 var blob = new Blob([JSON.stringify(value)], {type: "application/json;charset=utf-8"});
                 saveAs(blob, "ownsheet-content.json");
@@ -134,16 +135,16 @@ ownsheetApp.controller('generalController', ["$scope", "$window", "$q", "chromeS
     }]);
 
 
-function startImportDialog(summary, $scope, $q, chromeStorageService) {
+function startImportDialog(summary, $scope, $q, localStorageWrapper) {
 
     if (summary.conflicts.length === 0) {
         printSuccessBootBox(summary);
     } else {
-        printAndProcessBootBox(summary, 0, $q, chromeStorageService);
+        printAndProcessBootBox(summary, 0, $q, localStorageWrapper);
     }
 }
 
-function printAndProcessBootBox(summary, index, $q, chromeStorageService) {
+function printAndProcessBootBox(summary, index, $q, localStorageWrapper) {
     if (index === summary.conflicts.length) {
         var boxPromise = bootBoxDialog(summary, index, $q);
         boxPromise.then(function (value) {
@@ -151,20 +152,20 @@ function printAndProcessBootBox(summary, index, $q, chromeStorageService) {
             switch (value) {
                 case "skip":
                     index += 1;
-                    printAndProcessBootBox(summary, index, $q, chromeStorageService);
+                    printAndProcessBootBox(summary, index, $q, localStorageWrapper);
                     break;
                 case "override":
                     var storageObject = {};
                     storageObject[summary.conflicts[index].name] = summary.conflicts[index];
-                    chromeStorageService.pushToStorage(storageObject);
+                    localStorageWrapper.pushToStorage(storageObject);
                     index += 1;
-                    printAndProcessBootBox(summary, index, $q, chromeStorageService);
+                    printAndProcessBootBox(summary, index, $q, localStorageWrapper);
                     break;
                 case "override-all":
                     var storageObject = {};
                     for (var i = index; i < summary.conflicts.length; i++) {
                         storageObject[summary.conflicts[index].name] = summary.conflicts[index];
-                        chromeStorageService.pushToStorage(storageObject);
+                        localStorageWrapper.pushToStorage(storageObject);
                     }
                     break;
             }
@@ -174,7 +175,7 @@ function printAndProcessBootBox(summary, index, $q, chromeStorageService) {
     }
 };
 
-function validateAndCheckForDuplicates(fileContent, chromeStorageService, $scope, $q) {
+function validateAndCheckForDuplicates(fileContent, localStorageWrapper, $scope, $q) {
     function isValidSheetObject(sheet) {
         return sheet === json[sheet].name &&
             Object.getOwnPropertyNames(json[sheet]).length === 2
@@ -195,7 +196,7 @@ function validateAndCheckForDuplicates(fileContent, chromeStorageService, $scope
         };
     }
 
-    var storagePromise = chromeStorageService.getFromStorage(null);
+    var storagePromise = localStorageWrapper.getFromStorage(null);
     storagePromise.then(function (value) {
         var conflicts = [];
         var safeImports = 0;
@@ -217,7 +218,7 @@ function validateAndCheckForDuplicates(fileContent, chromeStorageService, $scope
                     // case: no conflict
                     var storageObject = {};
                     storageObject[sheet] = json[sheet];
-                    chromeStorageService.pushToStorage(storageObject);
+                    localStorageWrapper.pushToStorage(storageObject);
                     safeImports += 1;
                 }
             } else {
@@ -232,7 +233,7 @@ function validateAndCheckForDuplicates(fileContent, chromeStorageService, $scope
             total: totalItems
         };
         console.log(summary);
-        startImportDialog(summary, $scope, $q, chromeStorageService);
+        startImportDialog(summary, $scope, $q, localStorageWrapper);
     });
 
 }

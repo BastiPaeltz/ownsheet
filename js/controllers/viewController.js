@@ -7,8 +7,8 @@
 var ownsheetApp = angular.module("ownsheetApp");
 
 ownsheetApp.controller('viewController', ["$scope", "$window", "$routeParams", "$sce",
-    "chromeStorageService", "mdParserService", "previewContentService", "localStorageService",
-    function ($scope, $window, $routeParams, $sce, chromeStorageService,
+    "localStorageWrapper", "mdParserService", "previewContentService", "localStorageService",
+    function ($scope, $window, $routeParams, $sce, localStorageWrapper,
               mdParserService, previewContentService, localStorageService) {
         var mdContent, sheetPromise;
         var sheetNameParam = $routeParams.sheetName;
@@ -30,7 +30,7 @@ ownsheetApp.controller('viewController', ["$scope", "$window", "$routeParams", "
             // sheetNameParam is definitely defined
             $scope.sheet.name = sheetNameParam;
             $scope.sheet.message = "";
-            sheetPromise = chromeStorageService.getFromStorage(sheetNameParam);
+            sheetPromise = localStorageWrapper.getFromStorage(sheetNameParam);
             sheetPromise.then(function (value) {
                 if (value[sheetNameParam]) {
                     // if there is content in storage

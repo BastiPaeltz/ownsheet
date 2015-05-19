@@ -2,6 +2,8 @@
  * Created by sebastian on 5/7/15.
  */
 
+"use strict";
+
 var ownsheetApp = angular.module("ownsheetApp");
 
 ownsheetApp.service('mdParserService', function () {
@@ -25,14 +27,14 @@ ownsheetApp.service('mdParserService', function () {
                 if (isFirst) {
                     isFirst = false;
                     return '\<div class\=\"hideH1\"\> \<\h1\>' + text + '\<\/h1\>';
-                }else {
+                } else {
                     return '<\/div> \<div class\=\"hideH1\"\> \<\h1\>' + text + '\<\/h1\>';
                 }
             } else if (level === 2) {
                 if (isFirst) {
                     isFirst = false;
                     return '\<div class\=\"box\"\> \<\h2\>' + text + '\<\/h2\>';
-                }else{
+                } else {
                     return '<\/div> \<div class\=\"box\"\> \<\h2\>' + text + '\<\/h2\>';
                 }
             } else {

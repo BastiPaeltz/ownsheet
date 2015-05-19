@@ -7,10 +7,10 @@
 
 var ownsheetApp = angular.module("ownsheetApp");
 
-ownsheetApp.controller('popupController', ["$scope", "$window", "chromeStorageService",
-    function ($scope, $window, chromeStorageService) {
+ownsheetApp.controller('popupController', ["$scope", "$window", "localStorageWrapper",
+    function ($scope, $window, localStorageWrapper) {
 
-        chromeStorageService.getFromStorage(null).then(function (value) {
+        localStorageWrapper.getFromStorage(null).then(function (value) {
             if (Object.getOwnPropertyNames(value).length === 0) {
                 $scope.message = "No sheets added yet."
             }
@@ -33,7 +33,7 @@ ownsheetApp.controller('popupController', ["$scope", "$window", "chromeStorageSe
         this.removeSheet = function (sheetName) {
             var confirmed = $window.confirm('Do you really want to do delete this sheet?');
             if (confirmed) {
-                chromeStorageService.removeFromStorage(sheetName);
+                localStorageWrapper.removeFromStorage(sheetName);
                 removeFromScope($scope, sheetName);
                 if ($scope.sheets.length === 0) {
                     $scope.message = "No sheets added yet."

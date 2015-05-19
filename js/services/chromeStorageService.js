@@ -6,10 +6,10 @@
 
 var ownsheetApp = angular.module("ownsheetApp");
 
-ownsheetApp.service('chromeStorageService', function ($q) {
+ownsheetApp.service('chromeStorageService', ["$q", function ($q) {
 
-    // A word on the storage and the data structures involved with it to myself from the future.
-    // When retrieving a single object with .get(key, ...) the returned object looks like this:
+    // When retrieving a single object with .get(key, ...) the returned object
+    // looks like this:
     //  {
     //    key : {
     //        aPropertyYouDefined : 'and its value',
@@ -69,4 +69,4 @@ ownsheetApp.service('chromeStorageService', function ($q) {
         storage.remove(sheet);
     };
 
-});
+}]);

@@ -7,8 +7,8 @@
 var ownsheetApp = angular.module("ownsheetApp");
 
 ownsheetApp.controller('editController', ["$scope", "$routeParams",
-    "chromeStorageService", "$window", "previewContentService",
-    function ($scope, $routeParams, chromeStorageService, $window, previewContentService) {
+    "localStorageWrapper", "$window", "previewContentService",
+    function ($scope, $routeParams, localStorageWrapper, $window, previewContentService) {
 
         var sheet;
         var defaultContent = "# ownsheet ignores these headings\n\
@@ -38,7 +38,7 @@ ownsheet shines when it comes to displaying not so much when it comes to editing
         if (sheetNameParam) {
             $scope.sheet.name = sheetNameParam;
             if (!bufferedContent) {
-                sheet = chromeStorageService.getFromStorage(sheetNameParam);
+                sheet = localStorageWrapper.getFromStorage(sheetNameParam);
                 sheet.then(function (value) {
                     if (value[sheetNameParam]) {
                         $scope.content = value[sheetNameParam].content;
@@ -100,7 +100,7 @@ ownsheet shines when it comes to displaying not so much when it comes to editing
                         name: sheetKey,
                         content: $scope.content
                     };
-                    chromeStorageService.pushToStorage(storageObject);
+                    localStorageWrapper.pushToStorage(storageObject);
                     $scope.safeToNavigate = true;
                     $window.open('main.html#/view/' + sheetKey, "_self");
                 }
@@ -116,7 +116,7 @@ ownsheet shines when it comes to displaying not so much when it comes to editing
                         };
                     }
                     else {
-                        storagePromise = chromeStorageService.getFromStorage(sheetKey);
+                        storagePromise = localStorageWrapper.getFromStorage(sheetKey);
                         storagePromise.then(function (value) {
                             if (value[sheetKey]) {
                                 $scope.alerts.push({
@@ -132,7 +132,7 @@ ownsheet shines when it comes to displaying not so much when it comes to editing
                                     name: sheetKey,
                                     content: $scope.content
                                 };
-                                chromeStorageService.pushToStorage(storageObject);
+                                localStorageWrapper.pushToStorage(storageObject);
                                 $scope.safeToNavigate = true;
                                 $window.open('main.html#/view/' + sheetKey, "_self");
                             }
