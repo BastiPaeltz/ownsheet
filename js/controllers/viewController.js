@@ -98,6 +98,10 @@ function customizePage(localStorageService) {
         }
     });
 
+    $('img').each(function () {
+        $(this).remove();
+    });
+
     $('pre').before("\<button class=\"pre-button\" \>Show/Hide code block\<\/button\>");
     $(".pre-button").click(function () {
         $(this).next().find("code").toggle();
