@@ -10,7 +10,7 @@ ownsheetApp.controller('editController', ["$scope", "$routeParams",
     "chromeStorageService", "$window", "previewContentService",
     function ($scope, $routeParams, chromeStorageService, $window, previewContentService) {
 
-        var sheet;
+        var sheetPromise;
         var defaultContent = "\
 ## WELCOME TO OWNSHEET! \n\
 You can write your sheets with markdown. It is a **simple** and **easy to learn** markup language.\n\
@@ -44,16 +44,20 @@ ownsheet shines when it comes to displaying not so much when it comes to editing
         var bufferedContent = previewContentService.getBuffer();
         $scope.alerts = [];
         $scope.sheet = {};
+
         if (sheetNameParam) {
             $scope.sheet.name = sheetNameParam;
+            // check buffered content (from previewContentService) first
             if (!bufferedContent) {
-                sheet = chromeStorageService.getFromStorage(sheetNameParam);
-                sheet.then(function (value) {
+                // if no buffered content is found, check storage for it
+                sheetPromise = chromeStorageService.getFromStorage(sheetNameParam);
+                sheetPromise.then(function (value) {
                     if (value[sheetNameParam]) {
                         $scope.content = value[sheetNameParam].content;
                         $scope.initialContent = $scope.content;
                         $scope.sheet.message = sheetNameParam;
                     } else {
+                        // if storage doesn't have content either, print message
                         $scope.newSheet = true;
                         $scope.sheet.message = "You currently have no sheet named " + sheetNameParam + " but you can easily add one below.";
                         $scope.content = defaultContent;
@@ -69,7 +73,9 @@ ownsheet shines when it comes to displaying not so much when it comes to editing
 
             $scope.newSheet = true;
             $scope.sheet.message = "Add new sheet";
+            // check buffered content
             if (!bufferedContent) {
+                // if it isnt found, print default content
                 $scope.content = defaultContent;
                 $scope.initialContent = $scope.content;
             } else {
@@ -99,20 +105,17 @@ ownsheet shines when it comes to displaying not so much when it comes to editing
         this.submit = function () {
             if (isValidContent($scope)) {
                 var sheetKey, storagePromise, storageObject;
+                // if a sheet name is defined and it is not a new sheet.
                 if ($scope.sheet.name && !$scope.newSheet) {
+                    // this guarantees that no collision will be there
                     sheetKey = $scope.sheet.name;
-                    storageObject = {};
-                    storageObject[sheetKey] = {
-                        name: sheetKey,
-                        content: $scope.content
-                    };
-                    chromeStorageService.pushToStorage(storageObject);
-                    $scope.safeToNavigate = true;
-                    $window.open('main.html#/view/' + sheetKey, "_self");
+                    saveToStorageAndCleanup(sheetKey, chromeStorageService, $scope, $window)
                 }
                 else {
+                    // if it is a new sheet ...
                     sheetKey = $scope.sheet.newName;
                     if (!sheetKey) {
+                        // if no name is defined, print alert message
                         $scope.alerts.push({
                             type: "danger",
                             msg: "Give your sheet a name."
@@ -122,9 +125,12 @@ ownsheet shines when it comes to displaying not so much when it comes to editing
                         };
                     }
                     else {
+                        // else try to save to storage
                         storagePromise = chromeStorageService.getFromStorage(sheetKey);
                         storagePromise.then(function (value) {
                             if (value[sheetKey]) {
+                                // sheet is already present and defined in storage
+                                // -> print alert
                                 $scope.alerts.push({
                                     type: "danger",
                                     msg: "sheet with name " + sheetKey + " is already defined. Please try another name."
@@ -133,14 +139,9 @@ ownsheet shines when it comes to displaying not so much when it comes to editing
                                     $scope.alerts.splice(index, 1);
                                 };
                             } else {
-                                storageObject = {};
-                                storageObject[sheetKey] = {
-                                    name: sheetKey,
-                                    content: $scope.content
-                                };
-                                chromeStorageService.pushToStorage(storageObject);
-                                $scope.safeToNavigate = true;
-                                $window.open('main.html#/view/' + sheetKey, "_self");
+                                // no collision on sheet is found
+                                // save to storage
+                                saveToStorageAndCleanup(sheetKey, chromeStorageService, $scope, $window)
                             }
                         });
                     }
@@ -149,6 +150,18 @@ ownsheet shines when it comes to displaying not so much when it comes to editing
         }
     }
 ]);
+
+
+function saveToStorageAndCleanup(sheetKey ,chromeStorageService, $scope, $window){
+    var storageObject = {};
+    storageObject[sheetKey] = {
+        name: sheetKey,
+        content: $scope.content
+    };
+    chromeStorageService.pushToStorage(storageObject);
+    $scope.safeToNavigate = true;
+    $window.open('main.html#/view/' + sheetKey, "_self");
+}
 
 function isValidContent($scope) {
     if ($scope.content.indexOf('##') === -1) {

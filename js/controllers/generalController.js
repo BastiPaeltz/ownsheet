@@ -12,6 +12,8 @@ var ownsheetApp = angular.module("ownsheetApp");
 
 ownsheetApp.controller('generalController', ["$scope", "$window", "$q", "chromeStorageService", "localStorageService",
     function ($scope, $window, $q, chromeStorageService, localStorageService) {
+
+        // get values from storage or default values
         $scope.colors = localStorageService.get('colors') || [
                 {code: "#2d9f34"}, {code: "#4b65c3"}, {code: "#48456a"}, {code: "#4f7a4e"},
                 {code: "#d61115"}, {code: "#59582f"}];
@@ -74,22 +76,23 @@ Any content will stay the same.\n";
             bootbox.alert("Box colors reset!");
         };
 
-        this.convertUp = function(){
+        this.convertUp = function () {
             $scope.converter = ($scope.converter).replace(/(\n|^)[\#]{3}([^\#])/g, "$1####$2");
             $scope.converter = ($scope.converter).replace(/(\n|^)[\#]{2}([^\#])/g, "$1###$2");
             $scope.converter = ($scope.converter).replace(/(\n|^)[\#]{1}([^\#])/g, "$1##$2");
 
         };
 
-        this.convertDown = function(){
+        this.convertDown = function () {
             $scope.converter = ($scope.converter).replace(/(\n|^)[\#]{2}([^\#])/g, "$1#$2");
             $scope.converter = ($scope.converter).replace(/(\n|^)[\#]{3}([^\#])/g, "$1##$2");
             $scope.converter = ($scope.converter).replace(/(\n|^)[\#]{4}([^\#])/g, "$1###$2");
         };
 
         this.submitBGColor = function () {
-
+            // test if valid hex color
             if (/^#[0-9A-F]{6}$/i.test($scope.backgroundColor) === false) {
+                // reset to default if not valid
                 $scope.backgroundColor = "#b3b3b3";
                 bootbox.alert("Please enter valid hex color codes!");
             } else {
@@ -106,10 +109,12 @@ Any content will stay the same.\n";
 
 
         this.submitBoxSize = function () {
-            if($.isNumeric($scope.boxSize) && $scope.boxSize > 100 && $scope.boxSize < 700) {
+            // check (with jquerys is NUmberic if the input number is valid integer
+            // and if its between 100 and 700
+            if ($.isNumeric($scope.boxSize) && $scope.boxSize > 100 && $scope.boxSize < 700) {
                 localStorageService.set('box-size', $scope.boxSize);
                 bootbox.alert("Box size saved!");
-            }else{
+            } else {
                 $scope.boxSize = 250;
                 bootbox.alert("Please enter an integer number between 100 and 700.");
             }
@@ -124,14 +129,17 @@ Any content will stay the same.\n";
 
 
         this.import = function () {
-            readFile(document.getElementById('importFile').files[0], $scope, function (readyCallback) {
-                validateAndCheckForDuplicates(readyCallback.target.result, chromeStorageService, $scope, $q);
+            // read input file and process import
+            readFile(document.getElementById('importFile').files[0], $scope,
+                function (readyCallback) {
+                    validateAndCheckForDuplicates(readyCallback.target.result,
+                        chromeStorageService, $scope, $q);
 
-            });
+                });
         };
 
         this.export = function () {
-
+            // get entire storage and write it to json file
             var entireStoragePromise = chromeStorageService.getFromStorage(null);
             entireStoragePromise.then(function (value) {
                 var blob = new Blob([JSON.stringify(value)], {type: "application/json;charset=utf-8"});
@@ -140,18 +148,110 @@ Any content will stay the same.\n";
         }
     }]);
 
+function readFile(file, $scope, onLoadCallback) {
+    var reader = new FileReader();
+    reader.onload = onLoadCallback;
+
+    // try to read file
+    try {
+        reader.readAsText(file);
+    } catch (e) {
+        $scope.alerts.push({
+            type: "danger",
+            msg: "Can't read import file."
+        });
+        $scope.closeAlert = function (index) {
+            $scope.alerts.splice(index, 1);
+        };
+    }
+}
+
+function validateAndCheckForDuplicates(fileContent, chromeStorageService, $scope, $q) {
+
+    // helper function which validates if the json entry is a well formed sheet entry
+    function isValidSheetObject(sheet) {
+        return sheet === json[sheet].name &&
+            Object.getOwnPropertyNames(json[sheet]).length === 2
+            && json[sheet].content;
+    }
+
+    var storagePromise;
+    var json;
+
+    // try to parse json file
+    try {
+        json = JSON.parse(fileContent);
+    } catch (e) {
+        $scope.alerts.push({
+            type: "danger",
+            msg: "Couldn't parse input file." +
+            " Make sure this is the ownsheet-content.json file you exported earlier."
+        });
+        $scope.closeAlert = function (index) {
+            $scope.alerts.splice(index, 1);
+        };
+    }
+
+    // get entire storage to compare it to import values
+    storagePromise = chromeStorageService.getFromStorage(null);
+    storagePromise.then(function (value) {
+        var summary;
+        var conflicts = [];
+        var safeImports = 0;
+        var totalItems = 0;
+        var failedImports = 0;
+        // check every imported sheet, if it is well formed and if there is a conflict
+        Object.keys(json).forEach(function (sheet) {
+            if (isValidSheetObject(sheet)) {
+                totalItems += 1;
+                // check for conflict - conflict case when sheet is already defined and
+                // contents differ.
+                if (value[sheet]) {
+                    // case: conflict
+                    if (value[sheet].content !== json[sheet].content) {
+                        conflicts.push(json[sheet]);
+                    } else {
+                        safeImports += 1;
+                    }
+                } else {
+                    // case: no conflict -> push to storage
+                    var storageObject = {};
+                    storageObject[sheet] = json[sheet];
+                    chromeStorageService.pushToStorage(storageObject);
+                    safeImports += 1;
+                }
+            } else {
+                // invalid sheet entry
+                failedImports += 1;
+                delete json[sheet];
+            }
+        });
+        summary = {
+            conflicts: conflicts,
+            failed: failedImports,
+            safe: safeImports,
+            total: totalItems
+        };
+        // start actual dialog
+        startImportDialog(summary, $scope, $q, chromeStorageService);
+    });
+
+}
 
 function startImportDialog(summary, $scope, $q, chromeStorageService) {
 
     if (summary.conflicts.length === 0) {
+        // case: no conflicts
         printSuccessBootBox(summary);
     } else {
+        // case: at least 1 conflict
+        // begin at first(index = 0) conflict
         printAndProcessBootBox(summary, 0, $q, chromeStorageService);
     }
 }
 
 function printAndProcessBootBox(summary, index, $q, chromeStorageService) {
-    if (index === summary.conflicts.length) {
+    if (index < summary.conflicts.length) {
         var boxPromise = bootBoxDialog(summary, index, $q);
         boxPromise.then(function (value) {
             // value = decision
@@ -181,92 +281,17 @@ function printAndProcessBootBox(summary, index, $q, chromeStorageService) {
     }
 };
 
-function validateAndCheckForDuplicates(fileContent, chromeStorageService, $scope, $q) {
-    function isValidSheetObject(sheet) {
-        return sheet === json[sheet].name &&
-            Object.getOwnPropertyNames(json[sheet]).length === 2
-            && json[sheet].content;
-    }
-
-    var json;
-    try {
-        json = JSON.parse(fileContent);
-    } catch (e) {
-        $scope.alerts.push({
-            type: "danger",
-            msg: "Couldn't parse input file." +
-            " Make sure this is the ownsheet-content.json file you exported earlier."
-        });
-        $scope.closeAlert = function (index) {
-            $scope.alerts.splice(index, 1);
-        };
-    }
-
-    var storagePromise = chromeStorageService.getFromStorage(null);
-    storagePromise.then(function (value) {
-        var conflicts = [];
-        var safeImports = 0;
-        var totalItems = 0;
-        var failedImports = 0;
-        Object.keys(json).forEach(function (sheet) {
-            if (isValidSheetObject(sheet)) {
-                totalItems += 1;
-                // check for conflict - conflict case when sheet is already defined and
-                // contents differ.
-                if (value[sheet]) {
-                    // case: conflict
-                    if (value[sheet].content !== json[sheet].content) {
-                        conflicts.push(json[sheet]);
-                    } else {
-                        safeImports += 1;
-                    }
-                } else {
-                    // case: no conflict
-                    var storageObject = {};
-                    storageObject[sheet] = json[sheet];
-                    chromeStorageService.pushToStorage(storageObject);
-                    safeImports += 1;
-                }
-            } else {
-                failedImports += 1;
-                delete json[sheet];
-            }
-        });
-        var summary = {
-            conflicts: conflicts,
-            failed: failedImports,
-            safe: safeImports,
-            total: totalItems
-        };
-        console.log(summary);
-        startImportDialog(summary, $scope, $q, chromeStorageService);
-    });
-
-}
-
-function readFile(file, $scope, onLoadCallback) {
-    var reader = new FileReader();
-    reader.onload = onLoadCallback;
-    try {
-        reader.readAsText(file);
-    } catch (e) {
-        $scope.alerts.push({
-            type: "danger",
-            msg: "Can't read import file."
-        });
-        $scope.closeAlert = function (index) {
-            $scope.alerts.splice(index, 1);
-        };
-    }
-}
 
 function bootBoxDialog(summary, index, $q) {
+    // returns promise, which contains choice of user
+    // as soon as he made his decision --> returns immediately
+
     var deferred = $q.defer();
     bootbox.dialog({
-        message: "Detected " + summary.failed + " invalid sheet. " + summary.safe +
-        " out of " + summary.total + " valid sheets were successfully imported. Conflicts on " +
-        (summary.conflicts.length - index) + " remaining sheets. \<br\/>\<br\/> Conflict on sheet <b>'"
-        + summary.conflicts[index].name + "'\<\/b>",
+        message: "Detected " + summary.failed + " invalid sheet. " +
+        summary.safe + " out of " + summary.total + " valid sheets were successfully imported. " +
+        "Conflicts on " + (summary.conflicts.length - index) + " remaining sheets. " +
+        "\<br\/>\<br\/> Conflict on sheet <b>'" + summary.conflicts[index].name + "'\<\/b>",
         title: "Import into ownsheet",
         buttons: {
             success: {

@@ -10,6 +10,7 @@ var ownsheetApp = angular.module("ownsheetApp");
 ownsheetApp.controller('popupController', ["$scope", "$window", "chromeStorageService",
     function ($scope, $window, chromeStorageService) {
 
+        // populate scope initially
         chromeStorageService.getFromStorage(null).then(function (value) {
             if (Object.getOwnPropertyNames(value).length === 0) {
                 $scope.message = "No sheets added yet."
