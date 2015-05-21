@@ -35,7 +35,7 @@ ownsheetApp.service('chromeStorageService', function ($q) {
     var storage = chrome.storage.local;
 
     this.pushToStorage = function (sheet) {
-        storage.set(sheet)
+        storage.set(sheet);
     };
 
 

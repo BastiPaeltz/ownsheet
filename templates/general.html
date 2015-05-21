@@ -1,31 +1,39 @@
-<div class="heading">
-    <h1>Explore ownsheet</h1>
-</div>
 <div ng-controller="generalController as general">
-    <div class="converter" style="float: right; width: 50%; margin-right: 30px">
+    <div class="heading">
+        <h1>Explore ownsheet</h1>
+        <h2 style="margin-left: 15px; color: #880000">{{warning}}</h2>
+    </div>
+    <div class="converter" style="float: right; width: 50%; margin-right: 50px">
         <h3 class="generalHeading" style="margin-left: 0px">Header converter tool</h3>
 
         <p style="margin-bottom: 10px; font-size: 18px">ownsheet creates a box for each <strong>## heading</strong>. So
             each of your main logical points should
             be under those level 2 headings. However a lot of cheat sheets out there, which are written in
-            markdown use <strong>other levels</strong>. <br/>This simple tool can <strong>convert</strong> those cheat sheets into <i>ownsheet friendly</i>
+            markdown use <strong>other levels</strong>. <br/>This simple tool can <strong>convert</strong> those cheat
+            sheets into <i>ownsheet friendly</i>
             ones.</p>
         <textarea height="80%" class="form-control" ng-model="converter" type="text" rows="20">
 
         </textarea>
-        <button ng-click="general.convertUp()" style="margin-top: 10px; margin-right: 15px" class="btn btn-primary btn-lg ">Convert up (# -> ##)</button>
-        <button ng-click="general.convertDown()" style="margin-top: 10px;" class="btn btn-warning btn-lg ">Convert down (### -> ##)</button>
+        <button ng-click="general.convertUp()" style="margin-top: 10px; margin-right: 15px"
+                class="btn btn-primary btn-lg ">Convert up (# -> ##)
+        </button>
+        <button ng-click="general.convertDown()" style="margin-top: 10px;" class="btn btn-warning btn-lg ">Convert down
+            (### -> ##)
+        </button>
     </div>
 
     <div class="colors">
-        <h3 class="generalHeading">Customize your box colors</h3>
+        <h3 style="margin-bottom: 10px" class="generalHeading">Customize your box colors</h3>
+        <a style="display: block; margin: 10px 15px; font-size: 19px" target="_blank"
+           href="http://www.w3schools.com/tags/ref_colornames.asp">Learn more about hex color codes.</a>
         <button ng-click="general.addFont()" class="btn btn-success btn-lg generalLeftButton">
             <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add font color
         </button>
         <button ng-click="general.removeFont()" class="btn btn-danger btn-lg generalButton">Remove last color</button>
-        <label style="margin-left: 15px; display: block">Input a hex color code</label>
         <div class="form-group colorForms" ng-repeat="color in colors track by $index">
-            <input type="text" class="form-control colorInput" ng-model="color.code">
+            <input type="text" placeholder="Enter a hex color code." class="form-control colorInput"
+                   ng-model="color.code">
         </div>
         <button ng-click="general.submitFonts()" class="btn btn-success btn-lg generalLeftButton">Save colors</button>
         <button ng-click="general.resetFonts()" class="btn btn-warning btn-lg generalButton">
@@ -43,8 +51,8 @@
         </button>
 
         <h3 class="generalHeading">Set your background color</h3>
-        <label style="margin-left: 15px">Input a hex color code</label>
-        <input type="text" class="form-control colorForms" ng-model="backgroundColor">
+        <input type="text" placeholder="Enter a hex color code." class="form-control colorForms"
+               ng-model="backgroundColor">
         <button ng-click="general.submitBGColor()" class="btn btn-success btn-lg generalLeftButton">Save background
             color
         </button>

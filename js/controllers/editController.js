@@ -6,9 +6,9 @@
 
 var ownsheetApp = angular.module("ownsheetApp");
 
-ownsheetApp.controller('editController', ["$scope", "$location", "$routeParams",
+ownsheetApp.controller('editController', ["$scope", "$routeParams",
     "chromeStorageService", "$window", "previewContentService",
-    function ($scope, $location, $routeParams, chromeStorageService, $window, previewContentService) {
+    function ($scope, $routeParams, chromeStorageService, $window, previewContentService) {
 
         var sheetPromise;
         var defaultContent = "\
@@ -98,8 +98,7 @@ ownsheet shines when it comes to displaying not so much when it comes to editing
             if (isValidContent($scope)) {
                 previewContentService.add($scope.content);
                 $scope.safeToNavigate = true;
-                $location.path('/preview');
-                //$window.open('main.html#/preview', "_self");
+                $window.open('main.html#/preview', "_self");
             }
         };
 

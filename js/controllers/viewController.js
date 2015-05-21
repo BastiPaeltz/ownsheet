@@ -58,9 +58,15 @@ ownsheetApp.controller('viewController', ["$scope", "$window", "$routeParams", "
                 } else {
                     // if there isn't
                     spinner.stop();
-                    $scope.sheet.name = "";
-                    $scope.sheet.message = "No sheet here. Do you want to add one?";
-                    $scope.buttonType = "new"
+                    // check for error first
+                    if (value === "Error") {
+                        $scope.sheet.message = "Storage error! Please open ownsheet again. " +
+                            "If this problem persists, consider contacting the developer."
+                    } else {
+                        $scope.sheet.name = "";
+                        $scope.sheet.message = "No sheet here. Do you want to add one?";
+                        $scope.buttonType = "new"
+                    }
                 }
             });
 

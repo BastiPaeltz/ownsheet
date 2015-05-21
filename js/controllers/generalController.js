@@ -25,6 +25,11 @@ ownsheetApp.controller('generalController', ["$scope", "$window", "$q", "chromeS
         $scope.alerts = [];
         document.title = "Explore ownsheet";
 
+        if(!localStorageService.isSupported) {
+            $scope.warning = "Your browser doesn't seem to support " +
+                "HTML5 local storage! Please update your browser, if you want to customize ownsheet."
+
+        }
         $scope.converter = "\
 ## headings will be converted. \n\
 You can convert headings UP or DOWN.\n\
@@ -36,7 +41,7 @@ You can convert headings UP or DOWN.\n\
 Any content will stay the same.\n";
 
         this.addFont = function () {
-            $scope.colors.push({code: "Enter a hex color code."})
+            $scope.colors.push({code: ""})
         };
 
         this.removeFont = function () {

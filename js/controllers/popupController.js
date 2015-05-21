@@ -12,7 +12,11 @@ ownsheetApp.controller('popupController', ["$scope", "$window", "chromeStorageSe
 
         // populate scope initially
         chromeStorageService.getFromStorage(null).then(function (value) {
-            if (Object.getOwnPropertyNames(value).length === 0) {
+            if(value === "Error"){
+                $scope.message = "Storage error. Please open ownsheet again. " +
+                    "If this problem persists, consider contacting the developer."
+            }
+            else if (Object.getOwnPropertyNames(value).length === 0) {
                 $scope.message = "No sheets added yet."
             }
             else {
