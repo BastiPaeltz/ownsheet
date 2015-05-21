@@ -15,8 +15,6 @@ ownsheetApp.controller('viewController', ["$scope", "$window", "$routeParams", "
         var sheetNameParam = $routeParams.sheetName;
         $scope.sheet = {};
 
-        startSpinner();
-
         // case: preview
         if ($window.location.href.endsWith('main.html#/preview')) {
             $scope.sheet.name = "preview";
@@ -24,6 +22,7 @@ ownsheetApp.controller('viewController', ["$scope", "$window", "$routeParams", "
             $scope.mdContent = previewContentService.get();
             // get content from previewService
             if ($scope.mdContent) {
+                startSpinner();
                 renderContent($scope.mdContent, mdParserService);
                 customizePage(localStorageService);
                 $scope.buttonType = "edit";
@@ -39,6 +38,7 @@ ownsheetApp.controller('viewController', ["$scope", "$window", "$routeParams", "
             sheetPromise.then(function (value) {
                 if (value[sheetNameParam]) {
                     // if there is content in storage
+                    startSpinner();
                     renderContent(value[sheetNameParam].content, mdParserService);
                     customizePage(localStorageService);
                     $scope.buttonType = "edit";
@@ -104,9 +104,7 @@ function customizePage(localStorageService) {
 
     // make links open in new tab
     $('a').each(function () {
-        if (this.id !== "general") {
-            (this).target = "_blank";
-        }
+        (this).target = "_blank";
     });
 
     // remove images
@@ -141,7 +139,7 @@ String.prototype.endsWith = function (suffix) {
     return this.indexOf(suffix, this.length - suffix.length) !== -1;
 };
 
-function startSpinner(){
+function startSpinner() {
     var opts = {
         lines: 13, // The number of lines to draw
         length: 20, // The length of each line
