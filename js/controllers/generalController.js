@@ -270,14 +270,17 @@ function printAndProcessBootBox(summary, index, $q, chromeStorageService) {
                     storageObject[summary.conflicts[index].name] = summary.conflicts[index];
                     chromeStorageService.pushToStorage(storageObject);
                     index += 1;
+                    summary.safe += 1;
                     printAndProcessBootBox(summary, index, $q, chromeStorageService);
                     break;
                 case "override-all":
                     var storageObject = {};
                     for (var i = index; i < summary.conflicts.length; i++) {
+                        summary.safe += 1;
                         storageObject[summary.conflicts[index].name] = summary.conflicts[index];
                         chromeStorageService.pushToStorage(storageObject);
                     }
+                    printSuccessBootBox(summary);
                     break;
             }
         });
