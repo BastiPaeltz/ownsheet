@@ -15,21 +15,35 @@ ownsheetApp.controller('viewController', ["$scope", "$window", "$routeParams", "
         var sheetNameParam = $routeParams.sheetName;
         $scope.sheet = {};
 
+        var spinner = startSpinner();
+
         // case: preview
-        if ($window.location.href.endsWith('main.html#/preview')) {
+        if (!sheetNameParam && $window.location.href.endsWith('main.html#/preview')) {
             $scope.sheet.name = "preview";
             $scope.mode = "preview";
-            $scope.mdContent = previewContentService.get();
+            $scope.sheet.message = "";
             // get content from previewService
-            if ($scope.mdContent) {
-                startSpinner();
-                renderContent($scope.mdContent, mdParserService);
-                customizePage(localStorageService);
-                $scope.buttonType = "edit";
-            } else {
-                $scope.sheet.message = "No preview here";
-                $scope.buttonType = "new";
-            }
+            var mdContentPromise = previewContentService.get();
+            mdContentPromise.then(function (value) {
+                $scope.mdContent = value;
+                if ($scope.mdContent) {
+                    renderContent($scope.mdContent, mdParserService);
+                    customizePage(localStorageService);
+                    $scope.buttonType = "edit";
+                } else {
+                    spinner.stop();
+                    $scope.sheet.message = "No preview here";
+                    $scope.buttonType = "new";
+                }
+            });
+            // ask before unloading, because changed content will
+            // be lost
+
+            window.onbeforeunload = function (event) {
+                return "If you leave this page, " +
+                    "changes on your sheet you were just editing, " +
+                    "will be lost."
+            };
         } else {
             $scope.sheet.name = sheetNameParam;
             $scope.sheet.message = "";
@@ -38,12 +52,12 @@ ownsheetApp.controller('viewController', ["$scope", "$window", "$routeParams", "
             sheetPromise.then(function (value) {
                 if (value[sheetNameParam]) {
                     // if there is content in storage
-                    startSpinner();
                     renderContent(value[sheetNameParam].content, mdParserService);
                     customizePage(localStorageService);
                     $scope.buttonType = "edit";
                 } else {
                     // if there isn't
+                    spinner.stop();
                     $scope.sheet.name = "";
                     $scope.sheet.message = "No sheet here. Do you want to add one?";
                     $scope.buttonType = "new"
@@ -160,4 +174,5 @@ function startSpinner() {
     };
     var target = document.getElementById('ms-content');
     var spinner = new Spinner(opts).spin(target);
+    return spinner;
 }

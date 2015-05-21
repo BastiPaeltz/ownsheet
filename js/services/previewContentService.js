@@ -5,7 +5,7 @@
 
 var ownsheetApp = angular.module("ownsheetApp");
 
-ownsheetApp.service('previewContentService', function () {
+ownsheetApp.service('previewContentService', function ($q) {
     var preview = this;
 
     preview.add = function(content){
@@ -13,7 +13,11 @@ ownsheetApp.service('previewContentService', function () {
     };
 
     preview.get = function(){
-        return preview.content;
+        var deferred = $q.defer();
+        setTimeout(function () {
+            deferred.resolve(preview.content);
+        }, 0);
+        return deferred.promise;
     };
 
     preview.buffer = function(bufferedContent){

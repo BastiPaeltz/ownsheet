@@ -8,7 +8,7 @@
         <p style="margin-bottom: 10px; font-size: 18px">ownsheet creates a box for each <strong>## heading</strong>. So
             each of your main logical points should
             be under those level 2 headings. However a lot of cheat sheets out there, which are written in
-            markdown use other levels. <br/>This simple tool can convert those cheat sheets into <i>ownsheet friendly</i>
+            markdown use <strong>other levels</strong>. <br/>This simple tool can <strong>convert</strong> those cheat sheets into <i>ownsheet friendly</i>
             ones.</p>
         <textarea height="80%" class="form-control" ng-model="converter" type="text" rows="20">
 
@@ -23,6 +23,7 @@
             <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add font color
         </button>
         <button ng-click="general.removeFont()" class="btn btn-danger btn-lg generalButton">Remove last color</button>
+        <label style="margin-left: 15px; display: block">Input a hex color code</label>
         <div class="form-group colorForms" ng-repeat="color in colors track by $index">
             <input type="text" class="form-control colorInput" ng-model="color.code">
         </div>
@@ -42,6 +43,7 @@
         </button>
 
         <h3 class="generalHeading">Set your background color</h3>
+        <label style="margin-left: 15px">Input a hex color code</label>
         <input type="text" class="form-control colorForms" ng-model="backgroundColor">
         <button ng-click="general.submitBGColor()" class="btn btn-success btn-lg generalLeftButton">Save background
             color
