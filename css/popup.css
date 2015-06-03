@@ -103,9 +103,3 @@ table {
     word-break: break-word;
     word-wrap: break-word;
 }
-
-.modal-content{
-    float: right;
-    margin-right: 300px;
-    overflow: hidden;
-}

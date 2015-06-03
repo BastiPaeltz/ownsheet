@@ -292,7 +292,11 @@ body {
     font-size: 15px;
     color: darkgray;
     text-decoration: none;
-    display: inline-block;
+    display: inline;
+}
+
+.box a[ng-click]{
+    cursor: pointer;
 }
 
 .box a:hover {
