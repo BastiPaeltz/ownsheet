@@ -99,6 +99,7 @@ function initializeMasonry() {
 }
 
 function customizePage(localStorageService) {
+    makeTableOfContent();
     var colorList = [];
     // get custom page parameters from local storage
     // set default value, if not customized.
@@ -153,6 +154,22 @@ function renderContent(mdContent, mdParserService) {
     // parse Content and insert it in 'ms.content' div
     var content = document.getElementById('ms-content');
     content.innerHTML = mdParserService.parse(mdContent) + "\</div>\</div>";
+}
+
+function makeTableOfContent() {
+    var tableOfContent = [];
+    var content = "";
+    var allBoxes = $('.box');
+    // insert link after to each box
+    $.each(allBoxes.find('h2'), function (index, value) {
+        $(value).after("<a style=\"display: none\" id=\"" + $(value).text() + "\">\</a>");
+        tableOfContent.push($(value).text());
+        content += "\<li><a  href=\"#" + $(value).text() + "\">"+$(value).text()+"\</a>"+ "\</li>"
+    });
+    // make table of contents box
+    var tableOfContentHTML = "\<div class=\"box\"><h2>TABLE OF CONTENTS</h2><ul>"+content+"\</ul></div>";
+    $(allBoxes).first().before(tableOfContentHTML);
+
 }
 
 String.prototype.endsWith = function (suffix) {
