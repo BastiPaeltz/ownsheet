@@ -8,8 +8,9 @@ var ownsheetApp = angular.module("ownsheetApp");
 
 ownsheetApp.controller('viewController', ["$scope", "$window", "$routeParams", "$sce",
     "chromeStorageService", "mdParserService", "previewContentService", "localStorageService",
-    "$anchorScroll", "$location", function ($scope, $window, $routeParams, $sce, chromeStorageService,
-              mdParserService, previewContentService, localStorageService, $anchorScroll, $location) {
+    "$anchorScroll", "$location",
+    function ($scope, $window, $routeParams, $sce, chromeStorageService, mdParserService,
+              previewContentService, localStorageService, $anchorScroll, $location) {
 
         var mdContent, sheetPromise;
         var sheetNameParam = $routeParams.sheetName;
@@ -61,6 +62,7 @@ ownsheetApp.controller('viewController', ["$scope", "$window", "$routeParams", "
                     // if there is content in storage
                     renderContent(value[sheetNameParam].content, mdParserService);
                     customizePage(localStorageService, $scope);
+
                     $scope.buttonType = "edit";
                 } else {
                     // if there isn't
@@ -93,7 +95,7 @@ ownsheetApp.controller('viewController', ["$scope", "$window", "$routeParams", "
             $window.open('main.html#/edit', "_self");
         }
 
-        this.scrollTo = function(id){
+        this.scrollTo = function (id) {
             console.log(id);
         }
 
@@ -111,7 +113,7 @@ function initializeMasonry() {
 
 
 function customizePage(localStorageService, $scope) {
-    makeTableOfContent($scope);
+    makeTableOfContent($scope)  ;
     var colorList = [];
     // get custom page parameters from local storage
     // set default value, if not customized.
@@ -119,7 +121,7 @@ function customizePage(localStorageService, $scope) {
     var colorsFromStorage = localStorageService.get('colors');
     if (!colorsFromStorage) {
         // default
-        colorList = ["#4b65c3", "#2d9f34" , "#48456a", "#4f7a4e",
+        colorList = ["#4b65c3", "#2d9f34", "#48456a", "#4f7a4e",
             "#d61115", "#59582f"];
     } else {
         for (var indx in colorsFromStorage) {
@@ -153,8 +155,10 @@ function customizePage(localStorageService, $scope) {
     if (backgroundColorFromStorage) {
         $('html, body').css('background-color', backgroundColorFromStorage);
     }
+    setTimeout(function(){
+        initializeMasonry()
+    }, 200);
 
-    initializeMasonry();
 }
 
 function renderContent(mdContent, mdParserService) {
@@ -166,7 +170,7 @@ function renderContent(mdContent, mdParserService) {
 // Jquery I love you <3
 function makeTableOfContent($scope) {
 
-     //make links except contentTable ones open in new tab
+    //make links except contentTable ones open in new tab
     $('a').each(function () {
         (this).target = "_blank";
     });
@@ -179,17 +183,19 @@ function makeTableOfContent($scope) {
         var text = $(value).text();
         $(value).after("<a style=\"display: block\" id=\"" + text + "\">\</a>");
         tableOfContent.push(text);
-        content += "\<li><a href=\""+text+"\">"+text+"\</a>"+ "\</li>"
+        content += "\<li><a href=\"" + text + "\">" + text + "\</a>" + "\</li>"
     });
-    var tableOfContentHTML = "\<div id=\"___tableOfcontent___\" class=\"box contentTable\"><h2>TABLE OF CONTENTS</h2><ul>"+content+"\</ul></div>";
+    var tableOfContentHTML = "\<div id=\"___tableOfcontent___\" class=\"box contentTable\"><h2>TABLE OF CONTENTS</h2><ul>" + content + "\</ul></div>";
+
     $(allBoxes).first().before(tableOfContentHTML);
-    $( ".contentTable a" ).click(function( event ) {
+
+    $(".contentTable a").click(function (event) {
         event.preventDefault();
         var id = $(event.target).text();
         $scope.scrollTo(id);
     });
 
-    $( "a" ).click(function( event ) {
+    $("a").click(function (event) {
         var goToTopExpressions = ['Back to top', 'Go to top', 'top', 'Scroll to top', 'Scroll up'];
         var id = $(event.target).text();
 
