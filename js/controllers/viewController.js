@@ -19,7 +19,6 @@ ownsheetApp.controller('viewController', ["$scope", "$window", "$routeParams", "
         var spinner = startSpinner();
 
         $scope.scrollTo = function (id) {
-            console.log(id);
             var old = $location.hash();
             $location.hash(id);
             $anchorScroll();
@@ -93,11 +92,7 @@ ownsheetApp.controller('viewController', ["$scope", "$window", "$routeParams", "
 
         this.new = function () {
             $window.open('main.html#/edit', "_self");
-        }
-
-        this.scrollTo = function (id) {
-            console.log(id);
-        }
+        };
 
     }]);
 
@@ -113,7 +108,7 @@ function initializeMasonry() {
 
 
 function customizePage(localStorageService, $scope) {
-    makeTableOfContent($scope)  ;
+    makeTableOfContent($scope);
     var colorList = [];
     // get custom page parameters from local storage
     // set default value, if not customized.
@@ -155,7 +150,7 @@ function customizePage(localStorageService, $scope) {
     if (backgroundColorFromStorage) {
         $('html, body').css('background-color', backgroundColorFromStorage);
     }
-    setTimeout(function(){
+    setTimeout(function () {
         initializeMasonry()
     }, 200);
 
