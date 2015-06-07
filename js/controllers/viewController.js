@@ -132,6 +132,7 @@ function customizePage(localStorageService) {
         $(this).remove();
     });
 
+
     // add "toogle code block" button
     $('pre').before("\<button class=\"pre-button\" \>Show/Hide code block\<\/button\>");
     $(".pre-button").click(function () {

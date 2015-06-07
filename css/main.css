@@ -246,10 +246,7 @@ body {
 
 .box {
     border-radius: 8px;
-    margin-top: 15px;
-    margin-left: 15px;
-    margin-right: 10px;
-    margin-bottom: 10px;
+    margin: 15px 10px 10px 15px;
     padding: 15px;
     width: 200px;
     color: #fff;
@@ -284,11 +281,16 @@ body {
     padding-bottom: 3px;
 }
 
+.box video {
+    width: 100%;
+}
+
 .box a {
     font-size: 15px;
-    color: darkgray;
+    color: rgb(184, 184, 184);
     text-decoration: none;
     display: inline-block;
+    word-break: break-word;
 }
 
 .box a:hover {
@@ -314,11 +316,27 @@ body {
 .box blockquote {
     word-break: normal;
     word-wrap: break-word;
+    margin-top: 3px;
+    margin-bottom: 3px;
+    border-left-width: 2px;
+    padding-left: 2px;
+}
+
+.box canvas {
+    display: none;
+}
+
+.box iframe {
+    width: 100%;
 }
 
 .box td {
     padding: 7px;
     word-wrap: break-word;
+}
+
+.box audio {
+    width: inherit;
 }
 
 .box th {
@@ -337,7 +355,7 @@ img {
     text-decoration: none;
     display: initial;
     word-wrap: break-word;
-    background-color: rgb(245, 245, 245);
+    background-color: #F9F2F4;
     border-radius: 2px;
     white-space: inherit;
 }
@@ -348,7 +366,7 @@ img {
     word-wrap: break-word;
 }
 
-.pre-button{
+.pre-button {
     margin-top: 5px;
     margin-bottom: 1px;
     font-size: 13px;

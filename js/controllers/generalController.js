@@ -260,13 +260,14 @@ function printAndProcessBootBox(summary, index, $q, chromeStorageService) {
         var boxPromise = bootBoxDialog(summary, index, $q);
         boxPromise.then(function (value) {
             // value = decision
+            var storageObject;
             switch (value) {
                 case "skip":
                     index += 1;
                     printAndProcessBootBox(summary, index, $q, chromeStorageService);
                     break;
                 case "override":
-                    var storageObject = {};
+                    storageObject = {};
                     storageObject[summary.conflicts[index].name] = summary.conflicts[index];
                     chromeStorageService.pushToStorage(storageObject);
                     index += 1;
@@ -274,7 +275,7 @@ function printAndProcessBootBox(summary, index, $q, chromeStorageService) {
                     printAndProcessBootBox(summary, index, $q, chromeStorageService);
                     break;
                 case "override-all":
-                    var storageObject = {};
+                    storageObject = {};
                     for (var i = index; i < summary.conflicts.length; i++) {
                         summary.safe += 1;
                         storageObject[summary.conflicts[index].name] = summary.conflicts[index];
