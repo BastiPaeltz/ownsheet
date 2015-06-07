@@ -8,8 +8,9 @@ var ownsheetApp = angular.module("ownsheetApp");
 
 ownsheetApp.controller('viewController', ["$scope", "$window", "$routeParams", "$sce",
     "chromeStorageService", "mdParserService", "previewContentService", "localStorageService",
-    function ($scope, $window, $routeParams, $sce, chromeStorageService,
-              mdParserService, previewContentService, localStorageService) {
+    "$anchorScroll", "$location",
+    function ($scope, $window, $routeParams, $sce, chromeStorageService, mdParserService,
+              previewContentService, localStorageService, $anchorScroll, $location) {
 
         var mdContent, sheetPromise;
         var sheetNameParam = $routeParams.sheetName;
@@ -17,6 +18,12 @@ ownsheetApp.controller('viewController', ["$scope", "$window", "$routeParams", "
 
         var spinner = startSpinner();
 
+        $scope.scrollTo = function (id) {
+            var old = $location.hash();
+            $location.hash(id);
+            $anchorScroll();
+            $location.hash(old);
+        };
         // case: preview
         if (!sheetNameParam && $window.location.href.endsWith('main.html#/preview')) {
             $scope.sheet.name = "preview";
@@ -28,7 +35,7 @@ ownsheetApp.controller('viewController', ["$scope", "$window", "$routeParams", "
                 $scope.mdContent = value;
                 if ($scope.mdContent) {
                     renderContent($scope.mdContent, mdParserService);
-                    customizePage(localStorageService);
+                    customizePage(localStorageService, $scope);
                     $scope.buttonType = "edit";
                 } else {
                     spinner.stop();
@@ -53,7 +60,8 @@ ownsheetApp.controller('viewController', ["$scope", "$window", "$routeParams", "
                 if (value[sheetNameParam]) {
                     // if there is content in storage
                     renderContent(value[sheetNameParam].content, mdParserService);
-                    customizePage(localStorageService);
+                    customizePage(localStorageService, $scope);
+
                     $scope.buttonType = "edit";
                 } else {
                     // if there isn't
@@ -84,7 +92,7 @@ ownsheetApp.controller('viewController', ["$scope", "$window", "$routeParams", "
 
         this.new = function () {
             $window.open('main.html#/edit', "_self");
-        }
+        };
 
     }]);
 
@@ -98,7 +106,9 @@ function initializeMasonry() {
     });
 }
 
-function customizePage(localStorageService) {
+
+function customizePage(localStorageService, $scope) {
+    makeTableOfContent($scope);
     var colorList = [];
     // get custom page parameters from local storage
     // set default value, if not customized.
@@ -106,7 +116,7 @@ function customizePage(localStorageService) {
     var colorsFromStorage = localStorageService.get('colors');
     if (!colorsFromStorage) {
         // default
-        colorList = ["#2d9f34", "#4b65c3", "#48456a", "#4f7a4e",
+        colorList = ["#4b65c3", "#2d9f34", "#48456a", "#4f7a4e",
             "#d61115", "#59582f"];
     } else {
         for (var indx in colorsFromStorage) {
@@ -120,11 +130,6 @@ function customizePage(localStorageService) {
     $('.box').each(function (index) {
         $(this).css("width", boxSizeFromStorage + "px");
         $(this).css("background-color", colorList[index % colorList.length]);
-    });
-
-    // make links open in new tab
-    $('a').each(function () {
-        (this).target = "_blank";
     });
 
     // remove images
@@ -146,14 +151,55 @@ function customizePage(localStorageService) {
     if (backgroundColorFromStorage) {
         $('html, body').css('background-color', backgroundColorFromStorage);
     }
+    setTimeout(function () {
+        initializeMasonry()
+    }, 200);
 
-    initializeMasonry();
 }
 
 function renderContent(mdContent, mdParserService) {
     // parse Content and insert it in 'ms.content' div
     var content = document.getElementById('ms-content');
     content.innerHTML = mdParserService.parse(mdContent) + "\</div>\</div>";
+}
+
+// Jquery I love you <3
+function makeTableOfContent($scope) {
+
+    //make links except contentTable ones open in new tab
+    $('a').each(function () {
+        (this).target = "_blank";
+    });
+
+    var tableOfContent = [];
+    var content = "";
+    var allBoxes = $('.box');
+
+    $.each(allBoxes.find('h2'), function (index, value) {
+        var text = $(value).text();
+        $(value).after("<a style=\"display: block\" id=\"" + text + "\">\</a>");
+        tableOfContent.push(text);
+        content += "\<li><a href=\"" + text + "\">" + text + "\</a>" + "\</li>"
+    });
+    var tableOfContentHTML = "\<div id=\"___tableOfcontent___\" class=\"box contentTable\"><h2>TABLE OF CONTENTS</h2><ul>" + content + "\</ul></div>";
+
+    $(allBoxes).first().before(tableOfContentHTML);
+
+    $(".contentTable a").click(function (event) {
+        event.preventDefault();
+        var id = $(event.target).text();
+        $scope.scrollTo(id);
+    });
+
+    $("a").click(function (event) {
+        var goToTopExpressions = ['Back to top', 'Go to top', 'top', 'Scroll to top', 'Scroll up'];
+        var id = $(event.target).text();
+
+        if (goToTopExpressions.indexOf(id) > -1) {
+            event.preventDefault();
+            $scope.scrollTo("___tableOfcontent___");
+        }
+    });
 }
 
 String.prototype.endsWith = function (suffix) {

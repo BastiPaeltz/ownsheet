@@ -8,9 +8,10 @@
 var ownsheetApp = angular.module("ownsheetApp");
 
 ownsheetApp.controller('popupController', ["$scope", "$window", "chromeStorageService",
-    function ($scope, $window, chromeStorageService) {
-
+    "localStorageService", function ($scope, $window, 
+        chromeStorageService, localStorageService) {
         // populate scope initially
+        $scope.showRevert = false;
         chromeStorageService.getFromStorage(null).then(function (value) {
             if(value === "Error"){
                 $scope.message = "Storage error. Please open ownsheet again. " +
@@ -35,15 +36,27 @@ ownsheetApp.controller('popupController', ["$scope", "$window", "chromeStorageSe
             $window.open('main.html#/edit/' + sheetName);
         };
 
+        this.revert = function() {
+            var deletedSheet = localStorageService.get("revert");
+            chromeStorageService.pushToStorage(deletedSheet);
+            Object.keys(deletedSheet).forEach(function (sheet) {
+                $scope.sheets.push(sheet);
+                $scope.showRevert = false;
+                $scope.message = "";
+            });
+        };
+
         this.removeSheet = function (sheetName) {
-            var confirmed = $window.confirm('Do you really want to do delete this sheet?');
-            if (confirmed) {
+            var storagePromise = chromeStorageService.getFromStorage(sheetName);
+            storagePromise.then(function (value) {
+                localStorageService.set("revert", value);
                 chromeStorageService.removeFromStorage(sheetName);
-                removeFromScope($scope, sheetName);
-                if ($scope.sheets.length === 0) {
-                    $scope.message = "No sheets added yet."
-                }
+            });
+            removeFromScope($scope, sheetName);
+            if ($scope.sheets.length === 0) {
+                $scope.message = "No sheets added yet."
             }
+            $scope.showRevert = true;
         };
 
         this.goToSheet = function (sheetName) {

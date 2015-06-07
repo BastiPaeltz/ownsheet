@@ -18,7 +18,7 @@
 
         <label id="searchField">Search: <input ng-model="searchText"></label>
     </div>
-    <h3>{{message}}</h3>
+    <h3 ng-if="message">{{message}}</h3>
 
     <div class="container">
 
@@ -29,7 +29,7 @@
 
                     </thead>
                     <tbody>
-                    <tr ng-repeat="sheet in sheets | filter:searchText">
+                    <tr ng-repeat="sheet in sheets | filter:searchText | orderBy:sheet">
                         <td class="tableSheetName">
                             <a href="" ng-click="popup.goToSheet(sheet)" target="_blank">
                                 {{sheet}}
@@ -60,10 +60,12 @@
         <button type="button" ng-click="popup.goToGeneral()" class="btn btn-info btn-lg">
             <span class="glyphicon glyphicon-cog"></span> Explore
         </button>
+        <button ng-if="showRevert" type="button" ng-click="popup.revert()" class="btn btn-warning btn-lg">
+            <span class="glyphicon glyphicon-refresh"></span> Undo last deletion
     </div>
 </div>
 
-<script src="lib/jquery-2.1.3.min.js"></script>
+<script src="lib/jquery-2.1.4.min.js"></script>
 <script src="lib/bootstrap.min.js"></script>
 <script src="lib/angular.min.js"></script>
 <script src="lib/angular-route.min.js"></script>

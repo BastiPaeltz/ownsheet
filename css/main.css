@@ -31,6 +31,10 @@ input, select, textarea {
     font-size: 100%;
 }
 
+.heading {
+    word-wrap: break-word;
+}
+
 .heading h1 {
     margin-top: 3px;
     margin-bottom: 5px;
@@ -289,8 +293,8 @@ body {
     font-size: 15px;
     color: rgb(184, 184, 184);
     text-decoration: none;
-    display: inline-block;
     word-break: break-word;
+    display: inline;
 }
 
 .box a:hover {

@@ -28,7 +28,11 @@ ownsheetApp.config(function ($routeProvider) {
             controller: "generalController"
         })
 
-        .otherwise({redirectTo: '/general'});
+        //.otherwise({redirectTo: '/general'});
 
 
 });
+
+ownsheetApp.run(['$anchorScroll', function($anchorScroll) {
+        $anchorScroll.yOffset = 100;   // always scroll by 100 extra pixels
+    }])
