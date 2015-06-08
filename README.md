@@ -12,7 +12,7 @@ quickly transform markdown texts into 'ownsheet-friendly' ones
 - import / export:
   Backing up, sharing ownsheet or transferring it to another machine is easy
 - customizable:
-  Don't like the default colors? Or your boxes are too slow/big? Don't worry, you can adjust all that how you please.
+  Don't like the default colors? Or your boxes are too small/big? Don't worry, you can adjust all that how you please.
 
 
 ## to extension developers
