@@ -4,8 +4,7 @@ Your markdown texts never looked so pretty before.
 **features**   
 
 - out-of-the-box compatible: 
-just copy and paste any documentation, reference or cheat sheet written in markdown out there  
-and it will look nice with ownsheet - and if not, take a look at the ...
+just copy and paste any documentation, reference or cheat sheet written in markdown out there and it will look nice with ownsheet - and if not, take a look at the ...
 - included heading converter tool:
 quickly transform markdown texts into 'ownsheet-friendly' ones
 - supports Github-Flavored Markdown and HTML as well
