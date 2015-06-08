@@ -6,7 +6,7 @@
 
 var ownsheetApp = angular.module("ownsheetApp", ['ngRoute', 'ui.bootstrap', 'LocalStorageModule']);
 
-ownsheetApp.config(function ($routeProvider) {
+ownsheetApp.config(["$routeProvider", function ($routeProvider) {
     $routeProvider
         .when("/edit/:sheetName?", {
             templateUrl: "../templates/edit.html",
@@ -26,13 +26,13 @@ ownsheetApp.config(function ($routeProvider) {
         .when("/general", {
             templateUrl: "../templates/general.html",
             controller: "generalController"
-        })
+        });
 
         //.otherwise({redirectTo: '/general'});
 
 
-});
+}]);
 
 ownsheetApp.run(['$anchorScroll', function($anchorScroll) {
         $anchorScroll.yOffset = 100;   // always scroll by 100 extra pixels
-    }])
+    }]);

@@ -34,7 +34,7 @@ Don't like the default colors? Just head to the **Explore** section and define y
 ## Compatible with a lot of cheat sheets out there.\n\
 Markdown is a common tool for writing cheat sheets, documentations and the likes.\n\
 So you can easily **incorporate parts or entire external sheets** into ownsheet.\n\
-*You may find the converter on the Explore section useful for this.*\n\
+*You may find the converter tool on the Explore section useful for this.*\n\
 \n\
 ## Note however\n\
 **There are better options for editing markdown (online or offline)**  \n\

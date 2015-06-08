@@ -1,18 +1,18 @@
 {
   "name": "ownsheet",
   "description": "Generate a nice view of your cheat sheets from Markdown.",
-  "version": "0.8",
+  "version": "0.9",
   "browser_action": {
     "default_icon": {
-      "19": "images/document.png",
-      "38": "images/document.png"
+      "19": "images/document19.png",
+      "38": "images/document38.png"
     },
     "default_title": "ownsheet",
     "default_popup": "popup.html"
   },
   "icons": {
-    "16": "images/document.png",
-    "48": "images/document.png",
+    "16": "images/document16.png",
+    "48": "images/document48.png",
     "128": "images/document.png"
   },
   "permissions": [

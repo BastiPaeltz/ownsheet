@@ -84,12 +84,12 @@ form {
 
 .colorForms {
     margin: 20px 15px;
-    width: 600px;
+    width: 80%;
 }
 
-.colorInput {
-    width: 600px;
-}
+/*.colorInput {*/
+    /*width: 90;*/
+/*}*/
 
 .generalButton {
     margin-top: 5px;
