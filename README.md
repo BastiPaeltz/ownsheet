@@ -3,7 +3,8 @@ Your markdown texts never looked so pretty before.
 
 **features**   
 
-- converts any markdown text into a neat, tidy and nice looking view  
+- converts any markdown text into a neat, tidy and nice looking view 
+- uses the full width of your screen
 - out-of-the-box compatible: 
 just copy and paste any documentation, reference or cheat sheet out there into ownsheet, it'll look nice - and if not, take a look at the ...
 - included heading converter tool:
