@@ -4,17 +4,17 @@ Your markdown texts never looked so pretty before.
 **features**   
 
 - converts any markdown text into a neat, tidy and nice looking view 
-- uses the full width of your screen
+- uses the entire width of your screen
 - out-of-the-box compatible: 
 just copy and paste any documentation, reference or cheat sheet out there into ownsheet, it'll look nice - and if not, take a look at the ...
 - included heading converter tool:
 quickly transform markdown texts into 'ownsheet-friendly' ones
+- customizable:
+  Don't like the default colors? Or your boxes are too small/big? Don't worry, you can adjust all that how you please.
 - supports Github-Flavored Markdown and HTML as well
 - built-in table of contents
 - import / export:
   Backing up, sharing ownsheet or transferring it to another machine is easy
-- customizable:
-  Don't like the default colors? Or your boxes are too small/big? Don't worry, you can adjust all that how you please.
 
 
 ## to extension developers
